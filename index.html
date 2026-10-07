@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wenevergonnaclose</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        background:#fff;
+        font-family:Arial, sans-serif;
+        text-align:center;
+        padding-top:60px;
+    }
+    .stick {
+        font-size:80px;
+        line-height:80px;
+    }
+    .btn {
+        display:inline-block;
+        margin-top:30px;
+        padding:14px 28px;
+        background:black;
+        color:white;
+        text-decoration:none;
+        font-size:18px;
+        border-radius:6px;
+        cursor:pointer;
+    }
+</style>
+</head>
+<body>
+
+<div class="stick">🙂</div>
+
+<h1>Welcome to Wenevergonnaclose</h1>
+<p>Your journey starts here.</p>
+
+<script>
+function goNext() {
+    const grad = prompt("Enter your high school graduation year:");
+    if (!grad) return;
+
+    const gradYear = parseInt(grad);
+    const currentYear = new Date().getFullYear();
+
+    if (gradYear > currentYear) {
+        // Youth → The Table
+        window.location.href = "https://wholedonuts.cloud/table";
+    } else {
+        // Adult → The Counter
+        window.location.href = "https://wholedonuts.cloud/counter";
+    }
+}
+</script>
+
+<a class="btn" onclick="goNext()">ENTER</a>
+
+</body>
+</html>
