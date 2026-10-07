@@ -1,46 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Wenevergonnaclose</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    body {
-        background:#fff;
-        font-family:Arial, sans-serif;
-        text-align:center;
-        padding-top:60px;
-    }
-
-    /* Stick Figure Animation */
-    .stick {
-        font-size:80px;
-        animation: bounce 1.2s infinite ease-in-out;
-        display:inline-block;
-    }
-
-    @keyframes bounce {
-        0%   { transform: translateY(0); }
-        50%  { transform: translateY(-18px); }
-        100% { transform: translateY(0); }
-    }
-
-    .btn {
-        display:inline-block;
-        margin-top:30px;
-        padding:14px 28px;
-        background:black;
-        color:white;
-        text-decoration:none;
-        font-size:18px;
-        border-radius:6px;
-        cursor:pointer;
-    }
-</style>
-</head>
 <body>
 
-<div class="stick">🙂</div>
+<!-- Unified Header -->
+<header style="width:100%; padding:18px 0; background:black; color:white; text-align:center; font-family:Arial;">
+    <strong>WHOLE DONUTS</strong>
+</header>
+
+<!-- Stick Figure Entrance -->
+<div class="stick" style="margin-top:40px;">🙂</div>
 
 <h1>Welcome to Wenevergonnaclose</h1>
 <p>Your journey starts here.</p>
@@ -63,5 +29,9 @@ function goNext() {
 
 <a class="btn" onclick="goNext()">ENTER</a>
 
+<!-- Unified Footer -->
+<footer style="width:100%; padding:18px 0; background:black; color:white; text-align:center; font-family:Arial; margin-top:60px;">
+    <small>© WHOLE DONUTS — Wenevergonnaclose</small>
+</footer>
+
 </body>
-</html>
