@@ -1,147 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Whole Donuts – Universal Entry</title>
-
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        background: #fafafa;
-        font-family: Arial, sans-serif;
-        text-align: center;
-        color: #222;
-    }
-    .container {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 40px 20px;
-    }
-    h1 {
-        font-size: 2.4rem;
-        margin-bottom: 20px;
-    }
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin: 30px 0;
-    }
-    .stick {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .stick:hover {
-        transform: scale(1.05);
-    }
-    button {
-        padding: 14px 20px;
-        font-size: 1.2rem;
-        background: black;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-</style>
-
+  <meta charset="UTF-8">
+  <title>wenevergonnaclose · Identity Engine</title>
+  <link rel="stylesheet" href="css/identity.css">
 </head>
 <body>
-<div class="container">
+  <main id="engine">
+    <!-- HEADER -->
+    <header class="engine-header">
+      <h1>+U Identity Engine</h1>
+      <p>Everyone starts here. No data. Just your stick figure and your momentum.</p>
+    </header>
 
-    <h1>Welcome to the Whole Donuts Universe</h1>
-    <p>Select the stick figure that best represents you.</p>
+    <!-- STEP 1: BASE FIGURE -->
+    <section class="engine-step" data-step="1">
+      <h2>Step 1 · Choose your base stick figure</h2>
+      <div class="figure-grid">
+        <button class="figure-card" data-base="adult-man">
+          <div class="stick-figure +u"> </div>
+          <span>Adult Man +U</span>
+        </button>
+        <button class="figure-card" data-base="adult-woman">
+          <div class="stick-figure +u"> </div>
+          <span>Adult Woman +U</span>
+        </button>
+        <button class="figure-card" data-base="youth-boy">
+          <div class="stick-figure +u"> </div>
+          <span>Youth Boy +U</span>
+        </button>
+        <button class="figure-card" data-base="youth-girl">
+          <div class="stick-figure +u"> </div>
+          <span>Youth Girl +U</span>
+        </button>
+      </div>
+    </section>
 
-    <!-- 4 CORE IDENTITY FIGURES -->
-    <div class="grid">
-        <div class="stick" onclick="selectIdentity('adult')">Adult Man</div>
-        <div class="stick" onclick="selectIdentity('adult')">Adult Woman</div>
-        <div class="stick" onclick="selectIdentity('youth')">Youth Boy</div>
-        <div class="stick" onclick="selectIdentity('youth')">Youth Girl</div>
-    </div>
+    <!-- STEP 2: PRESENT EMOTION -->
+    <section class="engine-step" data-step="2">
+      <h2>Step 2 · How do you feel right now?</h2>
+      <p class="step-note">Choose one black‑and‑white emotion stick figure.</p>
+      <div class="emotion-grid" id="present-emotions">
+        <!-- 14 emotion tiles, all black & white, all +U -->
+        <!-- Example subset; more can be added by community -->
+        <button class="emotion-card" data-present="calm">
+          <div class="stick-figure +u calm"></div>
+          <span>Calm</span>
+        </button>
+        <button class="emotion-card" data-present="overwhelmed">
+          <div class="stick-figure +u overwhelmed"></div>
+          <span>Overwhelmed</span>
+        </button>
+        <button class="emotion-card" data-present="hopeful">
+          <div class="stick-figure +u hopeful"></div>
+          <span>Hopeful</span>
+        </button>
+        <!-- Add more: tired, excited, confused, focused, etc. -->
+      </div>
+    </section>
 
-    <div id="step2" style="display:none;">
-        <h2>How do you feel right now?</h2>
-        <div class="grid">
-            <!-- 14 PRESENT EMOTION FIGURES -->
-            <div class="stick" onclick="presentEmotion()">🙂</div>
-            <div class="stick" onclick="presentEmotion()">😐</div>
-            <div class="stick" onclick="presentEmotion()">😢</div>
-            <div class="stick" onclick="presentEmotion()">😡</div>
-            <div class="stick" onclick="presentEmotion()">😨</div>
-            <div class="stick" onclick="presentEmotion()">😴</div>
-            <div class="stick" onclick="presentEmotion()">🤒</div>
-            <div class="stick" onclick="presentEmotion()">🤕</div>
-            <div class="stick" onclick="presentEmotion()">🤯</div>
-            <div class="stick" onclick="presentEmotion()">🤬</div>
-            <div class="stick" onclick="presentEmotion()">🤢</div>
-            <div class="stick" onclick="presentEmotion()">😎</div>
-            <div class="stick" onclick="presentEmotion()">🤗</div>
-            <div class="stick" onclick="presentEmotion()">🥺</div>
-        </div>
-    </div>
+    <!-- STEP 3: FUTURE EMOTION -->
+    <section class="engine-step" data-step="3">
+      <h2>Step 3 · How do you hope to feel?</h2>
+      <p class="step-note">Choose one future emotion stick figure.</p>
+      <div class="emotion-grid" id="future-emotions">
+        <!-- 7 future emotion tiles -->
+        <button class="emotion-card" data-future="steady">
+          <div class="stick-figure +u steady"></div>
+          <span>Steady</span>
+        </button>
+        <button class="emotion-card" data-future="proud">
+          <div class="stick-figure +u proud"></div>
+          <span>Proud</span>
+        </button>
+        <button class="emotion-card" data-future="peaceful">
+          <div class="stick-figure +u peaceful"></div>
+          <span>Peaceful</span>
+        </button>
+        <!-- Add more future arcs as needed -->
+      </div>
+    </section>
 
-    <div id="step3" style="display:none;">
-        <h2>How do you hope to feel?</h2>
-        <div class="grid">
-            <!-- 7 HOPE EMOTION FIGURES -->
-            <div class="stick" onclick="hopeEmotion()">😀</div>
-            <div class="stick" onclick="hopeEmotion()">😊</div>
-            <div class="stick" onclick="hopeEmotion()">😌</div>
-            <div class="stick" onclick="hopeEmotion()">🤩</div>
-            <div class="stick" onclick="hopeEmotion()">🥰</div>
-            <div class="stick" onclick="hopeEmotion()">😇</div>
-            <div class="stick" onclick="hopeEmotion()">🤗</div>
-        </div>
-    </div>
+    <!-- STEP 4: HS GRAD YEAR -->
+    <section class="engine-step" data-step="4">
+      <h2>Step 4 · Your high school graduation year</h2>
+      <p class="step-note">This decides your lane forever. Youth or Adult. No reversal.</p>
+      <div class="grad-input">
+        <label for="gradYear">Graduation year</label>
+        <input type="number" id="gradYear" min="1900" max="2100" placeholder="YYYY">
+      </div>
+      <button id="routeButton">Continue</button>
+      <p id="routeMessage" class="route-message"></p>
+    </section>
 
-    <div id="step4" style="display:none;">
-        <h2>Your High School Graduation Year</h2>
-        <input id="gradyear" type="number" placeholder="YYYY" style="padding:12px;font-size:1.2rem;width:200px;">
-        <button onclick="route()">Continue</button>
-    </div>
+    <!-- FOOTER: COMMUNITY MOMENTUM NOTE -->
+    <footer class="engine-footer">
+      <p>
+        This identity engine is never finished.  
+        Community momentum can add new stick figures, new emotions, new arcs—always black & white, always +U.
+      </p>
+    </footer>
+  </main>
 
-</div>
-
-<script>
-let identity = null;
-
-function selectIdentity(type) {
-    identity = type;
-    document.getElementById("step2").style.display = "block";
-}
-
-function presentEmotion() {
-    document.getElementById("step3").style.display = "block";
-}
-
-function hopeEmotion() {
-    document.getElementById("step4").style.display = "block";
-}
-
-function route() {
-    const year = parseInt(document.getElementById("gradyear").value);
-
-    if (!year) {
-        alert("Please enter your graduation year.");
-        return;
-    }
-
-    // Youth protection lock
-    if (identity === 'youth' || year > 2026) {
-        window.location.href = "/TABLE/index.html";
-    } else {
-        window.location.href = "/COUNTER/index.html";
-    }
-}
-</script>
-
+  <script src="js/identity-engine.js"></script>
 </body>
 </html>
