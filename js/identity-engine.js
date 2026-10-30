@@ -6,6 +6,31 @@ const state = {
   gradYear: null
 };
 
+const WD = Object.freeze({
+  INPUT: "WD.INPUT",
+  OUTPUT: "WD.OUTPUT",
+  ARCHIVE: "WD.ARCHIVE"
+});
+
+const externalRouting = Object.freeze({
+  status: "unverified",
+  reason: "External destinations require independent verification before use."
+});
+
+function createBlockedRoutingRecord(lane) {
+  return Object.freeze({
+    protocol: WD.ARCHIVE,
+    status: "blocked",
+    lane,
+    routingStatus: externalRouting.status,
+    reason: externalRouting.reason
+  });
+}
+
+function classifyLane(year) {
+  return year >= currentYear ? "youth" : "adult";
+}
+
 function selectCard(group, value) {
   const cards = document.querySelectorAll(group);
   cards.forEach(card => {
@@ -43,7 +68,7 @@ document.querySelectorAll("#future-emotions .emotion-card").forEach(card => {
   });
 });
 
-// STEP 4: Grad year + routing
+// STEP 4: Grad year + local classification
 const gradInput = document.getElementById("gradYear");
 const routeButton = document.getElementById("routeButton");
 const routeMessage = document.getElementById("routeMessage");
@@ -56,23 +81,13 @@ routeButton.addEventListener("click", () => {
   state.gradYear = year;
 
   if (!state.base || !state.presentEmotion || !state.futureEmotion || !year) {
-    routeMessage.textContent = "Finish all four steps first. Your +U identity needs all pieces.";
+    routeMessage.textContent = `${WD.INPUT}: finish all four steps first.`;
     return;
   }
 
-  let lane;
-  if (year >= currentYear) {
-    lane = "youth";
-    routeMessage.textContent = "You are Youth · The Table (wholedonuts). Routing you to wholedonuts.app …";
-    // Example routing:
-    window.location.href = "https://wholedonuts.app";
-  } else {
-    lane = "adult";
-    routeMessage.textContent = "You are Adult · The Counter (thenurturedchef). Routing you to thenurturedchef.app …";
-    // Example routing:
-    window.location.href = "https://thenurturedchef.app";
-  }
-
-  // NOTE: No personal data stored here.
-  // If you later add a backend, keep this engine anonymous and momentum-based.
+  const lane = classifyLane(year);
+  const record = createBlockedRoutingRecord(lane);
+  routeMessage.textContent =
+    `${WD.OUTPUT}: local ${lane} classification. ` +
+    `${WD.ARCHIVE}: external routing is ${record.status} (${record.routingStatus}).`;
 });
