@@ -1,0 +1,43 @@
+{
+  "schema": "bathroom-door-routing/v1",
+  "scope": "metadata-only",
+  "advance_rule": "A record may appear in WD.OUTPUT only after its exact external destination has verified ownership, reachability, intended use, and launch approval.",
+  "block_rule": "A missing or unverified verification record blocks external navigation.",
+  "WD.INPUT": [
+    {
+      "record_id": "local-youth-lane",
+      "source": "js/identity-engine.js",
+      "lane": "youth",
+      "status": "blocked",
+      "reason": "No verified external destination record exists."
+    },
+    {
+      "record_id": "local-adult-lane",
+      "source": "js/identity-engine.js",
+      "lane": "adult",
+      "status": "blocked",
+      "reason": "No verified external destination record exists."
+    }
+  ],
+  "WD.OUTPUT": [],
+  "WD.ARCHIVE": [
+    {
+      "record_id": "youth-app-route",
+      "destination": "https://wholedonuts.app",
+      "status": "archived",
+      "reason": "Previously referenced in local code, but this repository contains no verification record for ownership, reachability, intended use, or launch approval."
+    },
+    {
+      "record_id": "adult-app-route",
+      "destination": "https://thenurturedchef.app",
+      "status": "archived",
+      "reason": "Previously referenced in local code, but this repository contains no verification record for ownership, reachability, intended use, or launch approval."
+    },
+    {
+      "record_id": "readme-cloud-routes",
+      "destination": "https://wholedonuts.cloud/table and https://wholedonuts.cloud/counter",
+      "status": "archived",
+      "reason": "Previously documented routes did not match the implementation and have no verification record in this repository."
+    }
+  ]
+}
