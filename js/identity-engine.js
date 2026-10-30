@@ -43,7 +43,7 @@ document.querySelectorAll("#future-emotions .emotion-card").forEach(card => {
   });
 });
 
-// STEP 4: Grad year + routing
+// STEP 4: Grad year + local-only lane selection
 const gradInput = document.getElementById("gradYear");
 const routeButton = document.getElementById("routeButton");
 const routeMessage = document.getElementById("routeMessage");
@@ -63,16 +63,11 @@ routeButton.addEventListener("click", () => {
   let lane;
   if (year >= currentYear) {
     lane = "youth";
-    routeMessage.textContent = "You are Youth · The Table (wholedonuts). Routing you to wholedonuts.app …";
-    // Example routing:
-    window.location.href = "https://wholedonuts.app";
   } else {
     lane = "adult";
-    routeMessage.textContent = "You are Adult · The Counter (thenurturedchef). Routing you to thenurturedchef.app …";
-    // Example routing:
-    window.location.href = "https://thenurturedchef.app";
   }
 
-  // NOTE: No personal data stored here.
-  // If you later add a backend, keep this engine anonymous and momentum-based.
+  routeMessage.textContent =
+    `You selected the ${lane === "youth" ? "Youth" : "Adult"} lane locally. ` +
+    "External routing is blocked until its destination is verified for launch.";
 });
