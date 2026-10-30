@@ -31,6 +31,28 @@ function classifyLane(year) {
   return year >= currentYear ? "youth" : "adult";
 }
 
+const welcomeMessages = [
+  "Welcome to +U—choose the figure that feels right for this moment.",
+  "At +U, every starting point belongs. Pick one of four figures to begin.",
+  "Your path, your pace: explore the +U identity choices below.",
+  "A small +U check-in starts with the figure you choose.",
+  "Welcome in. +U makes room for many ways to show up.",
+  "Take a moment with +U; choose any figure that fits today.",
+  "Four figures, many stories—begin your +U check-in where you are.",
+  "At +U, you can start simply: choose a figure and continue at your pace.",
+  "There is no wrong place to begin. Choose a +U figure that feels comfortable.",
+  "Your selection is yours. Start your +U check-in with any of the four figures."
+];
+const remainingWelcomeMessages = [...welcomeMessages];
+const entryMessage = document.getElementById("entryMessage");
+
+function showNextWelcomeMessage() {
+  if (remainingWelcomeMessages.length === 0) return;
+
+  const index = Math.floor(Math.random() * remainingWelcomeMessages.length);
+  entryMessage.textContent = remainingWelcomeMessages.splice(index, 1)[0];
+}
+
 function selectCard(group, value) {
   const cards = document.querySelectorAll(group);
   cards.forEach(card => {
@@ -47,10 +69,15 @@ function selectCard(group, value) {
 // STEP 1: Base figure
 document.querySelectorAll(".figure-card").forEach(card => {
   card.addEventListener("click", () => {
+    if (state.base === card.dataset.base) return;
+
     state.base = card.dataset.base;
     selectCard(".figure-card", state.base);
+    showNextWelcomeMessage();
   });
 });
+
+showNextWelcomeMessage();
 
 // STEP 2: Present emotion
 document.querySelectorAll("#present-emotions .emotion-card").forEach(card => {
@@ -81,13 +108,13 @@ routeButton.addEventListener("click", () => {
   state.gradYear = year;
 
   if (!state.base || !state.presentEmotion || !state.futureEmotion || !year) {
-    routeMessage.textContent = `${WD.INPUT}: finish all four steps first.`;
+    routeMessage.textContent = `${WD.INPUT}: Finish all four steps first.`;
     return;
   }
 
   const lane = classifyLane(year);
   const record = createBlockedRoutingRecord(lane);
   routeMessage.textContent =
-    `${WD.OUTPUT}: local ${lane} classification. ` +
-    `${WD.ARCHIVE}: external routing is ${record.status} (${record.routingStatus}).`;
+    `${WD.OUTPUT}: You selected the ${lane === "youth" ? "Youth" : "Adult"} lane locally. ` +
+    `${WD.ARCHIVE}: External routing is ${record.status} (${record.routingStatus}).`;
 });
