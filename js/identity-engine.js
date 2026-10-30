@@ -6,6 +6,31 @@ const state = {
   gradYear: null
 };
 
+const WD = Object.freeze({
+  INPUT: "WD.INPUT",
+  OUTPUT: "WD.OUTPUT",
+  ARCHIVE: "WD.ARCHIVE"
+});
+
+const externalRouting = Object.freeze({
+  status: "unverified",
+  reason: "External destinations require independent verification before use."
+});
+
+function createBlockedRoutingRecord(lane) {
+  return Object.freeze({
+    protocol: WD.ARCHIVE,
+    status: "blocked",
+    lane,
+    routingStatus: externalRouting.status,
+    reason: externalRouting.reason
+  });
+}
+
+function classifyLane(year) {
+  return year >= currentYear ? "youth" : "adult";
+}
+
 const welcomeMessages = [
   "Welcome to +U—choose the figure that feels right for this moment.",
   "At +U, every starting point belongs. Pick one of four figures to begin.",
@@ -70,7 +95,7 @@ document.querySelectorAll("#future-emotions .emotion-card").forEach(card => {
   });
 });
 
-// STEP 4: Grad year + local-only lane selection
+// STEP 4: Grad year + local classification
 const gradInput = document.getElementById("gradYear");
 const routeButton = document.getElementById("routeButton");
 const routeMessage = document.getElementById("routeMessage");
@@ -83,18 +108,13 @@ routeButton.addEventListener("click", () => {
   state.gradYear = year;
 
   if (!state.base || !state.presentEmotion || !state.futureEmotion || !year) {
-    routeMessage.textContent = "Finish all four steps first. Your +U identity needs all pieces.";
+    routeMessage.textContent = `${WD.INPUT}: Finish all four steps first.`;
     return;
   }
 
-  let lane;
-  if (year >= currentYear) {
-    lane = "youth";
-  } else {
-    lane = "adult";
-  }
-
+  const lane = classifyLane(year);
+  const record = createBlockedRoutingRecord(lane);
   routeMessage.textContent =
-    `You selected the ${lane === "youth" ? "Youth" : "Adult"} lane locally. ` +
-    "External routing is blocked until its destination is verified for launch.";
+    `${WD.OUTPUT}: You selected the ${lane === "youth" ? "Youth" : "Adult"} lane locally. ` +
+    `${WD.ARCHIVE}: External routing is ${record.status} (${record.routingStatus}).`;
 });
