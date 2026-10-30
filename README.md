@@ -5,6 +5,7 @@ Static, local-only entry page for `wenevergonnaclose.com`.
 ## Verified local capabilities
 
 - Presents base-figure and emotion selections in the browser.
+- Rotates accessible +U entry messages on page load and when the chosen base figure changes. Messages do not repeat during one page visit; after the finite set is used, the last message remains. Rotation is not persisted across reloads.
 - Classifies a completed graduation-year entry as Youth or Adult using the browser's current year.
 - Keeps selections only in the page's in-memory JavaScript state; it has no backend, persistence, or content collection.
 - Holds the selected lane locally instead of navigating to an external destination.
