@@ -1,44 +1,52 @@
-# Wenevergonnaclose
+# Whole Donuts Universe
 
-The universal, private entry point for `wenevergonnaclose.com`.
+This repository is the canonical public entry bundle for
+[`wenevergonnaclose.com`](https://wenevergonnaclose.com/). The broader Sunshine
+repository is the canonical Whole Donuts LLC code ecosystem; reviewed public
+intent and compatible fixes are integrated here without turning internal source
+or operations into public destinations.
 
-Guests select a stick-figure sequence and provide a high school graduation year. Current and future graduation years enter **The Table** (the Whole Donuts side) after an under-college confirmation. Earlier graduation years enter **The Counter** (the Nurtured Chef side). The browser sends no names or public identity.
+## Public experience
 
-## Routes
+- `index.html`, `styles.css`, and `app.js` provide the credential-free +U
+  gateway, Table, Counter, library, reviewed archive, and optional support
+  disclosures.
+- `world/` provides an optional local stick-figure experience. Its pose and
+  color choices stay in page memory and clear on reset or reload.
+- `guide.html`, `PUBLIC_SYSTEM.md`, `WHOLE_DONUTS_GUIDE.md`, and the tracked
+  templates document public paths and their privacy boundaries.
+- `review-queue-manifest.js` contains curated review metadata already shipped
+  with the site. The browser does not discover repositories, scan networks, or
+  publish changes.
 
-- The Table: `https://wholedonuts.cloud/table`
-- The Counter: `https://wholedonuts.cloud/counter`
+The public bundle has no account, email registration, analytics, tracker,
+profile, or submission runtime. Gateway and World choices are temporary and
+are not sent or stored. Repository links are not primary visitor actions.
 
-Both destination sites receive an opaque, one-time `entry` token and `exit=estore`. They must validate the token before admitting the guest, and they must send each guest to that side's e-store when the guest exits. The e-store may offer free items; it must not require a purchase.
+## Deployment
 
-## Required registration service
+The manual [`Deploy Pages`](.github/workflows/deploy-pages.yml) workflow uses
+Node.js 22 to syntax-check the public scripts and run the public contract tests.
+It then stages only its named static-file allowlist and verifies that `CNAME`
+is exactly `wenevergonnaclose.com`.
 
-This repository includes [Cloudflare Pages Functions](functions/api) and a [D1 schema](db/schema.sql) for the registration service. The static client deliberately refuses to route guests until `POST /api/entry` is available.
+In **Settings -> Pages**, select **GitHub Actions** as the source and keep the
+custom domain configured and verified. Dispatch only after the reviewed
+revision is on `main`, then confirm the generated Pages deployment and custom
+domain are healthy.
 
-The endpoint must:
+## Maintainer boundaries
 
-1. accept only `email`, `graduationYear`, `lane`, `underCollegeConfirmed`, and the anonymous stick-figure `sequence`;
-2. normalize the email and store a server-side keyed hash, never a public email or name;
-3. derive and store a server-side keyed hash of the source IP;
-4. reject an email or IP hash already used for universal entry;
-5. issue a short-lived, single-use opaque `entryToken` only after successful registration; and
-6. return `{ "entryToken": "...", "lane": "table" }` or `{ "entryToken": "...", "lane": "counter" }`.
-
-The registration function implements the one-entry policy with unique, server-side keyed email and IP hashes. Browser storage, client-side hashing, and query parameters alone cannot reliably limit an email account or IP address.
-
-### Deploying the registration service
-
-1. Create a Cloudflare D1 database and execute `db/schema.sql`.
-2. Deploy this repository with Cloudflare Pages, binding the D1 database as `DB`.
-3. Configure `IDENTITY_HASH_SECRET` as a secret; do not commit it.
-4. Route `wenevergonnaclose.com` through that Pages project so `/api/entry` receives `CF-Connecting-IP`.
-
-The Table and Counter must consume a received entry by calling `POST https://wenevergonnaclose.com/api/entry/consume` server-to-server with `{ "entryToken": "...", "lane": "table" }` or `{ "entryToken": "...", "lane": "counter" }`. A successful response is the only permission to admit the guest. They must reject direct entry without it and send the guest to the proper side's e-store at exit.
+Read [`PUBLIC_SYSTEM.md`](PUBLIC_SYSTEM.md) before changing public behavior.
+Preserve the credential-free entry, same-site canonical paths, human-reviewed
+publication, and truthful availability labels. Do not add credentials,
+analytics, automatic intake, automatic publication, or internal operational
+configuration to the public artifact.
 
 ## Pull request checks
 
-The `Test` workflow runs `node --test tests/identity-engine.test.js` on every
-pull request and on updates to `main`. Configure `Test / Identity engine tests`
-as the required status check for `main`. This repository currently has one
-administrator, so it should not require an approval until an independent
-reviewer has been added.
+The `Test` workflow syntax-checks both public scripts and runs
+`node --test tests/public-site.test.js` on every pull request and on updates to
+`main`. Configure `Test / Public experience tests` as the required status check
+for `main`. This repository currently has one administrator, so it should not
+require an approval until an independent reviewer has been added.

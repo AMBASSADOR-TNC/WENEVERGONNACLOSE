@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  identity-engine:
-    name: Identity engine tests
+  public-experience:
+    name: Public experience tests
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
@@ -22,5 +22,8 @@ jobs:
         with:
           node-version: 22
 
-      - name: Run identity engine tests
-        run: node --test tests/identity-engine.test.js
+      - name: Validate public scripts and contract
+        run: |
+          node --check app.js
+          node --check world/script.js
+          node --test tests/public-site.test.js

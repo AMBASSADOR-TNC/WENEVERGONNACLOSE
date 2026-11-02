@@ -112,6 +112,7 @@ function applyState() {
 function completeJourney() {
   state.completed = true;
   applyState();
+  unlockState.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 enterButton.addEventListener("click", completeJourney);
