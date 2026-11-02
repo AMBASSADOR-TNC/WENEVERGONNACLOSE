@@ -43,3 +43,14 @@ test("documentation and deployment describe the canonical split", () => {
   assert.match(workflow, /node-version: 22/);
   assert.match(workflow, /node --test tests\/public-site\.test\.js/);
 });
+
+test("obsolete repository-home placeholders stay removed", () => {
+  [
+    "bathroom-door-routing.json",
+    "cachebreaker.html",
+    "force-rebuild.txt",
+    "storefront-config.js"
+  ].forEach(relativePath => {
+    assert.equal(fs.existsSync(path.join(root, relativePath)), false);
+  });
+});

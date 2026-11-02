@@ -6,6 +6,19 @@ suggestion optional.
 
 ## Unreleased
 
+### Repository home cleanup
+
+**What changed:** Removed empty cache/rebuild placeholders, an unused storefront
+configuration stub, and obsolete archived routing metadata. Necessary operating
+folders and every file used by the public site, tests, deployment, guides, and
+templates remain.
+
+**Why it matters:** The repository home now shows only active public content or
+files that support current and planned system operation.
+
+**Optional next choices:** None. The cleanup does not change visitor routes or
+public behavior.
+
 ### Canonical ecosystem integration
 
 **What changed:** The target's full privacy-safe gateway and ecosystem archive
