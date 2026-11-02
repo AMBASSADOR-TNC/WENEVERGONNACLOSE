@@ -42,3 +42,11 @@ Preserve the credential-free entry, same-site canonical paths, human-reviewed
 publication, and truthful availability labels. Do not add credentials,
 analytics, automatic intake, automatic publication, or internal operational
 configuration to the public artifact.
+
+## Pull request checks
+
+The `Test` workflow syntax-checks both public scripts and runs
+`node --test tests/public-site.test.js` on every pull request and on updates to
+`main`. Configure `Test / Public experience tests` as the required status check
+for `main`. This repository currently has one administrator, so it should not
+require an approval until an independent reviewer has been added.
