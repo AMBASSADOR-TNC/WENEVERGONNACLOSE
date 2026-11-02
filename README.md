@@ -58,14 +58,19 @@ Maintainers refresh the queue through the normal local/repository workflow:
 
 The [`deploy-pages` workflow](.github/workflows/deploy-pages.yml) publishes
 the reviewed public bundle only when a maintainer dispatches it manually. It
-stages only named public static files, including the exact
-`CNAME`, and excludes Go operations configuration and local credentials. In
-**Settings -> Pages**, select **GitHub Actions** as the source and set the
-custom domain to `wenevergonnaclose.com`; GitHub provides the required DNS and
-verification instructions. The workflow verifies the deployed revision through
-the GitHub Pages URL, so custom-domain DNS propagation does not make a valid
-deployment look failed. Any future domain or DNS change requires a separate
-reviewed operational change.
+copies an explicit allowlist of the root landing files, public guides,
+templates, and `world/` files into the Pages artifact; it does not publish
+operations configuration, archived routing metadata, or local credentials.
+Before upload, the workflow verifies that the artifact retains the exact
+`CNAME` value `wenevergonnaclose.com` and that the root canonical and sitemap
+references use that domain.
+
+The workflow is not domain activation. In **Settings -> Pages**, a maintainer
+must select **GitHub Actions** as the source and configure the custom domain
+as `wenevergonnaclose.com`; GitHub provides the separate DNS and verification
+instructions. Dispatch only after the reviewed revision is on `main`, then
+review the Pages deployment and GitHub domain-verification status. Any future
+domain or DNS change requires a separate reviewed operational change.
 
 ### Public system and curation policy
 

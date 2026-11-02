@@ -37,14 +37,18 @@ temporary settings, or follow any present on-site path.
 
 ### Pages delivery
 
-**What changed:** The Pages workflow deploys the reviewed static bundle only
-after a maintainer manually dispatches it, retaining
-`wenevergonnaclose.com` in the deployed `CNAME`.
+**What changed:** The `deploy-pages` workflow now deploys the reviewed static
+bundle only after a maintainer manually dispatches it. It copies a named
+public-file allowlist, including the root entry, guides, templates, and
+`world/` files, and verifies that the deployed `CNAME` remains exactly
+`wenevergonnaclose.com`.
 
-**Why it matters:** The public site has one deployable source of truth.
+**Why it matters:** The public site has one deployable source of truth without
+publishing unrelated repository files.
 
-**Optional next choices:** A maintainer can dispatch and review the workflow
-run after a human-reviewed merge. Visitors do not need to do anything.
+**Optional next choices:** After a human-reviewed merge, a maintainer can
+confirm the separate GitHub Pages source and custom-domain verification, then
+dispatch and review the workflow run. Visitors do not need to do anything.
 
 ### Operations reliability
 

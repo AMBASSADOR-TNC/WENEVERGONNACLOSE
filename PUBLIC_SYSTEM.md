@@ -83,8 +83,9 @@ must:
    a separate explicit rights and safety decision makes a sanitized derivative
    eligible.
 6. Make the proposed change locally, complete human repository review, and
-   merge only after approval. Publication requires a separate manual Pages
-   dispatch by a maintainer.
+   merge only after approval. Publication requires a separate manual
+   [`deploy-pages` workflow](.github/workflows/deploy-pages.yml) dispatch by
+   a maintainer after the reviewed revision is on `main`.
 
 The review queue is a shortlist for this process, not a feed. It must never
 discover sources, read a repository, scan a network, create a submission,
@@ -94,6 +95,9 @@ change a source, publish material, or merge a change automatically.
 
 For an eligible public addition, update the relevant public page or template,
 `review-queue-manifest.js` when appropriate, this system map when availability
-changes, and the release notes. Verify the Pages artifact stages only intended
-public files and preserves `CNAME` exactly as `wenevergonnaclose.com`. Dispatch
-the deployment manually only after the reviewed merge is present on `main`.
+changes, and the release notes. The workflow stages only its named public
+bundle allowlist and verifies that `CNAME` is exactly
+`wenevergonnaclose.com` before upload. A maintainer must separately confirm
+that GitHub Pages uses GitHub Actions, the custom domain remains configured
+and verified, and the dispatched deployment is healthy. Dispatch only after
+the reviewed merge is present on `main`.
