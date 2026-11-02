@@ -34,3 +34,11 @@ The registration function implements the one-entry policy with unique, server-si
 4. Route `wenevergonnaclose.com` through that Pages project so `/api/entry` receives `CF-Connecting-IP`.
 
 The Table and Counter must consume a received entry by calling `POST https://wenevergonnaclose.com/api/entry/consume` server-to-server with `{ "entryToken": "...", "lane": "table" }` or `{ "entryToken": "...", "lane": "counter" }`. A successful response is the only permission to admit the guest. They must reject direct entry without it and send the guest to the proper side's e-store at exit.
+
+## Pull request checks
+
+The `Test` workflow runs `node --test tests/identity-engine.test.js` on every
+pull request and on updates to `main`. Configure `Test / Identity engine tests`
+as the required status check for `main`. This repository currently has one
+administrator, so it should not require an approval until an independent
+reviewer has been added.
