@@ -1,139 +1,36 @@
-# Whole Donuts Universe
+# Wenevergonnaclose
 
-This repository is the consolidated home for the Whole Donuts Universe.
+The universal, private entry point for `wenevergonnaclose.com`.
 
-## Public site
+Guests select a stick-figure sequence and provide a high school graduation year. Current and future graduation years enter **The Table** (the Whole Donuts side) after an under-college confirmation. Earlier graduation years enter **The Counter** (the Nurtured Chef side). The browser sends no names or public identity.
 
-The repository root contains the static GitHub Pages bundle for
-`wenevergonnaclose.com`:
+## Routes
 
-- `index.html`, `guide.html`, `PUBLIC_SYSTEM.md`, `styles.css`, and `app.js`
-  provide the one public Whole Donuts entry, system map, curation policy, and
-  +U experience.
-- `CNAME` declares `wenevergonnaclose.com` as the custom domain.
-- The +U gateway is a four-tap, progressive route: broad Youth or
-  Adult side, a face-only feeling, one of three bounded non-sensitive needs,
-  and an available on-site destination. Its 14 original Youth and 14 original
-  Adult stick-figure companions are visual-only. All four temporary choices
-  exist only in page memory, clear on restart, skip, back, or onward navigation,
-  and are never sent, tracked, or stored. The gateway never asks for an exact
-  age or birth date, name, email, face image, photo, location, account, or
-  sensitive information.
-- The optional +U World keeps visual pose and color choices only in page
-  memory. They clear on reset or reload and are never sent, tracked, or stored.
-- The browser-only +U review queue renders the small, curated
-  `review-queue-manifest.js` list already shipped with the site. It has no
-  filesystem access, GitHub API access, network scanning, automatic
-  publishing, or automatic merging. Every candidate is review-only and shows
-  its source reference, category, provenance, rights status, review status,
-  and manual next step. The queue also documents excluded sources and why they
-  are not eligible.
+- The Table: `https://wholedonuts.cloud/table`
+- The Counter: `https://wholedonuts.cloud/counter`
 
-### Refreshing the review queue
+Both destination sites receive an opaque, one-time `entry` token and `exit=estore`. They must validate the token before admitting the guest, and they must send each guest to that side's e-store when the guest exits. The e-store may offer free items; it must not require a purchase.
 
-Maintainers refresh the queue through the normal local/repository workflow:
+## Required registration service
 
-1. Review a public, tracked source manually and edit
-   `review-queue-manifest.js` locally.
-2. Keep each candidate's `title`, `source`, `category` (`draft`, `image`, or
-   `crumb`), `provenance`, `rights`, `reviewStatus`, and `nextStep` accurate
-   and specific. Record uncertain or ineligible sources in
-   `WHNUTZ_REVIEW_QUEUE_EXCLUSIONS` with a clear reason.
-3. Review and merge the manifest change normally. A human must complete every
-   stated next step; the site never discovers candidates, changes sources,
-   publishes material, or merges work automatically.
+This repository includes [Cloudflare Pages Functions](functions/api) and a [D1 schema](db/schema.sql) for the registration service. The static client deliberately refuses to route guests until `POST /api/entry` is available.
 
-  The public site creates no visitor identifier, return pass, profile, or
-  visit record. Daily SEO and learning targets remain outside the public site
-  in access-controlled operations and require explicit human activation and
-  release review.
+The endpoint must:
 
-  The public SEO Crumb Saver treats deliberate public pages, guides, templates,
-  and canonical invitations as discovery entry points for reviewed knowledge. It
-  does not collect a visitor profile or submit material from this static site.
-  The root uses canonical, robots, sitemap, social-preview, and factual WebSite
-  metadata. The non-deployed [SEO Crumb Saver operating model](config/seo-crumb-saver-operating-model.md)
-  requires human review of aggregate visibility and prohibits tracking, scraping,
-  credentials, rank manipulation, and automatic publishing.
+1. accept only `email`, `graduationYear`, `lane`, `underCollegeConfirmed`, and the anonymous stick-figure `sequence`;
+2. normalize the email and store a server-side keyed hash, never a public email or name;
+3. derive and store a server-side keyed hash of the source IP;
+4. reject an email or IP hash already used for universal entry;
+5. issue a short-lived, single-use opaque `entryToken` only after successful registration; and
+6. return `{ "entryToken": "...", "lane": "table" }` or `{ "entryToken": "...", "lane": "counter" }`.
 
-The [`deploy-pages` workflow](.github/workflows/deploy-pages.yml) publishes
-the reviewed public bundle only when a maintainer dispatches it manually. It
-copies an explicit allowlist of the root landing files, public guides,
-templates, and `world/` files into the Pages artifact; it does not publish
-operations configuration, archived routing metadata, or local credentials.
-Before upload, the workflow verifies that the artifact retains the exact
-`CNAME` value `wenevergonnaclose.com` and that the root canonical and sitemap
-references use that domain.
+The registration function implements the one-entry policy with unique, server-side keyed email and IP hashes. Browser storage, client-side hashing, and query parameters alone cannot reliably limit an email account or IP address.
 
-The workflow is not domain activation. In **Settings -> Pages**, a maintainer
-must select **GitHub Actions** as the source and configure the custom domain
-as `wenevergonnaclose.com`; GitHub provides the separate DNS and verification
-instructions. Dispatch only after the reviewed revision is on `main`, then
-review the Pages deployment and GitHub domain-verification status. Any future
-domain or DNS change requires a separate reviewed operational change.
+### Deploying the registration service
 
-### Public system and curation policy
+1. Create a Cloudflare D1 database and execute `db/schema.sql`.
+2. Deploy this repository with Cloudflare Pages, binding the D1 database as `DB`.
+3. Configure `IDENTITY_HASH_SECRET` as a secret; do not commit it.
+4. Route `wenevergonnaclose.com` through that Pages project so `/api/entry` receives `CF-Connecting-IP`.
 
-[`PUBLIC_SYSTEM.md`](PUBLIC_SYSTEM.md) is the public system map and maintainer
-curation policy. It identifies available local public paths, unavailable areas,
-external exits, the privacy boundary, and the human-only process for considering
-eligible original or permitted public material. It does not authorize
-collection, automated intake, publication, GitHub actions, or merges.
-
-### Companion repository reconciliation
-
-Universe is the single canonical public bundle. The Sunshine repository is
-recorded only as a public source/provenance reference pending an owner-confirmed
-reuse grant; its code, text, imagery, configuration, and legacy Pages fallback
-are not imported or linked as a canonical destination. WHNutz and the merch
-platform remain separate: their differing source material, operational
-configuration, authentication, and commerce surfaces require explicit rights,
-privacy, safety, and owner review before any future sanitized derivative can be
-considered. No companion repository implies that an internal asset, storefront,
-submission channel, or service is live.
-
-## Operations tooling
-
-The Go 1.21 funnel and domain operations project remains in `cmd/`, `pkg/`,
-`config/`, `workflows/`, and `projects/`. It is separate from the static Pages
-site. See [SETUP.md](SETUP.md) and [README_FUNNELS.md](README_FUNNELS.md) for
-operational setup; keep credentials in local environment files or GitHub
-Actions secrets, never in the repository.
-
-## Donation Access Hub and Rewards Center
-
-The public Donation Access Hub is an interface and policy, not a payment
-processor, wallet, fund-transfer system, automatic billing system, or
-automatic allocation system. A visitor must select a voluntary support purpose,
-review the processor and payee, and affirm a final action before an external
-payment link is revealed. Store purchases remain separate merchant
-transactions, not donations. The Share & Invitation Protocol creates a
-non-sensitive ecosystem link only when a visitor explicitly shares or copies
-it; it does not track recipients or create referral, payment, or reward records.
-Cash App and Chime to `$wholedonuts` are the only allowed manual provider
-routes. Cash App is the consent-gated optional external exit. Chime has no
-universal public payment URL, so the same gate reveals only an instruction to
-open the official Chime app, enter the ChimeSign, and optionally copy it;
-copying never initiates a payment or transfer. No other provider is part of
-this model.
-
-Real accounting, charity or tax treatment, refunds, merchant-of-record
-responsibilities, and reward eligibility require decisions by the responsible
-entity and configured providers. See the non-deployed
-[Donation Access Hub operating model](config/donation-access-operating-model.md)
-for operational constraints.
-
-The public Crumb Saver protocol and contribution template remain available, but
-the current static Pages configuration contains no approved submission runtime.
-Its form is visibly unavailable and accepts no text, so it cannot discard a
-submission. Do not link a separate Crumb Saver endpoint unless its owner
-supplies and verifies it.
-
-## Consolidation and learning
-
-Universe is the verified system of record for material that has completed
-intake; it does not claim that all legacy or private material has migrated.
-The non-deployed [consolidation and learning model](config/consolidation-learning-model.md)
-defines classification, preserve-before-remove provenance, reviewed learning
-loops, and staged legacy retirement. It prohibits automatic publishing,
-deletion, payment, credential import, and private-data import.
+The Table and Counter must consume a received entry by calling `POST https://wenevergonnaclose.com/api/entry/consume` server-to-server with `{ "entryToken": "...", "lane": "table" }` or `{ "entryToken": "...", "lane": "counter" }`. A successful response is the only permission to admit the guest. They must reject direct entry without it and send the guest to the proper side's e-store at exit.

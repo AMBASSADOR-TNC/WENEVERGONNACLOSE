@@ -1,85 +1,36 @@
-// Simple state object to keep track of selections
 const state = {
   base: null,
   presentEmotion: null,
   futureEmotion: null,
-  gradYear: null
+  gradYear: null,
+  lane: null
 };
 
-const WD = Object.freeze({
-  INPUT: "WD.INPUT",
-  OUTPUT: "WD.OUTPUT",
-  ARCHIVE: "WD.ARCHIVE"
-});
-
-const externalRouting = Object.freeze({
-  status: "unverified",
-  reason: "External destinations require independent verification before use."
-});
-
-function createBlockedRoutingRecord(lane) {
-  return Object.freeze({
-    protocol: WD.ARCHIVE,
-    status: "blocked",
-    lane,
-    routingStatus: externalRouting.status,
-    reason: externalRouting.reason
-  });
-}
-
-function classifyLane(year) {
-  return year >= currentYear ? "youth" : "adult";
-}
-
-const welcomeMessages = [
-  "Welcome to +U—choose the figure that feels right for this moment.",
-  "At +U, every starting point belongs. Pick one of four figures to begin.",
-  "Your path, your pace: explore the +U identity choices below.",
-  "A small +U check-in starts with the figure you choose.",
-  "Welcome in. +U makes room for many ways to show up.",
-  "Take a moment with +U; choose any figure that fits today.",
-  "Four figures, many stories—begin your +U check-in where you are.",
-  "At +U, you can start simply: choose a figure and continue at your pace.",
-  "There is no wrong place to begin. Choose a +U figure that feels comfortable.",
-  "Your selection is yours. Start your +U check-in with any of the four figures."
-];
-const remainingWelcomeMessages = [...welcomeMessages];
-const entryMessage = document.getElementById("entryMessage");
-
-function showNextWelcomeMessage() {
-  if (remainingWelcomeMessages.length === 0) return;
-
-  const index = Math.floor(Math.random() * remainingWelcomeMessages.length);
-  entryMessage.textContent = remainingWelcomeMessages.splice(index, 1)[0];
-}
+const ROUTES = {
+  table: "https://wholedonuts.cloud/table",
+  counter: "https://wholedonuts.cloud/counter"
+};
+const ENTRY_ENDPOINT = "/api/entry";
+const currentYear = new Date().getFullYear();
 
 function selectCard(group, value) {
   const cards = document.querySelectorAll(group);
   cards.forEach(card => {
-    if (card.dataset.base === value ||
-        card.dataset.present === value ||
-        card.dataset.future === value) {
-      card.classList.add("selected");
-    } else {
-      card.classList.remove("selected");
-    }
+    const isSelected = card.dataset.base === value ||
+      card.dataset.present === value ||
+      card.dataset.future === value;
+    card.classList.toggle("selected", isSelected);
+    card.setAttribute("aria-pressed", String(isSelected));
   });
 }
 
-// STEP 1: Base figure
 document.querySelectorAll(".figure-card").forEach(card => {
   card.addEventListener("click", () => {
-    if (state.base === card.dataset.base) return;
-
     state.base = card.dataset.base;
     selectCard(".figure-card", state.base);
-    showNextWelcomeMessage();
   });
 });
 
-showNextWelcomeMessage();
-
-// STEP 2: Present emotion
 document.querySelectorAll("#present-emotions .emotion-card").forEach(card => {
   card.addEventListener("click", () => {
     state.presentEmotion = card.dataset.present;
@@ -87,7 +38,6 @@ document.querySelectorAll("#present-emotions .emotion-card").forEach(card => {
   });
 });
 
-// STEP 3: Future emotion
 document.querySelectorAll("#future-emotions .emotion-card").forEach(card => {
   card.addEventListener("click", () => {
     state.futureEmotion = card.dataset.future;
@@ -95,26 +45,108 @@ document.querySelectorAll("#future-emotions .emotion-card").forEach(card => {
   });
 });
 
-// STEP 4: Grad year + local classification
 const gradInput = document.getElementById("gradYear");
+const emailInput = document.getElementById("email");
+const collegeConfirmation = document.getElementById("collegeConfirmation");
+const underCollegeConfirmed = document.getElementById("underCollegeConfirmed");
 const routeButton = document.getElementById("routeButton");
 const routeMessage = document.getElementById("routeMessage");
 
-// Adjust this to current year dynamically
-const currentYear = new Date().getFullYear();
+function showMessage(message) {
+  routeMessage.textContent = message;
+}
 
-routeButton.addEventListener("click", () => {
-  const year = parseInt(gradInput.value, 10);
-  state.gradYear = year;
-
-  if (!state.base || !state.presentEmotion || !state.futureEmotion || !year) {
-    routeMessage.textContent = `${WD.INPUT}: Finish all four steps first.`;
+function setLaneFromGraduationYear() {
+  const year = Number.parseInt(gradInput.value, 10);
+  if (!Number.isInteger(year) || year < 1900 || year > currentYear + 1) {
+    state.gradYear = null;
+    state.lane = null;
+    collegeConfirmation.hidden = true;
     return;
   }
 
-  const lane = classifyLane(year);
-  const record = createBlockedRoutingRecord(lane);
-  routeMessage.textContent =
-    `${WD.OUTPUT}: You selected the ${lane === "youth" ? "Youth" : "Adult"} lane locally. ` +
-    `${WD.ARCHIVE}: External routing is ${record.status} (${record.routingStatus}).`;
+  state.gradYear = year;
+  state.lane = year >= currentYear ? "table" : "counter";
+  collegeConfirmation.hidden = state.lane !== "table";
+}
+
+gradInput.addEventListener("input", setLaneFromGraduationYear);
+
+function validateEntry() {
+  if (!state.base || !state.presentEmotion || !state.futureEmotion) {
+    return "Complete your stick-figure sequence first.";
+  }
+  if (!state.lane) {
+    return `Enter a graduation year from 1900 through ${currentYear + 1}.`;
+  }
+  if (!emailInput.validity.valid) {
+    return "Enter one valid email address for private registration.";
+  }
+  if (state.lane === "table" && !underCollegeConfirmed.checked) {
+    return "Confirm the under-college path before continuing to The Table.";
+  }
+  return null;
+}
+
+async function registerEntry() {
+  const response = await fetch(ENTRY_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: emailInput.value.trim(),
+      graduationYear: state.gradYear,
+      lane: state.lane,
+      underCollegeConfirmed: underCollegeConfirmed.checked,
+      sequence: {
+        base: state.base,
+        presentEmotion: state.presentEmotion,
+        futureEmotion: state.futureEmotion
+      }
+    })
+  });
+
+  if (!response.ok) {
+    let message = "Registration could not be completed.";
+    try {
+      const error = await response.json();
+      message = error.error || message;
+    } catch {
+      // The service may return a non-JSON error before it reaches the entry handler.
+    }
+    throw new Error(message);
+  }
+
+  const result = await response.json();
+  if (!result.entryToken || typeof result.entryToken !== "string") {
+    throw new Error("Registration did not return a valid entry token.");
+  }
+
+  if (!["table", "counter"].includes(result.lane)) {
+    throw new Error("Registration did not return a valid destination.");
+  }
+
+  return result;
+}
+
+routeButton.addEventListener("click", async () => {
+  setLaneFromGraduationYear();
+  const validationMessage = validateEntry();
+  if (validationMessage) {
+    showMessage(validationMessage);
+    return;
+  }
+
+  routeButton.disabled = true;
+  showMessage("Creating your private, one-time entry...");
+
+  try {
+    const registration = await registerEntry();
+    const destination = new URL(ROUTES[registration.lane]);
+    destination.searchParams.set("entry", registration.entryToken);
+    destination.searchParams.set("exit", "estore");
+    window.location.replace(destination);
+  } catch (error) {
+    showMessage(error.message || "Registration is unavailable. Please try again.");
+    routeButton.disabled = false;
+  }
 });
