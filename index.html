@@ -2,102 +2,105 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>wenevergonnaclose · Identity Engine</title>
+  <title>wenevergonnaclose · Universal Entry</title>
   <link rel="stylesheet" href="css/identity.css">
 </head>
 <body>
   <main id="engine">
-    <!-- HEADER -->
     <header class="engine-header">
-      <h1>+U Identity Engine</h1>
-      <p>Everyone starts here. No data. Just your stick figure and your momentum.</p>
+      <h1>+U Universal Entry</h1>
+      <p>Start here. Your sequence stays private and guides you to the right side.</p>
     </header>
 
-    <!-- STEP 1: BASE FIGURE -->
     <section class="engine-step" data-step="1">
-      <h2>Step 1 · Choose your base stick figure</h2>
+      <h2>1. Choose your base stick figure</h2>
       <div class="figure-grid">
-        <button class="figure-card" data-base="adult-man">
-          <div class="stick-figure +u"> </div>
+        <button class="figure-card" type="button" data-base="adult-man" aria-pressed="false">
+          <div class="stick-figure" aria-hidden="true"></div>
           <span>Adult Man +U</span>
         </button>
-        <button class="figure-card" data-base="adult-woman">
-          <div class="stick-figure +u"> </div>
+        <button class="figure-card" type="button" data-base="adult-woman" aria-pressed="false">
+          <div class="stick-figure" aria-hidden="true"></div>
           <span>Adult Woman +U</span>
         </button>
-        <button class="figure-card" data-base="youth-boy">
-          <div class="stick-figure +u"> </div>
+        <button class="figure-card" type="button" data-base="youth-boy" aria-pressed="false">
+          <div class="stick-figure" aria-hidden="true"></div>
           <span>Youth Boy +U</span>
         </button>
-        <button class="figure-card" data-base="youth-girl">
-          <div class="stick-figure +u"> </div>
+        <button class="figure-card" type="button" data-base="youth-girl" aria-pressed="false">
+          <div class="stick-figure" aria-hidden="true"></div>
           <span>Youth Girl +U</span>
         </button>
       </div>
     </section>
 
-    <!-- STEP 2: PRESENT EMOTION -->
     <section class="engine-step" data-step="2">
-      <h2>Step 2 · How do you feel right now?</h2>
-      <p class="step-note">Choose one black‑and‑white emotion stick figure.</p>
+      <h2>2. How do you feel right now?</h2>
+      <p class="step-note">Choose one black-and-white emotion stick figure.</p>
       <div class="emotion-grid" id="present-emotions">
-        <!-- 14 emotion tiles, all black & white, all +U -->
-        <!-- Example subset; more can be added by community -->
-        <button class="emotion-card" data-present="calm">
-          <div class="stick-figure +u calm"></div>
+        <button class="emotion-card" type="button" data-present="calm" aria-pressed="false">
+          <div class="stick-figure calm" aria-hidden="true"></div>
           <span>Calm</span>
         </button>
-        <button class="emotion-card" data-present="overwhelmed">
-          <div class="stick-figure +u overwhelmed"></div>
+        <button class="emotion-card" type="button" data-present="overwhelmed" aria-pressed="false">
+          <div class="stick-figure overwhelmed" aria-hidden="true"></div>
           <span>Overwhelmed</span>
         </button>
-        <button class="emotion-card" data-present="hopeful">
-          <div class="stick-figure +u hopeful"></div>
+        <button class="emotion-card" type="button" data-present="hopeful" aria-pressed="false">
+          <div class="stick-figure hopeful" aria-hidden="true"></div>
           <span>Hopeful</span>
         </button>
-        <!-- Add more: tired, excited, confused, focused, etc. -->
       </div>
     </section>
 
-    <!-- STEP 3: FUTURE EMOTION -->
     <section class="engine-step" data-step="3">
-      <h2>Step 3 · How do you hope to feel?</h2>
+      <h2>3. How do you hope to feel?</h2>
       <p class="step-note">Choose one future emotion stick figure.</p>
       <div class="emotion-grid" id="future-emotions">
-        <!-- 7 future emotion tiles -->
-        <button class="emotion-card" data-future="steady">
-          <div class="stick-figure +u steady"></div>
+        <button class="emotion-card" type="button" data-future="steady" aria-pressed="false">
+          <div class="stick-figure steady" aria-hidden="true"></div>
           <span>Steady</span>
         </button>
-        <button class="emotion-card" data-future="proud">
-          <div class="stick-figure +u proud"></div>
+        <button class="emotion-card" type="button" data-future="proud" aria-pressed="false">
+          <div class="stick-figure proud" aria-hidden="true"></div>
           <span>Proud</span>
         </button>
-        <button class="emotion-card" data-future="peaceful">
-          <div class="stick-figure +u peaceful"></div>
+        <button class="emotion-card" type="button" data-future="peaceful" aria-pressed="false">
+          <div class="stick-figure peaceful" aria-hidden="true"></div>
           <span>Peaceful</span>
         </button>
-        <!-- Add more future arcs as needed -->
       </div>
     </section>
 
-    <!-- STEP 4: HS GRAD YEAR -->
     <section class="engine-step" data-step="4">
-      <h2>Step 4 · Your high school graduation year</h2>
-      <p class="step-note">This decides your lane forever. Youth or Adult. No reversal.</p>
+      <h2>4. Your high school graduation year</h2>
+      <p class="step-note">This selects your next safe step: The Table for youth, or The Counter for adults.</p>
       <div class="grad-input">
         <label for="gradYear">Graduation year</label>
-        <input type="number" id="gradYear" min="1900" max="2100" placeholder="YYYY">
+        <input type="number" id="gradYear" min="1900" inputmode="numeric" autocomplete="off" placeholder="YYYY">
       </div>
-      <button id="routeButton">Continue</button>
-      <p id="routeMessage" class="route-message"></p>
     </section>
 
-    <!-- FOOTER: COMMUNITY MOMENTUM NOTE -->
+    <section class="engine-step" data-step="5">
+      <h2>5. Private registration</h2>
+      <p class="step-note">Use one email account. No name or public profile is created. The registration service uses it privately to prevent duplicate entry.</p>
+      <div class="registration-input">
+        <label for="email">Email address</label>
+        <input type="email" id="email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div id="collegeConfirmation" class="confirmation" hidden>
+        <label>
+          <input type="checkbox" id="underCollegeConfirmed">
+          I confirm I am entering the under-college path.
+        </label>
+      </div>
+      <button id="routeButton" type="button">Continue safely</button>
+      <p id="routeMessage" class="route-message" role="status" aria-live="polite"></p>
+    </section>
+
     <footer class="engine-footer">
       <p>
-        This identity engine is never finished.  
-        Community momentum can add new stick figures, new emotions, new arcs—always black & white, always +U.
+        Your route is private. Each destination closes through its own e-store, where you may take a free item and pass one on.
       </p>
     </footer>
   </main>
