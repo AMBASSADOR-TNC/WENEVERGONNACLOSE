@@ -40,24 +40,23 @@ verifies their availability, ownership, content, privacy, and safety. Until
 then, any reference is a non-clickable future owner-verified route, never a
 redirect or commerce claim.
 
-## Companion repository reconciliation
+## Canonical ecosystem reconciliation
 
-Universe is the only canonical public bundle and
-`wenevergonnaclose.com` is its only canonical public entry. This
-reconciliation records source boundaries without importing companion source
-contents or representing internal material as live:
+The merged Sunshine repository is the canonical Whole Donuts LLC code
+ecosystem. This repository remains the canonical public entry bundle for
+`wenevergonnaclose.com`. Changes move between them only through reviewed,
+purpose-specific integration; internal services, source navigation, and
+operational configuration are not public destinations.
 
 | Companion scope | Reconciliation decision | Owner action before any future public use |
 |---|---|---|
-| `wholedonuts-sunshine` public repository | Metadata and provenance only. Its repository has no detected license or documented reuse grant, so its text, code, imagery, configuration, Pages fallback, and templates are not copied or treated as canonical. | Confirm the original source and explicit reuse scope, then approve a separately reviewed derivative if appropriate. |
+| Canonical Sunshine ecosystem | Use finalized public intent and compatible reliability/configuration updates as reviewed upstream input. Keep this site's target-specific gateway, archive, guides, templates, and deployment boundary. | Review each integration for privacy, rights, target compatibility, and truthful public availability. |
 | `WHNutz` | Excluded pending rights, privacy, safety, and provenance review. Canonical templates that happen to match are already shipped from Universe; differing source bundles, creative assets, funnel, authentication, and operations material are not migrated. | Record a written rights and safety decision for any proposed sanitized derivative. |
 | `wholedonuts-merch-platform` | Excluded from the public bundle. No verified public HTTPS storefront is configured; dashboard, catalog, order, provider, API, deployment, and asset surfaces are not public routes. | Verify a live destination, ownership, rights, privacy, operational readiness, and truthful consumer terms before considering a clearly labeled link. |
 
-The public site may cite the [Sunshine repository](https://github.com/thewholedonuts-beep/wholedonuts-sunshine)
-only as an attributable source reference. It must keep the canonical site and
-same-site routes as the visitor destination, never an older companion Pages
-deployment. This does not imply that every internal asset or capability is
-available to the public.
+The public experience keeps the canonical site and same-site routes as visitor
+destinations. It does not expose repository links as primary actions or imply
+that every internal asset, service, or capability is publicly available.
 
 ## Human-reviewed source curation
 

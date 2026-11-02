@@ -94,6 +94,31 @@ const copyInvitationButton=document.querySelector('#copy-invitation');
 const shareInvitationStatus=document.querySelector('#share-invitation-status');
 const invitationUrl='https://wenevergonnaclose.com/';
 
+async function copyText(value){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    try{
+      await navigator.clipboard.writeText(value);
+      return true;
+    }catch(e){
+      // Fall through to the browser's legacy local copy command.
+    }
+  }
+  const copyField=document.createElement('textarea');
+  try{
+    copyField.value=value;
+    copyField.setAttribute('readonly','');
+    copyField.style.position='fixed';
+    copyField.style.opacity='0';
+    document.body.append(copyField);
+    copyField.select();
+    return document.execCommand('copy');
+  }catch(e){
+    return false;
+  }finally{
+    copyField.remove();
+  }
+}
+
 function selectedDonationPurpose(){
   const selected=donationPurposeInputs.find(input=>input.checked);
   return selected?selected.value:null;
@@ -138,14 +163,9 @@ if(revealDonationLink)revealDonationLink.addEventListener('click',()=>{
 
 if(copyChimeSignButton)copyChimeSignButton.addEventListener('click',async()=>{
   if(copyChimeSignButton.disabled)return;
-  if(!navigator.clipboard||!navigator.clipboard.writeText){
-    if(chimeCopyStatus)chimeCopyStatus.textContent='Copy is unavailable in this browser. Enter $wholedonuts manually in the official Chime app. Copying does not initiate a payment or transfer.';
-    return;
-  }
-  try{
-    await navigator.clipboard.writeText(chimeSign);
+  if(await copyText(chimeSign)){
     if(chimeCopyStatus)chimeCopyStatus.textContent='$wholedonuts copied for manual entry in the official Chime app. Copying does not initiate a payment or transfer.';
-  }catch(e){
+  }else{
     if(chimeCopyStatus)chimeCopyStatus.textContent='The ChimeSign could not be copied. Enter $wholedonuts manually in the official Chime app. Copying does not initiate a payment or transfer.';
   }
 });
@@ -155,14 +175,9 @@ function setShareInvitationStatus(message){
 }
 
 async function copyInvitation(){
-  if(!navigator.clipboard||!navigator.clipboard.writeText){
-    setShareInvitationStatus('Copy is unavailable in this browser. You can share https://wenevergonnaclose.com/ directly.');
-    return;
-  }
-  try{
-    await navigator.clipboard.writeText(invitationUrl);
+  if(await copyText(invitationUrl)){
     setShareInvitationStatus('Invitation link copied. It contains no personal or referral information.');
-  }catch(e){
+  }else{
     setShareInvitationStatus('The invitation link could not be copied. You can share https://wenevergonnaclose.com/ directly.');
   }
 }

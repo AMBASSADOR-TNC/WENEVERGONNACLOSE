@@ -3,24 +3,23 @@
   "scope": "metadata-only",
   "advance_rule": "A record may appear in WD.OUTPUT only after its exact external destination has verified ownership, reachability, intended use, and launch approval.",
   "block_rule": "A missing or unverified verification record blocks external navigation.",
-  "WD.INPUT": [
+  "WD.INPUT": [],
+  "WD.OUTPUT": [],
+  "WD.ARCHIVE": [
     {
       "record_id": "local-youth-lane",
-      "source": "js/identity-engine.js",
+      "source": "removed universal-entry implementation",
       "lane": "youth",
-      "status": "blocked",
-      "reason": "No verified external destination record exists."
+      "status": "archived",
+      "reason": "The credential-based identity route was removed in favor of the canonical credential-free public gateway."
     },
     {
       "record_id": "local-adult-lane",
-      "source": "js/identity-engine.js",
+      "source": "removed universal-entry implementation",
       "lane": "adult",
-      "status": "blocked",
-      "reason": "No verified external destination record exists."
-    }
-  ],
-  "WD.OUTPUT": [],
-  "WD.ARCHIVE": [
+      "status": "archived",
+      "reason": "The credential-based identity route was removed in favor of the canonical credential-free public gateway."
+    },
     {
       "record_id": "youth-app-route",
       "destination": "https://wholedonuts.app",
