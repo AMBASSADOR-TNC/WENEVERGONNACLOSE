@@ -1455,7 +1455,8 @@ footer a{color:var(--ink);font-weight:900}
   .universe-shell{width:100%;min-width:0;grid-template-columns:1fr;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
   .universe-copy{width:100%;min-width:0;overflow-wrap:anywhere}
   .stick-field{width:min(13rem,65vw);height:17rem}
-  .gateway-panels{grid-template-columns:1fr}
+  .gateway-panels{grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+  .gateway-panel{gap:.65rem;padding:.85rem}
   .entry-style-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .entry-style{min-height:8rem}
   .companion-field{grid-template-columns:repeat(7,minmax(0,1fr));min-height:7.5rem}
