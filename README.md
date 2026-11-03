@@ -37,8 +37,14 @@ The site is compatible with the repository's current GitHub Pages delivery.
 Configure `wenevergonnaclose.com` as the Pages custom domain and enable HTTPS
 in the Pages settings before treating the public entry as live.
 
-The `Test` workflow runs `node --test tests/identity-engine.test.js` on every
-pull request and on updates to `main`. Configure `Test / Identity engine tests`
-as the required status check for `main`. This repository currently has one
+The `Test` workflow runs `node --test tests/identity-engine.test.js` and an
+offline static Pages deployment-contract check on every pull request and on
+updates to `main`. The Pages check validates only repository content: the
+custom-domain file, public entry assets, and domain metadata. It does not
+perform DNS or TLS checks, so it does not interfere with certificate
+remediation.
+
+Configure `Test / Identity engine tests` and `Test / Pages deployment readiness`
+as required status checks for `main`. This repository currently has one
 administrator, so it should not require an approval until an independent
 reviewer has been added.
