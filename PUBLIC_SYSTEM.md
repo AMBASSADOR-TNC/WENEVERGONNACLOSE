@@ -35,3 +35,17 @@ Before adding an external destination or e-store link, confirm its ownership,
 availability, privacy terms, safety, and free-item experience. Update this
 system map, the guide, the release notes, and the routing manifest in the same
 reviewed change.
+
+## Ecosystem Proto T source boundary
+
+[`ecosystem-proto-t.json`](ecosystem-proto-t.json) is the tracked integration
+record for this repository. It keeps the Table and Counter as the only
+Bathroom Door gateway outputs, adds public guides and contracts as system
+references, preserves the optional World experience outside lane routing, and
+holds templates, domain contracts, and review metadata behind their stated
+human-review gates.
+
+[`PRIVATE_INTAKE_CONTRACT.md`](PRIVATE_INTAKE_CONTRACT.md) governs any
+owner-selected private material considered for a future sanitized derivative.
+It is outside Bathroom Door output and prohibits device scanning, automatic
+collection, background monitoring, and automatic publication.
