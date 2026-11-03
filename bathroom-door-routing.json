@@ -47,10 +47,10 @@
       "reason": "Previously referenced in local code, but this repository contains no verification record for ownership, reachability, intended use, or launch approval."
     },
     {
-      "record_id": "unverified-cloud-routes",
+      "record_id": "legacy-cloud-routes",
       "destination": "https://wholedonuts.cloud/table and https://wholedonuts.cloud/counter",
-      "status": "archived",
-      "reason": "These routes were previously documented without the universal-entry token contract. They remain unavailable until the pending activation records are verified."
+      "status": "legacy",
+      "reason": "Verified, reachable legacy Cloud lane pages. They are noncanonical interim routes, not universal-entry gateway outputs, and remain excluded from universal-entry navigation until the canonical WENEVER HTTPS endpoint is live."
     }
   ]
 }
