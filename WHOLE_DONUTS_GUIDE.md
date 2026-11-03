@@ -4,7 +4,7 @@ Whole Donuts is a place to turn lived experience, practical knowledge, creative 
 
 ## Start where you are
 
-There is no single kind of person this is for. A maker, artist, trade professional, organizer, business leader, neighbor, or person rebuilding after a hard time can enter with what they know today. Start with the optional four-tap gateway or skip straight to a public path; it asks only a broad age range, a simple visual expression, a helpful direction, and a destination, and keeps those choices only in page memory.
+There is no single kind of person this is for. A maker, artist, trade professional, organizer, business leader, neighbor, or person rebuilding after a hard time can begin with what they know today. Everyone enters through `wenevergonnaclose.com`: an anonymous stick-figure sequence and graduation year choose one lane, while a private email address helps prevent duplicate entry. No name or public profile is created.
 
 ## The pieces
 
@@ -12,7 +12,7 @@ There is no single kind of person this is for. A maker, artist, trade profession
 |---|---|
 | Whole Donuts world | An optional figure studio and a way to explore the wider experience without an account. |
 | +U Library | Free, editable guides for taking a next step, sharing something useful, and building a table around a project or cause. |
-| +U gateway | An optional four-tap guide to a broad age range, visual expression, helpful direction, and present on-site destination. Its choices remain only in page memory and can be cleared by going back, restarting, skipping, or routing onward. |
+| Universal entry | A required private sequence that selects The Table or The Counter and issues a single-use entry token. The destination must validate that token server-side. |
 | Donuts New School: Visionaries & Pioneers | A non-exclusive learning subject for learning, building, sharing useful work, and carrying community knowledge forward. It is not enrollment, a credential, certification, identity requirement, financial opportunity, donation reward, or automated path. |
 | Ambassador Path | A route for people who want to grow a skill, lead a project, share experience, or support others. |
 | Dedication Award | Future recognition language, not a current account, credential, or guaranteed benefit. |
@@ -35,18 +35,18 @@ Share only what you have the right to share. Do not include someone else's priva
 
 ## How people enter and grow
 
-1. **Enter openly.** Use the optional gateway, World, or free library without an account.
-2. **Choose a next step.** Use a template, explore a visual, or follow one useful lead.
-3. **Prepare a crumb.** Use the template and reviewed protocol; contribute only
+1. **Enter privately.** Complete universal entry; no name or public profile is created.
+2. **Use one verified side.** The Table is the youth lane and The Counter is the adult lane; both require the issued token.
+3. **Choose a next step.** Use an available template, explore a visual, or follow one useful lead.
+4. **Prepare a crumb.** Use the template and reviewed protocol; contribute only
    through an approved reviewed channel.
-4. **Explore Donuts New School.** Learn, build, share useful work, and carry community knowledge forward without enrollment or a credential.
-5. **Become an ambassador.** Build with the community or carry the learning independently. An ambassador can be creative, skilled-trade, community, or business focused.
+5. **Explore Donuts New School.** Learn, build, share useful work, and carry community knowledge forward without enrollment or a credential.
 
 Recognition marks a completed path. It never measures a person's worth, rank, or right to belong.
 
 ## How to support the work
 
-Support can happen in different ways: make a voluntary financial contribution, offer time, a practical skill, materials, a connection, or tell someone about a useful resource. The current optional support exit is separate from merchandise purchases. No merchandise order route is active until an owner verifies a public destination and its terms.
+Every side exits through its own e-store. Buying remains optional: guests may take a free item, offer time or skill, or pass one useful resource to another person. No e-store claim is public until its owner verifies the destination and terms.
 
 ## Our promise
 

@@ -1,44 +1,40 @@
 # Whole Donuts Universe public system
 
 `https://wenevergonnaclose.com/` is the single public entry for Whole Donuts
-Universe. This document is the source-of-truth map for what the public site
-offers, what it does not offer, and how a maintainer may consider new public
-material.
+and The Nurtured Chef. This document is the source-of-truth map for the
+universal-entry contract, its privacy boundary, and the conditions required
+before a destination may accept a guest.
 
 ## Public paths
 
 | Path | Available now | Boundary |
 |---|---|---|
-| Community start-here | Yes. The Table, The Counter, Whole Donuts path, and The Nurtured Chef path are public and optional. | No account, profile, enrollment, or personal-data requirement. |
-| Four-tap +U gateway | Yes. A broad Youth or Adult side, face-only feeling, bounded need, and first destination progressively route to available on-site content. | All choices are temporary page state only: never stored, submitted, tracked, or used as a profile. |
-| +U Library | Yes. The tracked templates may be copied and adapted for personal use. | Do not add private, sensitive, or third-party material without permission. |
-| +U World | Yes. The visual studio is an optional public exploration path. | It does not create an account or collect a contribution. |
-| Donuts New School and Ambassador direction | Yes. They are open learning and leadership directions. | They are not enrollment, certification, employment, an application, or a guaranteed opportunity. |
-| Reviewed crumb process | Preparation only. The protocol and template are public. | The static site has no submission runtime; publication is always human-reviewed. |
-| Browser-only review queue | Yes. It renders curated metadata already shipped with the site. | It cannot scan, ingest, publish, merge, or access repositories or networks. |
-| Goods Window | Browse-only future concepts. | No store, order, payment, or external storefront route is active. |
-| Whole Donuts and TNC stores | Future owner-verified routes only. | They are non-clickable placeholders until availability, ownership, content, privacy, and safety are verified. |
-| Optional support | A deliberate external Cash App exit or manual Chime instruction is available after confirmation. | It is separate from merchandise and never creates an entitlement, reward, or public record. |
+| Universal entry | Yes in source. Guests select an anonymous stick-figure sequence, graduation year, and email address. | It does not ask for a name or create a public profile. |
+| The Table | Configured as the youth lane. | It may admit a guest only after server-side validation of a short-lived, single-use token. |
+| The Counter | Configured as the adult lane. | It may admit a guest only after server-side validation of a short-lived, single-use token. |
+| E-store exit | Required destination behavior. | Each side must provide its own truthful e-store destination; purchase remains optional. |
+| Professional guide | Yes. `guide.html`, this document, and `README.md` describe the implemented contract. | They are operational documentation, not a credential, certification, or 14-level curriculum. |
+| +U World and library material | Legacy public learning material. | It must return visitors to universal entry and must not bypass token validation. |
 
 ## Privacy and safety boundary
 
-Gateway and World selections exist only in temporary page memory and clear on
-reset, skip, routing onward, or reload. The public bundle must not collect or
-request names, email addresses, face images, photos, exact age or birth date,
-location, sensitive data, repository source contents, secrets, or operational
-configuration. The gateway's face choices are accessible text equivalents for
-simple visual marks, not image capture or facial data.
+The browser stores no registration record, public profile, or name. It sends a
+private email address, graduation year, lane, and anonymous stick-figure
+sequence only to the same-origin registration API. The API stores keyed hashes
+of the email address and source IP, the anonymous sequence, and a single-use
+token. It does not establish mailbox ownership: a verified-email feature must
+be added and reviewed before any email-account claim is made.
 
-Do not add analytics, tracking, accounts, profiling, network scanning,
-automatic content intake, automatic publication, automatic GitHub actions, or
-automatic merges. Do not add external assets or dependencies. A future
+Do not expose names, email addresses, IP addresses, tokens, or sequences to
+other guests. Do not add analytics, profiling, network scanning, automatic
+content intake, automatic publication, or automatic merges. A future
 capability is not public until it is explicitly implemented, reviewed, and
 truthfully labeled.
 
-Future ecosystem and store domains are not public destinations unless an owner
-verifies their availability, ownership, content, privacy, and safety. Until
-then, any reference is a non-clickable future owner-verified route, never a
-redirect or commerce claim.
+The Cloudflare Pages deployment must bind D1 as `DB`, configure
+`IDENTITY_HASH_SECRET`, and serve the custom domain before `/api/entry` is
+available. GitHub Pages cannot host the required Functions or D1 binding and
+is not an approved production host for this system.
 
 ## Companion repository reconciliation
 
@@ -82,10 +78,9 @@ must:
    contents, secrets, and configuration out of public-source candidates unless
    a separate explicit rights and safety decision makes a sanitized derivative
    eligible.
-6. Make the proposed change locally, complete human repository review, and
-   merge only after approval. Publication requires a separate manual
-   [`deploy-pages` workflow](.github/workflows/deploy-pages.yml) dispatch by
-   a maintainer after the reviewed revision is on `main`.
+6. Make the proposed change locally, complete repository review, and merge
+   only after required checks pass. Production deployment requires a separate
+   Cloudflare Pages configuration review.
 
 The review queue is a shortlist for this process, not a feed. It must never
 discover sources, read a repository, scan a network, create a submission,
@@ -94,10 +89,7 @@ change a source, publish material, or merge a change automatically.
 ## Maintainer release checklist
 
 For an eligible public addition, update the relevant public page or template,
-`review-queue-manifest.js` when appropriate, this system map when availability
-changes, and the release notes. The workflow stages only its named public
-bundle allowlist and verifies that `CNAME` is exactly
-`wenevergonnaclose.com` before upload. A maintainer must separately confirm
-that GitHub Pages uses GitHub Actions, the custom domain remains configured
-and verified, and the dispatched deployment is healthy. Dispatch only after
-the reviewed merge is present on `main`.
+this system map when availability changes, and the release notes. Before
+production activation, confirm the Cloudflare Pages custom domain, D1 binding,
+secret, API health, Table token consumer, Counter token consumer, and each
+side's e-store exit.

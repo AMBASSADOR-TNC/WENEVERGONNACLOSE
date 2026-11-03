@@ -5,18 +5,18 @@
   "block_rule": "A missing or unverified verification record blocks external navigation.",
   "WD.INPUT": [
     {
-      "record_id": "local-youth-lane",
+      "record_id": "table-universal-entry",
       "source": "js/identity-engine.js",
-      "lane": "youth",
-      "status": "blocked",
-      "reason": "No verified external destination record exists."
+      "lane": "table",
+      "status": "pending-activation",
+      "reason": "The Cloudflare registration API and Table token consumer must be owner-verified before activation."
     },
     {
-      "record_id": "local-adult-lane",
+      "record_id": "counter-universal-entry",
       "source": "js/identity-engine.js",
-      "lane": "adult",
-      "status": "blocked",
-      "reason": "No verified external destination record exists."
+      "lane": "counter",
+      "status": "pending-activation",
+      "reason": "The Cloudflare registration API and Counter token consumer must be owner-verified before activation."
     }
   ],
   "WD.OUTPUT": [],
@@ -34,10 +34,10 @@
       "reason": "Previously referenced in local code, but this repository contains no verification record for ownership, reachability, intended use, or launch approval."
     },
     {
-      "record_id": "readme-cloud-routes",
+      "record_id": "unverified-cloud-routes",
       "destination": "https://wholedonuts.cloud/table and https://wholedonuts.cloud/counter",
       "status": "archived",
-      "reason": "Previously documented routes did not match the implementation and have no verification record in this repository."
+      "reason": "These routes were previously documented without the universal-entry token contract. They remain unavailable until the pending activation records are verified."
     }
   ]
 }

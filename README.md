@@ -26,6 +26,11 @@ The endpoint must:
 
 The registration function implements the one-entry policy with unique, server-side keyed email and IP hashes. Browser storage, client-side hashing, and query parameters alone cannot reliably limit an email account or IP address.
 
+The current endpoint limits a submitted email address; it does not prove that a
+guest controls that mailbox. Do not describe it as verified email-account
+enforcement until a separate email-verification service has been configured
+and reviewed.
+
 ### Deploying the registration service
 
 1. Create a Cloudflare D1 database and execute `db/schema.sql`.
@@ -34,6 +39,10 @@ The registration function implements the one-entry policy with unique, server-si
 4. Route `wenevergonnaclose.com` through that Pages project so `/api/entry` receives `CF-Connecting-IP`.
 
 The Table and Counter must consume a received entry by calling `POST https://wenevergonnaclose.com/api/entry/consume` server-to-server with `{ "entryToken": "...", "lane": "table" }` or `{ "entryToken": "...", "lane": "counter" }`. A successful response is the only permission to admit the guest. They must reject direct entry without it and send the guest to the proper side's e-store at exit.
+
+GitHub Pages cannot serve the `functions/` API or D1 binding and is not a valid
+production host for this entry flow. Do not deploy the site until Cloudflare
+Pages, D1, the domain, and both destination token consumers are configured.
 
 ## Pull request checks
 

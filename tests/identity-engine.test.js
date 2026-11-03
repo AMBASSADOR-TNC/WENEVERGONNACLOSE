@@ -11,6 +11,7 @@ const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const entryFunction = fs.readFileSync(path.join(root, "functions/api/entry.js"), "utf8");
 const consumeFunction = fs.readFileSync(path.join(root, "functions/api/entry/consume.js"), "utf8");
 const schema = fs.readFileSync(path.join(root, "db/schema.sql"), "utf8");
+const headers = fs.readFileSync(path.join(root, "_headers"), "utf8");
 
 function makeElement(dataset = {}) {
   const listeners = {};
@@ -163,4 +164,7 @@ test("the Pages API stores only keyed identifiers and consumes each token once",
   assert.match(schema, /email_hash TEXT NOT NULL UNIQUE/);
   assert.match(schema, /ip_hash TEXT NOT NULL UNIQUE/);
   assert.match(consumeFunction, /consumed_at IS NULL/);
+  assert.match(headers, /Content-Security-Policy/);
+  assert.match(headers, /connect-src 'self'/);
+  assert.equal(fs.existsSync(path.join(root, ".github/workflows/deploy-pages.yml")), false);
 });

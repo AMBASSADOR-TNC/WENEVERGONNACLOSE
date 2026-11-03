@@ -8,47 +8,48 @@ suggestion optional.
 
 ### Whole Donuts entry
 
-**What changed:** The public entry is now a progressive four-tap +U gateway:
-choose a broad Youth or Adult side, a face-only feeling, a bounded need, and
-an available on-site destination. It presents 14 original visual-only
-stick-figure companions per side and routes directly to The Table, The Counter,
-or the +U Library.
+**What changed:** The public entry is now a universal private sequence:
+choose a base stick figure, current feeling, hoped-for feeling, graduation
+year, and private email address. The registration API selects The Table for
+the youth lane or The Counter for the adult lane, then issues a short-lived,
+single-use token.
 
-**Why it matters:** Visitors get a personal-feeling, legible starting point
-without an account, demographic profile, rewards system, persistent choices,
-or an unverified external destination.
+**Why it matters:** Visitors have one entry point without a name or public
+profile. The destinations can reject direct access and admit only a valid,
+one-time universal entry.
 
-**Optional next choices:** Open a guide, explore the World, visit a community
-path, or return later. No action is required.
+**Optional next choices:** Read the universal-entry guide, continue to the
+approved lane, take a free item from the destination e-store, or pass
+something useful to another person.
 
 ### Privacy and route corrections
 
-**What changed:** The site no longer creates a persistent +U return pass or
-visit record. The optional World uses only temporary page-memory visual
-settings, includes a reset control, and returns to The Table through the
-canonical same-site route. Gateway destination messages now remain visible
-after routing.
+**What changed:** The browser does not retain a registration record. The
+server stores keyed hashes of the email address and source IP, an anonymous
+stick-figure sequence, and the short-lived token required to enforce
+single-use entry. The optional World returns guests to universal entry.
 
-**Why it matters:** No public interaction creates a visitor identifier,
-profile, stored free-text response, or hidden routing dead end.
+**Why it matters:** No name, public profile, photo, location, or sequence
+history is exposed to other guests. The implementation currently limits a
+submitted email address but does not verify control of that mailbox.
 
 **Optional next choices:** Use the gateway, explore the World, reset its
 temporary settings, or follow any present on-site path.
 
-### Pages delivery
+### Deployment boundary
 
-**What changed:** The `deploy-pages` workflow now deploys the reviewed static
-bundle only after a maintainer manually dispatches it. It copies a named
-public-file allowlist, including the root entry, guides, templates, and
-`world/` files, and verifies that the deployed `CNAME` remains exactly
-`wenevergonnaclose.com`.
+**What changed:** The incompatible GitHub Pages deployment workflow was
+removed. Production requires Cloudflare Pages Functions and D1, which provide
+the same-origin registration API and keyed data storage.
 
-**Why it matters:** The public site has one deployable source of truth without
-publishing unrelated repository files.
+**Why it matters:** GitHub Pages can serve static files but cannot run the
+Functions or D1 binding required by universal entry. Removing that path avoids
+publishing a gateway that appears available but always fails at registration.
 
-**Optional next choices:** After a human-reviewed merge, a maintainer can
-confirm the separate GitHub Pages source and custom-domain verification, then
-dispatch and review the workflow run. Visitors do not need to do anything.
+**Optional next choices:** Before activation, configure the Cloudflare Pages
+domain, D1 binding, `IDENTITY_HASH_SECRET`, and both destination token
+consumers. Do not send guests to a destination that has not completed those
+checks.
 
 ### Operations reliability
 

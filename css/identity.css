@@ -16,6 +16,10 @@ body {
   margin-bottom: 2rem;
 }
 
+.engine-footer a {
+  color: inherit;
+}
+
 .engine-step {
   border-top: 1px solid #000;
   padding-top: 1.5rem;
