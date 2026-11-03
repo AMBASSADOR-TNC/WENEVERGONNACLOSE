@@ -22,8 +22,8 @@ jobs:
         with:
           node-version: 22
 
-      - name: Run identity engine tests
-        run: node --test tests/identity-engine.test.js
+      - name: Run static routing tests
+        run: node --test tests/*.test.js
 
   pages-readiness:
     name: Pages deployment readiness
