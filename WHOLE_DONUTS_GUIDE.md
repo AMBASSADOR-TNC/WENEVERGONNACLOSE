@@ -4,7 +4,7 @@ Whole Donuts is a place to turn lived experience, practical knowledge, creative 
 
 ## Start where you are
 
-There is no single kind of person this is for. A maker, artist, trade professional, organizer, business leader, neighbor, or person rebuilding after a hard time can begin with what they know today. Everyone enters through `wenevergonnaclose.com`: an anonymous stick-figure sequence and graduation year choose one lane, while a private email address helps prevent duplicate entry. No name or public profile is created.
+There is no single kind of person this is for. A maker, artist, trade professional, organizer, business leader, neighbor, or person rebuilding after a hard time can begin with what they know today. Everyone enters through `wenevergonnaclose.com`: an anonymous stick-figure sequence and graduation year choose one first-party lane. No name, email address, account, or public profile is created.
 
 ## The pieces
 
@@ -12,7 +12,7 @@ There is no single kind of person this is for. A maker, artist, trade profession
 |---|---|
 | Whole Donuts world | An optional figure studio and a way to explore the wider experience without an account. |
 | +U Library | Free, editable guides for taking a next step, sharing something useful, and building a table around a project or cause. |
-| Universal entry | A required private sequence that selects The Table or The Counter and issues a single-use entry token. The destination must validate that token server-side. |
+| Universal entry | A required private browser sequence that selects the first-party Table or Counter page. It is static and does not issue a token or create an account. |
 | Donuts New School: Visionaries & Pioneers | A non-exclusive learning subject for learning, building, sharing useful work, and carrying community knowledge forward. It is not enrollment, a credential, certification, identity requirement, financial opportunity, donation reward, or automated path. |
 | Ambassador Path | A route for people who want to grow a skill, lead a project, share experience, or support others. |
 | Dedication Award | Future recognition language, not a current account, credential, or guaranteed benefit. |
@@ -35,8 +35,8 @@ Share only what you have the right to share. Do not include someone else's priva
 
 ## How people enter and grow
 
-1. **Enter privately.** Complete universal entry; no name or public profile is created.
-2. **Use one verified side.** The Table is the youth lane and The Counter is the adult lane; both require the issued token.
+1. **Enter privately.** Complete universal entry; no name, email address, account, or public profile is created.
+2. **Use one first-party side.** The Table is the youth lane and The Counter is the adult lane.
 3. **Choose a next step.** Use an available template, explore a visual, or follow one useful lead.
 4. **Prepare a crumb.** Use the template and reviewed protocol; contribute only
    through an approved reviewed channel.

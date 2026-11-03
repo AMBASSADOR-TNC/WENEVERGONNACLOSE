@@ -1,50 +1,41 @@
 # Wenevergonnaclose
 
-The universal, private entry point for `wenevergonnaclose.com`.
+`wenevergonnaclose.com` is a static, private browser-only entry for Whole
+Donuts and The Nurtured Chef.
 
-Guests select a stick-figure sequence and provide a high school graduation year. Current and future graduation years enter **The Table** (the Whole Donuts side) after an under-college confirmation. Earlier graduation years enter **The Counter** (the Nurtured Chef side). The browser sends no names or public identity.
+Guests choose a base stick figure, current feeling, hoped-for feeling, and
+high school graduation year. Current and future graduation years enter
+[The Table](table.html), while earlier graduation years enter
+[The Counter](counter.html). The selections are held only in page memory for
+the current visit; no name, email address, account, profile, analytics event,
+or server request is created.
 
-## Routes
+## What is available
 
-- The Table: `https://wholedonuts.cloud/table`
-- The Counter: `https://wholedonuts.cloud/counter`
+- **The Table** is the Whole Donuts side with a free next step and a pass-it-on
+  prompt.
+- **The Counter** is the Nurtured Chef side with a free next step and a
+  pass-it-on prompt.
+- **The universal-entry guide** explains the public flow and professional
+  boundaries.
 
-Both destination sites receive an opaque, one-time `entry` token and `exit=estore`. They must validate the token before admitting the guest, and they must send each guest to that side's e-store when the guest exits. The e-store may offer free items; it must not require a purchase.
+Each side has a clearly marked e-store handoff placeholder. A real e-store link
+must not be added until its owner verifies the destination, privacy terms, and
+free-item experience.
 
-## Required registration service
+## Important limits
 
-This repository includes [Cloudflare Pages Functions](functions/api) and a [D1 schema](db/schema.sql) for the registration service. The static client deliberately refuses to route guests until `POST /api/entry` is available.
+This static site cannot enforce one entry per IP address or email address,
+verify a mailbox, create a single-use token, or prevent someone from opening a
+destination URL directly. Those capabilities require a separately deployed
+and reviewed server-side service. The public site does not claim that they
+exist.
 
-The endpoint must:
+## Delivery and checks
 
-1. accept only `email`, `graduationYear`, `lane`, `underCollegeConfirmed`, and the anonymous stick-figure `sequence`;
-2. normalize the email and store a server-side keyed hash, never a public email or name;
-3. derive and store a server-side keyed hash of the source IP;
-4. reject an email or IP hash already used for universal entry;
-5. issue a short-lived, single-use opaque `entryToken` only after successful registration; and
-6. return `{ "entryToken": "...", "lane": "table" }` or `{ "entryToken": "...", "lane": "counter" }`.
-
-The registration function implements the one-entry policy with unique, server-side keyed email and IP hashes. Browser storage, client-side hashing, and query parameters alone cannot reliably limit an email account or IP address.
-
-The current endpoint limits a submitted email address; it does not prove that a
-guest controls that mailbox. Do not describe it as verified email-account
-enforcement until a separate email-verification service has been configured
-and reviewed.
-
-### Deploying the registration service
-
-1. Create a Cloudflare D1 database and execute `db/schema.sql`.
-2. Deploy this repository with Cloudflare Pages, binding the D1 database as `DB`.
-3. Configure `IDENTITY_HASH_SECRET` as a secret; do not commit it.
-4. Route `wenevergonnaclose.com` through that Pages project so `/api/entry` receives `CF-Connecting-IP`.
-
-The Table and Counter must consume a received entry by calling `POST https://wenevergonnaclose.com/api/entry/consume` server-to-server with `{ "entryToken": "...", "lane": "table" }` or `{ "entryToken": "...", "lane": "counter" }`. A successful response is the only permission to admit the guest. They must reject direct entry without it and send the guest to the proper side's e-store at exit.
-
-GitHub Pages cannot serve the `functions/` API or D1 binding and is not a valid
-production host for this entry flow. Do not deploy the site until Cloudflare
-Pages, D1, the domain, and both destination token consumers are configured.
-
-## Pull request checks
+The site is compatible with the repository's current GitHub Pages delivery.
+Configure `wenevergonnaclose.com` as the Pages custom domain and enable HTTPS
+in the Pages settings before treating the public entry as live.
 
 The `Test` workflow runs `node --test tests/identity-engine.test.js` on every
 pull request and on updates to `main`. Configure `Test / Identity engine tests`

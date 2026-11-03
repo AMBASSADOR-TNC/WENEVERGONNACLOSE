@@ -172,21 +172,10 @@ body {
   margin: 1rem 0;
 }
 
-.grad-input input,
-.registration-input input {
+.grad-input input {
   padding: 0.5rem;
   border: 1px solid #000;
   width: 140px;
-}
-
-.registration-input {
-  margin: 1rem 0;
-}
-
-.registration-input input {
-  display: block;
-  width: min(100%, 360px);
-  margin-top: 0.35rem;
 }
 
 .confirmation {
@@ -199,11 +188,6 @@ body {
   background: #fff;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-}
-
-#routeButton:disabled {
-  cursor: wait;
-  opacity: 0.6;
 }
 
 #routeButton:hover {

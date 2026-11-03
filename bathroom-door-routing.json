@@ -1,25 +1,38 @@
 {
   "schema": "bathroom-door-routing/v1",
-  "scope": "metadata-only",
-  "advance_rule": "A record may appear in WD.OUTPUT only after its exact external destination has verified ownership, reachability, intended use, and launch approval.",
-  "block_rule": "A missing or unverified verification record blocks external navigation.",
+  "scope": "static-first-party",
+  "advance_rule": "A record may appear in WD.OUTPUT when it resolves to a tracked first-party static page. External destinations still require ownership, reachability, intended-use, and launch approval.",
+  "block_rule": "A missing or unverified verification record blocks external navigation but does not block a tracked first-party page.",
   "WD.INPUT": [
     {
-      "record_id": "table-universal-entry",
+      "record_id": "table-static-entry",
       "source": "js/identity-engine.js",
       "lane": "table",
-      "status": "pending-activation",
-      "reason": "The Cloudflare registration API and Table token consumer must be owner-verified before activation."
+      "status": "available",
+      "reason": "Routes to tracked first-party table.html without collecting or submitting visitor data."
     },
     {
-      "record_id": "counter-universal-entry",
+      "record_id": "counter-static-entry",
       "source": "js/identity-engine.js",
       "lane": "counter",
-      "status": "pending-activation",
-      "reason": "The Cloudflare registration API and Counter token consumer must be owner-verified before activation."
+      "status": "available",
+      "reason": "Routes to tracked first-party counter.html without collecting or submitting visitor data."
     }
   ],
-  "WD.OUTPUT": [],
+  "WD.OUTPUT": [
+    {
+      "record_id": "table-static-page",
+      "destination": "table.html",
+      "status": "available",
+      "reason": "Tracked Whole Donuts first-party destination."
+    },
+    {
+      "record_id": "counter-static-page",
+      "destination": "counter.html",
+      "status": "available",
+      "reason": "Tracked Nurtured Chef first-party destination."
+    }
+  ],
   "WD.ARCHIVE": [
     {
       "record_id": "youth-app-route",

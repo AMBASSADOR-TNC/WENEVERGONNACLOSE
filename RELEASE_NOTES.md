@@ -1,64 +1,27 @@
 # Whole Donuts Universe release notes
 
-Use this format for each meaningful public update. Keep the first visit simple:
-publish only what is available, link to the relevant guide, and leave every
-suggestion optional.
-
 ## Unreleased
 
-### Whole Donuts entry
+### Static universal entry
 
-**What changed:** The public entry is now a universal private sequence:
-choose a base stick figure, current feeling, hoped-for feeling, graduation
-year, and private email address. The registration API selects The Table for
-the youth lane or The Counter for the adult lane, then issues a short-lived,
-single-use token.
+**What changed:** The public entry is a browser-only, four-part stick-figure
+and graduation-year sequence. It sends current and future graduation years to
+the first-party Table page and earlier graduation years to the first-party
+Counter page.
 
-**Why it matters:** Visitors have one entry point without a name or public
-profile. The destinations can reject direct access and admit only a valid,
-one-time universal entry.
+**Why it matters:** The live GitHub Pages host can serve this flow without a
+missing API, account system, email collection, or unverified external
+destination.
 
-**Optional next choices:** Read the universal-entry guide, continue to the
-approved lane, take a free item from the destination e-store, or pass
-something useful to another person.
+**Limits:** The static product cannot enforce one visit per IP or email,
+validate mailbox ownership, issue single-use tokens, or block direct page
+access. It does not claim to do so.
 
-### Privacy and route corrections
+### E-store readiness
 
-**What changed:** The browser does not retain a registration record. The
-server stores keyed hashes of the email address and source IP, an anonymous
-stick-figure sequence, and the short-lived token required to enforce
-single-use entry. The optional World returns guests to universal entry.
+**What changed:** The Table and Counter each describe an explicit e-store
+handoff instead of linking to an unverified store.
 
-**Why it matters:** No name, public profile, photo, location, or sequence
-history is exposed to other guests. The implementation currently limits a
-submitted email address but does not verify control of that mailbox.
-
-**Optional next choices:** Use the gateway, explore the World, reset its
-temporary settings, or follow any present on-site path.
-
-### Deployment boundary
-
-**What changed:** The incompatible GitHub Pages deployment workflow was
-removed. Production requires Cloudflare Pages Functions and D1, which provide
-the same-origin registration API and keyed data storage.
-
-**Why it matters:** GitHub Pages can serve static files but cannot run the
-Functions or D1 binding required by universal entry. Removing that path avoids
-publishing a gateway that appears available but always fails at registration.
-
-**Optional next choices:** Before activation, configure the Cloudflare Pages
-domain, D1 binding, `IDENTITY_HASH_SECRET`, and both destination token
-consumers. Do not send guests to a destination that has not completed those
-checks.
-
-### Operations reliability
-
-**What changed:** Funnel creation now validates a parsed domain before use, and
-network activation or deactivation logs an individual funnel failure while
-continuing the remaining funnels.
-
-**Why it matters:** A malformed domain cannot cause a runtime index failure,
-and one unavailable funnel does not stop the rest of a network operation.
-
-**Optional next choices:** Operators can correct the reported funnel and rerun
-the intended operation.
+**Why it matters:** Guests can take a free next step and pass one forward now,
+while a future store link remains blocked until its owner verifies the
+destination and terms.

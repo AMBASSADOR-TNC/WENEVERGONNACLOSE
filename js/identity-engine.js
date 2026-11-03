@@ -7,10 +7,9 @@ const state = {
 };
 
 const ROUTES = {
-  table: "https://wholedonuts.cloud/table",
-  counter: "https://wholedonuts.cloud/counter"
+  table: "table.html",
+  counter: "counter.html"
 };
-const ENTRY_ENDPOINT = "/api/entry";
 const currentYear = new Date().getFullYear();
 
 function selectCard(group, value) {
@@ -46,7 +45,6 @@ document.querySelectorAll("#future-emotions .emotion-card").forEach(card => {
 });
 
 const gradInput = document.getElementById("gradYear");
-const emailInput = document.getElementById("email");
 const collegeConfirmation = document.getElementById("collegeConfirmation");
 const underCollegeConfirmed = document.getElementById("underCollegeConfirmed");
 const routeButton = document.getElementById("routeButton");
@@ -79,56 +77,13 @@ function validateEntry() {
   if (!state.lane) {
     return `Enter a graduation year from 1900 through ${currentYear + 1}.`;
   }
-  if (!emailInput.validity.valid) {
-    return "Enter one valid email address for private registration.";
-  }
   if (state.lane === "table" && !underCollegeConfirmed.checked) {
     return "Confirm the under-college path before continuing to The Table.";
   }
   return null;
 }
 
-async function registerEntry() {
-  const response = await fetch(ENTRY_ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: emailInput.value.trim(),
-      graduationYear: state.gradYear,
-      lane: state.lane,
-      underCollegeConfirmed: underCollegeConfirmed.checked,
-      sequence: {
-        base: state.base,
-        presentEmotion: state.presentEmotion,
-        futureEmotion: state.futureEmotion
-      }
-    })
-  });
-
-  if (!response.ok) {
-    let message = "Registration could not be completed.";
-    try {
-      const error = await response.json();
-      message = error.error || message;
-    } catch {
-      // The service may return a non-JSON error before it reaches the entry handler.
-    }
-    throw new Error(message);
-  }
-
-  const result = await response.json();
-  if (!result.entryToken || typeof result.entryToken !== "string") {
-    throw new Error("Registration did not return a valid entry token.");
-  }
-
-  if (!["table", "counter"].includes(result.lane)) {
-    throw new Error("Registration did not return a valid destination.");
-  }
-
-  return result;
-}
-
-routeButton.addEventListener("click", async () => {
+routeButton.addEventListener("click", () => {
   setLaneFromGraduationYear();
   const validationMessage = validateEntry();
   if (validationMessage) {
@@ -136,17 +91,6 @@ routeButton.addEventListener("click", async () => {
     return;
   }
 
-  routeButton.disabled = true;
-  showMessage("Creating your private, one-time entry...");
-
-  try {
-    const registration = await registerEntry();
-    const destination = new URL(ROUTES[registration.lane]);
-    destination.searchParams.set("entry", registration.entryToken);
-    destination.searchParams.set("exit", "estore");
-    window.location.replace(destination);
-  } catch (error) {
-    showMessage(error.message || "Registration is unavailable. Please try again.");
-    routeButton.disabled = false;
-  }
+  showMessage(`Opening ${state.lane === "table" ? "The Table" : "The Counter"}...`);
+  window.location.replace(ROUTES[state.lane]);
 });
