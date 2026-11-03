@@ -1,0 +1,104 @@
+{
+  "schema": "wenever-domain-routing/v1",
+  "canonical_entry": "https://wenevergonnaclose.com",
+  "temporary_verified_entry": "https://ambassador-tnc.github.io/",
+  "redirect_status": 308,
+  "activation_gate": [
+    "registrar ownership confirmed",
+    "DNS points to the selected edge provider",
+    "a valid HTTPS certificate covers the source host",
+    "the canonical entry returns HTTPS successfully"
+  ],
+  "domains": [
+    {
+      "host": "wholedonuts.app",
+      "family": "whole-donuts",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "wholedonuts.org",
+      "family": "whole-donuts",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "wholedonuts.buzz",
+      "family": "whole-donuts",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "wholedonuts.me",
+      "family": "whole-donuts",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "wholedonuts.pro",
+      "family": "whole-donuts",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "wholedonuts.foundation",
+      "family": "whole-donuts",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "wholedonuts.cloud",
+      "family": "whole-donuts",
+      "current_state": "interim-site-active",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "thenurturedchef.com",
+      "family": "the-nurtured-chef",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "thenurturedchef.org",
+      "family": "the-nurtured-chef",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "thenurturedchef.buzz",
+      "family": "the-nurtured-chef",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "thenurturedchef.foundation",
+      "family": "the-nurtured-chef",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "thenutur3dchef.com",
+      "family": "the-nutur3d-chef",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "thenutur3dchef.org",
+      "family": "the-nutur3d-chef",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "justtryplususa.com",
+      "family": "justtry-plus-usa",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    },
+    {
+      "host": "justtryplususa.org",
+      "family": "justtry-plus-usa",
+      "current_state": "unconfigured",
+      "desired_action": "redirect-to-universal-entry"
+    }
+  ]
+}

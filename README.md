@@ -48,3 +48,13 @@ Configure `Test / Identity engine tests` and `Test / Pages deployment readiness`
 as required status checks for `main`. This repository currently has one
 administrator, so it should not require an approval until an independent
 reviewer has been added.
+
+## Legacy-domain routing
+
+The requested Whole Donuts, The Nurtured Chef, The Nutur3d Chef, and
+JustTryPlusUSA hosts are catalogued in
+[`domains/domain-routing-manifest.json`](domains/domain-routing-manifest.json).
+They are prepared to use a permanent, path-preserving redirect to the universal
+entry only after ownership, DNS, source-host HTTPS, and canonical HTTPS are
+verified. The provider-neutral deployment contract and edge handler are in
+[`domains/`](domains/).
