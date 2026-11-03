@@ -1,27 +1,28 @@
-# Legacy-domain activation contract
+# Ecosystem-domain activation contract
 
-`domain-routing-manifest.json` is the source of truth for the requested Whole
-Donuts, The Nurtured Chef, The Nutur3d Chef, and JustTryPlusUSA domains. Every
-listed host has one intended public action: a permanent `308` redirect to the
-universal entry at `https://wenevergonnaclose.com`, preserving its path and
-query string.
+The manifest records the intended role for every named ecosystem domain. A new
+visitor arriving at any listed host goes first to
+`https://wenevergonnaclose.com`, where the browser-only stick-figure experience
+introduces the journey without collecting a name or public identity.
 
-The manifest does not configure a registrar, create a certificate, or claim a
-domain is live. Each host must pass every activation gate before it is sent to
-the edge redirect:
+The domains are not interchangeable:
 
-1. Confirm ownership in the registrar account.
-2. Point DNS for that one host to the chosen edge provider.
-3. Wait for a valid HTTPS certificate for the source host.
-4. Verify that `https://wenevergonnaclose.com` is available over HTTPS.
-5. Deploy `edge-redirect.js` with the manifest and verify the resulting `308`
-   response preserves a representative path and query.
+| Hosts | Role |
+|---|---|
+| `wholedonuts.app`, `.org`, `.buzz` | Whole Donuts youth side |
+| `thenurturedchef.com`, `.org`, `.foundation` | The Nurtured Chef adult side |
+| `wholedonuts.me` | Private Vault |
+| `wholedonuts.pro` | Overview of both sides |
+| `thenutur3dchef.com` | 3D design program |
+| `thenutur3dchef.org` | Newest Copilot creation; name intentionally pending |
+| All other listed domains | Hidden reserve until a specific protocol is approved |
 
-GitHub Pages accepts one custom domain per site. Do not copy these domains into
-this repository's `CNAME` file and do not add another Pages custom-domain
-claim. Use an edge provider that can terminate HTTPS for the activated legacy
-host, then run the redirect worker there.
+`edge-redirect.js` is an edge-provider adapter, not a standalone security
+system. Without `ACCESS_RESOLVER_URL`, it sends every request to the universal
+entry. With the resolver deployed, only a server-verified private code may
+receive a designated-side destination; unverified, missing, expired, or failed
+code checks return to the universal entry.
 
-`wholedonuts.cloud` currently serves an interim site. Its record remains
-planned until the canonical HTTPS entry is available; do not redirect it early
-and strand visitors at an unissued certificate.
+See [`private-access-contract.md`](private-access-contract.md) before deploying
+the resolver. GitHub Pages accepts one custom domain per site; do not copy this
+domain list into `CNAME` or create competing Pages domain claims.

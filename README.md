@@ -54,7 +54,7 @@ reviewer has been added.
 The requested Whole Donuts, The Nurtured Chef, The Nutur3d Chef, and
 JustTryPlusUSA hosts are catalogued in
 [`domains/domain-routing-manifest.json`](domains/domain-routing-manifest.json).
-They are prepared to use a permanent, path-preserving redirect to the universal
-entry only after ownership, DNS, source-host HTTPS, and canonical HTTPS are
-verified. The provider-neutral deployment contract and edge handler are in
-[`domains/`](domains/).
+Every first visit is routed to the universal entry; each host then has its own
+designated-side, Vault, overview, program, or hidden-reserve role. Returning
+private-code access requires a reviewed server-side resolver. The current
+browser-only entry does not pretend to provide that security boundary.
