@@ -126,5 +126,5 @@ test("an adult lane opens the local Counter page without a network request", () 
   assert.doesNotMatch(html, /type="email"|id="email"/);
   assert.equal(fs.existsSync(path.join(root, "table.html")), true);
   assert.equal(fs.existsSync(path.join(root, "counter.html")), true);
-  assert.equal(routingManifest.WD.OUTPUT.length, 2);
+  assert.equal(routingManifest["WD.OUTPUT"].length, 2);
 });
