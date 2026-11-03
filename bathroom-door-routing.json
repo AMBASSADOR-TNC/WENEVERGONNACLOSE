@@ -1,8 +1,8 @@
 {
   "schema": "bathroom-door-routing/v1",
-  "scope": "static-first-party",
-  "advance_rule": "A record may appear in WD.OUTPUT when it resolves to a tracked first-party static page. External destinations still require ownership, reachability, intended-use, and launch approval.",
-  "block_rule": "A missing or unverified verification record blocks external navigation but does not block a tracked first-party page.",
+  "scope": "static-first-party-and-owner-selected-private-intake",
+  "advance_rule": "A record may appear in WD.OUTPUT when it resolves to a tracked first-party static page. An owner-selected private intake item may advance only as a human-approved sanitized derivative; external destinations still require ownership, reachability, intended-use, and launch approval.",
+  "block_rule": "A missing or unverified verification record blocks external navigation and private-intake advancement but does not block a tracked first-party page.",
   "WD.INPUT": [
     {
       "record_id": "table-static-entry",
@@ -17,6 +17,13 @@
       "lane": "counter",
       "status": "available",
       "reason": "Routes to tracked first-party counter.html without collecting or submitting visitor data."
+    },
+    {
+      "record_id": "owner-selected-private-intake",
+      "source": "PRIVATE_INTAKE_CONTRACT.md",
+      "lane": "review-only",
+      "status": "review-gated",
+      "reason": "A person may narrowly select material for review. This record never authorizes device scanning, automatic collection, background monitoring, or public publication."
     }
   ],
   "WD.OUTPUT": [
@@ -51,6 +58,12 @@
       "destination": "https://wholedonuts.cloud/table and https://wholedonuts.cloud/counter",
       "status": "legacy",
       "reason": "Verified, reachable legacy Cloud lane pages. They are noncanonical interim routes, not universal-entry gateway outputs, and remain excluded from universal-entry navigation until the canonical WENEVER HTTPS endpoint is live."
+    },
+    {
+      "record_id": "private-intake-raw-and-declined-material",
+      "destination": "owner-controlled-private-storage",
+      "status": "private-retain",
+      "reason": "Raw, sensitive, rights-unclear, declined, or non-derivative material remains outside the repository and public experience. No automatic archive copy, device traversal, or publication is allowed."
     }
   ]
 }

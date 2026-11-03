@@ -1,0 +1,3 @@
+# Owner-selected private intake staging. This path is local only and must never
+# be treated as a security boundary or a destination for automatic collection.
+private-intake/
