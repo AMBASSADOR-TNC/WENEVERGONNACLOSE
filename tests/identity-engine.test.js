@@ -128,3 +128,20 @@ test("an adult lane opens the local Counter page without a network request", () 
   assert.equal(fs.existsSync(path.join(root, "counter.html")), true);
   assert.equal(routingManifest["WD.OUTPUT"].length, 2);
 });
+
+test("reachable legacy Cloud pages remain excluded from universal-entry navigation", () => {
+  const legacyCloudRoutes = routingManifest["WD.ARCHIVE"].find(
+    route => route.record_id === "legacy-cloud-routes"
+  );
+
+  assert.deepEqual(legacyCloudRoutes, {
+    record_id: "legacy-cloud-routes",
+    destination: "https://wholedonuts.cloud/table and https://wholedonuts.cloud/counter",
+    status: "legacy",
+    reason: "Verified, reachable legacy Cloud lane pages. They are noncanonical interim routes, not universal-entry gateway outputs, and remain excluded from universal-entry navigation until the canonical WENEVER HTTPS endpoint is live."
+  });
+  assert.equal(
+    routingManifest["WD.OUTPUT"].some(route => route.destination.includes("wholedonuts.cloud")),
+    false
+  );
+});
