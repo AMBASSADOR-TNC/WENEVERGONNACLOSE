@@ -3,40 +3,57 @@ const fs = require("node:fs");
 const path = require("node:path");
 const test = require("node:test");
 
-const manifestPath = path.join(__dirname, "..", "domains", "domain-routing-manifest.json");
+const root = path.join(__dirname, "..");
+const manifestPath = path.join(root, "domains", "domain-routing-manifest.json");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 
-const requestedDomains = [
-  "wholedonuts.app",
-  "wholedonuts.org",
-  "wholedonuts.buzz",
-  "wholedonuts.me",
-  "wholedonuts.pro",
-  "wholedonuts.foundation",
-  "wholedonuts.cloud",
-  "thenurturedchef.com",
-  "thenurturedchef.org",
-  "thenurturedchef.buzz",
-  "thenurturedchef.foundation",
-  "thenutur3dchef.com",
-  "thenutur3dchef.org",
-  "justtryplususa.com",
-  "justtryplususa.org"
-];
+const expectedRoles = {
+  "wholedonuts.app": "youth-side",
+  "wholedonuts.org": "youth-side",
+  "wholedonuts.buzz": "youth-side",
+  "thenurturedchef.com": "adult-side",
+  "thenurturedchef.org": "adult-side",
+  "thenurturedchef.foundation": "adult-side",
+  "wholedonuts.me": "private-vault",
+  "wholedonuts.pro": "two-side-overview",
+  "thenutur3dchef.com": "3d-design-program",
+  "thenutur3dchef.org": "newest-copilot-creation-name-pending",
+  "wholedonuts.foundation": "hidden-reserve",
+  "wholedonuts.cloud": "hidden-reserve",
+  "thenurturedchef.buzz": "hidden-reserve",
+  "justtryplususa.com": "hidden-reserve",
+  "justtryplususa.org": "hidden-reserve"
+};
 
-test("the legacy-domain contract covers every requested host exactly once", () => {
-  const hosts = manifest.domains.map(({ host }) => host);
+test("the ecosystem-domain contract assigns every requested host one intended role", () => {
+  const actualRoles = Object.fromEntries(
+    manifest.domains.map(({ host, role }) => [host, role])
+  );
 
-  assert.deepEqual([...hosts].sort(), [...requestedDomains].sort());
-  assert.equal(new Set(hosts).size, hosts.length);
+  assert.deepEqual(actualRoles, expectedRoles);
 });
 
-test("every legacy host is gated before redirecting to the canonical entry", () => {
-  assert.equal(manifest.canonical_entry, "https://wenevergonnaclose.com");
-  assert.equal(manifest.redirect_status, 308);
-  assert.equal(manifest.activation_gate.length, 4);
+test("first visits enter universally and returning visitors require server verification", () => {
+  assert.equal(manifest.universal_entry, "https://wenevergonnaclose.com");
+  assert.equal(manifest.first_visit_action, "redirect-to-universal-entry");
+  assert.equal(manifest.return_visit_action, "require-server-verified-private-code");
+  assert.equal(manifest.privacy_contract.public_identity_collection, false);
+  assert.equal(manifest.privacy_contract.welcome_representation, "stick-figure-only");
 
   for (const domain of manifest.domains) {
-    assert.equal(domain.desired_action, "redirect-to-universal-entry");
+    assert.equal(
+      domain.access_policy,
+      "first-visit-universal-entry-then-private-code"
+    );
   }
+});
+
+test("the edge adapter cannot grant protected access without the resolver", () => {
+  const handler = fs.readFileSync(path.join(root, "domains", "edge-redirect.js"), "utf8");
+
+  assert.match(handler, /if \(!env\.ACCESS_RESOLVER_URL\)/);
+  assert.match(handler, /access\.status !== "granted"/);
+  assert.match(handler, /destination\.protocol !== "https:"/);
+  assert.match(handler, /managedHosts\.has\(destination\.hostname\)/);
+  assert.match(handler, /universalEntryRedirect/);
 });

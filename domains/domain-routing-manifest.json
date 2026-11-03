@@ -1,104 +1,127 @@
 {
-  "schema": "wenever-domain-routing/v1",
-  "canonical_entry": "https://wenevergonnaclose.com",
+  "schema": "wenever-domain-routing/v2",
+  "universal_entry": "https://wenevergonnaclose.com",
   "temporary_verified_entry": "https://ambassador-tnc.github.io/",
-  "redirect_status": 308,
+  "first_visit_action": "redirect-to-universal-entry",
+  "return_visit_action": "require-server-verified-private-code",
+  "privacy_contract": {
+    "public_fields": [],
+    "public_identity_collection": false,
+    "welcome_representation": "stick-figure-only",
+    "browser_storage": "not a security boundary"
+  },
   "activation_gate": [
     "registrar ownership confirmed",
     "DNS points to the selected edge provider",
     "a valid HTTPS certificate covers the source host",
-    "the canonical entry returns HTTPS successfully"
+    "the canonical entry returns HTTPS successfully",
+    "the private-code verification service is deployed and reviewed"
   ],
   "domains": [
     {
       "host": "wholedonuts.app",
       "family": "whole-donuts",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "youth-side",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     },
     {
       "host": "wholedonuts.org",
       "family": "whole-donuts",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "youth-side",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     },
     {
       "host": "wholedonuts.buzz",
       "family": "whole-donuts",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
-    },
-    {
-      "host": "wholedonuts.me",
-      "family": "whole-donuts",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
-    },
-    {
-      "host": "wholedonuts.pro",
-      "family": "whole-donuts",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
-    },
-    {
-      "host": "wholedonuts.foundation",
-      "family": "whole-donuts",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
-    },
-    {
-      "host": "wholedonuts.cloud",
-      "family": "whole-donuts",
-      "current_state": "interim-site-active",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "youth-side",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     },
     {
       "host": "thenurturedchef.com",
       "family": "the-nurtured-chef",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "adult-side",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     },
     {
       "host": "thenurturedchef.org",
       "family": "the-nurtured-chef",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
-    },
-    {
-      "host": "thenurturedchef.buzz",
-      "family": "the-nurtured-chef",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "adult-side",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     },
     {
       "host": "thenurturedchef.foundation",
       "family": "the-nurtured-chef",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "adult-side",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
+    },
+    {
+      "host": "wholedonuts.me",
+      "family": "whole-donuts",
+      "role": "private-vault",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
+    },
+    {
+      "host": "wholedonuts.pro",
+      "family": "whole-donuts-and-the-nurtured-chef",
+      "role": "two-side-overview",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     },
     {
       "host": "thenutur3dchef.com",
       "family": "the-nutur3d-chef",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "3d-design-program",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     },
     {
       "host": "thenutur3dchef.org",
       "family": "the-nutur3d-chef",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "newest-copilot-creation-name-pending",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
+    },
+    {
+      "host": "wholedonuts.foundation",
+      "family": "whole-donuts",
+      "role": "hidden-reserve",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
+    },
+    {
+      "host": "wholedonuts.cloud",
+      "family": "whole-donuts",
+      "role": "hidden-reserve",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "interim-site-active"
+    },
+    {
+      "host": "thenurturedchef.buzz",
+      "family": "the-nurtured-chef",
+      "role": "hidden-reserve",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     },
     {
       "host": "justtryplususa.com",
       "family": "justtry-plus-usa",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "hidden-reserve",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     },
     {
       "host": "justtryplususa.org",
       "family": "justtry-plus-usa",
-      "current_state": "unconfigured",
-      "desired_action": "redirect-to-universal-entry"
+      "role": "hidden-reserve",
+      "access_policy": "first-visit-universal-entry-then-private-code",
+      "current_state": "unconfigured"
     }
   ]
 }
