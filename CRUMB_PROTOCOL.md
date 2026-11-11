@@ -2,9 +2,10 @@
 
 ## Purpose
 
-Crumbs are useful contributions that can strengthen the Whole Donuts world, +U
-Library, Donuts New School, Ambassador Path, or community-support work. They may
-be original writing, a practical lesson, a trusted resource, a connection, or a
+A crumb is a voluntary contribution of +U Flava. The program grows through each
+person's touch. A crumb can strengthen the Whole Donuts world, +U Library,
+Donuts New School, Ambassador Path, or community-support work. It may be
+original writing, a practical lesson, a trusted resource, a connection, or a
 project idea.
 
 Donuts New School: Visionaries & Pioneers is a non-exclusive learning subject for
@@ -15,9 +16,11 @@ financial opportunity, donation reward, or automated path.
 ## Current public availability
 
 The public prototype keeps the Crumb Saver invitation, protocol, and preparation
-template available. Its static Pages configuration has no approved submission
-runtime, so it does not accept, store, or discard a crumb. Do not link a
-separate submission endpoint until its owner supplies and verifies it.
+template available. Only a future human-reviewed process may gather,
+consolidate, arrange, integrate, and record crumbs. The current public site
+collects and records no crumbs. Its static Pages configuration has no approved
+submission runtime, so it does not accept, store, or discard a crumb. Do not
+link a separate submission endpoint until its owner supplies and verifies it.
 
 ## Reviewed path
 
