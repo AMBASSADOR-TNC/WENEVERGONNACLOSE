@@ -1,0 +1,32 @@
+name: WD Validate Intake
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "wd-system/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate Python files
+        run: |
+          python -m py_compile wd-system/wd_input.py
+          python -m py_compile wd-system/wd_monitor.py
+
+      - name: Validate WD configuration
+        run: |
+          python -m json.tool wd-system/wd-config.json > /dev/null
+
+      - name: WD validation complete
+        run: echo "WD INPUT AND 72-HOUR MONITOR VALIDATION PASSED"
