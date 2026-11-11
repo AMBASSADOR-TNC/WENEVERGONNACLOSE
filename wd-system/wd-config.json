@@ -1,0 +1,35 @@
+{
+  "system": "Whole Donuts WD Intake",
+  "version": "1.0",
+  "observation_hours": 72,
+
+  "input_dir": "runtime/WD.INPUT",
+  "archive_dir": "runtime/WD.ARCHIVE",
+  "output_dir": "runtime/WD.OUTPUT",
+  "reports_dir": "runtime/WD.REPORTS",
+
+  "allowed_extensions": [
+    ".md",
+    ".txt",
+    ".json",
+    ".yml",
+    ".yaml",
+    ".html",
+    ".css",
+    ".js",
+    ".py",
+    ".pdf",
+    ".docx",
+    ".xlsx",
+    ".pptx",
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".webp",
+    ".zip"
+  ],
+
+  "production_requires_manual_approval": true,
+  "delete_originals": false,
+  "porkbun_last": true
+}
