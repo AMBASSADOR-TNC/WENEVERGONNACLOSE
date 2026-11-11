@@ -1,90 +1,105 @@
 #!/usr/bin/env python3
 
 import argparse
+import hashlib
 import json
-import time
-from datetime import datetime, timezone, timedelta
+import shutil
+from datetime import datetime, timezone
 from pathlib import Path
 
 
-def snapshot(root):
-    data = {}
-
-    for name in ["WD.INPUT", "WD.ARCHIVE", "WD.OUTPUT"]:
-        folder = root / "runtime" / name
-
-        files = (
-            [item for item in folder.rglob("*") if item.is_file()]
-            if folder.exists()
-            else []
-        )
-
-        data[name] = {
-            "files": len(files),
-            "bytes": sum(item.stat().st_size for item in files)
-        }
-
-    return data
+def digest(path):
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(block)
+    return h.hexdigest()
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Whole Donuts 72-hour observation logger"
+        description="Non-destructive WD.INPUT inventory and deduplication"
     )
-
     parser.add_argument("--root", default=".")
-    parser.add_argument("--hours", type=float, default=72)
-    parser.add_argument("--interval-minutes", type=float, default=60)
-
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
 
-    reports = root / "runtime" / "WD.REPORTS"
-    reports.mkdir(parents=True, exist_ok=True)
-
-    start = datetime.now(timezone.utc)
-    end = start + timedelta(hours=args.hours)
-
-    log = reports / (
-        f"observation-{start.strftime('%Y%m%dT%H%M%SZ')}.jsonl"
+    cfg = json.loads(
+        (root / "code/wd-system/wd-config.json").read_text()
     )
 
-    while True:
-        now = datetime.now(timezone.utc)
+    inp = root / cfg["input_dir"]
+    arc = root / cfg["archive_dir"]
+    out = root / cfg["output_dir"]
+    rep = root / cfg["reports_dir"]
 
-        row = {
-            "utc": now.isoformat(),
-            "snapshot": snapshot(root)
-        }
+    for folder in (inp, arc, out, rep):
+        folder.mkdir(parents=True, exist_ok=True)
 
-        with log.open("a", encoding="utf-8") as file:
-            file.write(json.dumps(row) + "\n")
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
-        if now >= end:
-            break
+    rows = []
+    seen = {}
 
-        time.sleep(max(1, args.interval_minutes * 60))
+    for file in sorted(x for x in inp.rglob("*") if x.is_file()):
+        sha = digest(file)
 
-    summary = {
-        "start_utc": start.isoformat(),
-        "end_utc": datetime.now(timezone.utc).isoformat(),
-        "requested_hours": args.hours,
-        "log": str(log.relative_to(root)),
-        "action": (
-            "Review observation logs and make revisions "
-            "only through a new verified change."
-        )
+        status = "candidate"
+        reason = "unique file; manual review required"
+
+        if file.suffix.lower() not in cfg["allowed_extensions"]:
+            status = "quarantine"
+            reason = "extension not allowlisted"
+
+        elif sha in seen:
+            status = "duplicate"
+            reason = f"exact duplicate of {seen[sha]}"
+
+        else:
+            seen[sha] = str(file.relative_to(root))
+
+        if status == "candidate":
+            destination = out / "CANDIDATES" / file.name
+        else:
+            destination = arc / status / file.name
+
+        destination.parent.mkdir(parents=True, exist_ok=True)
+
+        if destination.exists():
+            destination = destination.with_name(
+                f"{destination.stem}_{sha[:8]}{destination.suffix}"
+            )
+
+        shutil.copy2(file, destination)
+
+        rows.append({
+            "source": str(file.relative_to(root)),
+            "sha256": sha,
+            "bytes": file.stat().st_size,
+            "status": status,
+            "reason": reason,
+            "copy": str(destination.relative_to(root))
+        })
+
+    report = {
+        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "destructive_actions": False,
+        "manual_approval_required": True,
+        "items": rows
     }
 
-    review_file = reports / "72-HOUR-REVIEW.json"
+    report_file = rep / f"intake-{stamp}.json"
 
-    review_file.write_text(
-        json.dumps(summary, indent=2),
+    report_file.write_text(
+        json.dumps(report, indent=2),
         encoding="utf-8"
     )
 
-    print(json.dumps(summary, indent=2))
+    print(json.dumps({
+        "processed": len(rows),
+        "report": str(report_file)
+    }, indent=2))
 
 
 if __name__ == "__main__":
