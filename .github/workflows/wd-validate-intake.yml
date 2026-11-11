@@ -1,32 +1,160 @@
-name: WD Validate Intake
+#!/usr/bin/env python3
 
-on:
-  workflow_dispatch:
-  push:
-    paths:
-      - "wd-system/**"
+import argparse
+import hashlib
+import json
+import shutil
+from datetime import datetime, timezone
+from pathlib import Path
 
-jobs:
-  validate:
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+def sha256_file(path):
+    digest = hashlib.sha256()
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+    with path.open("rb") as source:
+        for block in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(block)
 
-      - name: Validate Python files
-        run: |
-          python -m py_compile wd-system/wd_input.py
-          python -m py_compile wd-system/wd_monitor.py
+    return digest.hexdigest()
 
-      - name: Validate WD configuration
-        run: |
-          python -m json.tool wd-system/wd-config.json > /dev/null
 
-      - name: WD validation complete
-        run: echo "WD INPUT AND 72-HOUR MONITOR VALIDATION PASSED"
+def main():
+    parser = argparse.ArgumentParser(
+        description="Whole Donuts non-destructive WD.INPUT processor"
+    )
+    parser.add_argument("--root", default=".")
+    args = parser.parse_args()
+
+    root = Path(args.root).resolve()
+    config_file = root / "wd-system" / "wd-config.json"
+
+    if not config_file.exists():
+        raise FileNotFoundError(
+            f"WD configuration not found: {config_file}"
+        )
+
+    config = json.loads(config_file.read_text(encoding="utf-8"))
+
+    input_dir = root / config["input_dir"]
+    archive_dir = root / config["archive_dir"]
+    output_dir = root / config["output_dir"]
+    reports_dir = root / config["reports_dir"]
+
+    for folder in (
+        input_dir,
+        archive_dir,
+        output_dir,
+        reports_dir,
+    ):
+        folder.mkdir(parents=True, exist_ok=True)
+
+    allowed = {
+        extension.lower()
+        for extension in config["allowed_extensions"]
+    }
+
+    processed = []
+    hashes = {}
+
+    timestamp = datetime.now(timezone.utc).strftime(
+        "%Y%m%dT%H%M%SZ"
+    )
+
+    for source in sorted(input_dir.rglob("*")):
+        if not source.is_file():
+            continue
+
+        checksum = sha256_file(source)
+
+        status = "candidate"
+        reason = "unique file requiring manual review"
+
+        if source.suffix.lower() not in allowed:
+            status = "quarantine"
+            reason = "file extension is not allowlisted"
+
+        elif checksum in hashes:
+            status = "duplicate"
+            reason = (
+                "exact duplicate of "
+                + hashes[checksum]
+            )
+
+        else:
+            hashes[checksum] = str(
+                source.relative_to(root)
+            )
+
+        if status == "candidate":
+            destination = (
+                output_dir
+                / "CANDIDATES"
+                / source.name
+            )
+        else:
+            destination = (
+                archive_dir
+                / status
+                / source.name
+            )
+
+        destination.parent.mkdir(
+            parents=True,
+            exist_ok=True
+        )
+
+        if destination.exists():
+            destination = destination.with_name(
+                destination.stem
+                + "_"
+                + checksum[:8]
+                + destination.suffix
+            )
+
+        shutil.copy2(source, destination)
+
+        processed.append({
+            "source": str(source.relative_to(root)),
+            "sha256": checksum,
+            "bytes": source.stat().st_size,
+            "status": status,
+            "reason": reason,
+            "copy": str(destination.relative_to(root)),
+        })
+
+    report = {
+        "created_utc": datetime.now(
+            timezone.utc
+        ).isoformat(),
+        "destructive_actions": False,
+        "manual_approval_required": True,
+        "items_processed": len(processed),
+        "items": processed,
+    }
+
+    report_path = (
+        reports_dir
+        / f"intake-{timestamp}.json"
+    )
+
+    report_path.write_text(
+        json.dumps(report, indent=2),
+        encoding="utf-8",
+    )
+
+    print(
+        json.dumps(
+            {
+                "status": "WD.INPUT COMPLETE",
+                "processed": len(processed),
+                "report": str(
+                    report_path.relative_to(root)
+                ),
+            },
+            indent=2,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()
