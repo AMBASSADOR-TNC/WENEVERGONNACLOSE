@@ -158,3 +158,24 @@ def main():
 
 if __name__ == "__main__":
     main()
+echo "=== CURRENT BRANCH ==="
+git branch --show-current
+
+echo "=== WD FILE LOCATIONS ==="
+find . -maxdepth 4 -type f \( \
+  -name "wd_input.py" -o \
+  -name "wd_monitor.py" -o \
+  -name "wd-config.json" -o \
+  -name "requirements.txt" \
+\) -print
+
+echo "=== INPUT SYNTAX TEST ==="
+python -m py_compile wd-system/wd_input.py
+
+echo "=== MONITOR SYNTAX TEST ==="
+python -m py_compile wd-system/wd_monitor.py
+
+echo "=== CONFIGURATION TEST ==="
+python -m json.tool wd-system/wd-config.json > /dev/null
+
+echo "=== TESTS FINISHED ==="
