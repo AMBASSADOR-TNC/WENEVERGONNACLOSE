@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Ecosystem Proto T source boundary
+
+**What changed:** The repository now records its canonical gateway outputs,
+system references, preserved non-gateway experience, and review-gated source
+categories in `ecosystem-proto-t.json`.
+
+**Why it matters:** The integration record applies the Bathroom Door routing
+contract without making documentation, templates, World assets, configuration,
+or unverified destinations into new public lane outputs.
+
+**Limits:** It does not activate external domains, create accounts or
+submissions, grant reuse rights, or bypass required owner and safety review.
+
 ### Static universal entry
 
 **What changed:** The public entry is a browser-only, four-part stick-figure

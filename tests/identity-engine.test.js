@@ -8,6 +8,7 @@ const root = path.join(__dirname, "..");
 const script = fs.readFileSync(path.join(root, "js/identity-engine.js"), "utf8");
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const routingManifest = JSON.parse(fs.readFileSync(path.join(root, "bathroom-door-routing.json"), "utf8"));
+const ecosystemManifest = JSON.parse(fs.readFileSync(path.join(root, "ecosystem-proto-t.json"), "utf8"));
 
 function makeElement(dataset = {}) {
   const listeners = {};
@@ -127,6 +128,10 @@ test("an adult lane opens the local Counter page without a network request", () 
   assert.equal(fs.existsSync(path.join(root, "table.html")), true);
   assert.equal(fs.existsSync(path.join(root, "counter.html")), true);
   assert.equal(routingManifest["WD.OUTPUT"].length, 2);
+  assert.equal(
+    routingManifest["WD.INPUT"].some(route => route.record_id === "owner-selected-private-intake"),
+    true
+  );
 });
 
 test("reachable legacy Cloud pages remain excluded from universal-entry navigation", () => {
@@ -143,5 +148,34 @@ test("reachable legacy Cloud pages remain excluded from universal-entry navigati
   assert.equal(
     routingManifest["WD.OUTPUT"].some(route => route.destination.includes("wholedonuts.cloud")),
     false
+  );
+  assert.equal(
+    routingManifest["WD.ARCHIVE"].some(
+      route => route.record_id === "private-intake-raw-and-declined-material"
+    ),
+    true
+  );
+});
+
+test("the Ecosystem Proto T manifest preserves the Bathroom Door boundary", () => {
+  assert.equal(ecosystemManifest.canonical_entry, "https://wenevergonnaclose.com/");
+  assert.equal(ecosystemManifest.routing_protocol, "bathroom-door-routing/v1");
+  assert.deepEqual(
+    ecosystemManifest.gateway_outputs.map(output => output.destination),
+    routingManifest["WD.OUTPUT"].map(output => output.destination)
+  );
+  assert.deepEqual(
+    ecosystemManifest.gateway_outputs.map(output => output.status),
+    ["canonical", "canonical"]
+  );
+  assert.equal(ecosystemManifest.preserved_non_gateway[0].path, "world/");
+  assert.equal(ecosystemManifest.review_gated.some(item => item.path === "templates/"), true);
+  assert.equal(
+    ecosystemManifest.review_gated.some(item => item.path === "PRIVATE_INTAKE_CONTRACT.md"),
+    true
+  );
+  assert.equal(
+    ecosystemManifest.invariants.some(invariant => invariant.includes("Only tracked first-party static")),
+    true
   );
 });
