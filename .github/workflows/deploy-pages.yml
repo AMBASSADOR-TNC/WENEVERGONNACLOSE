@@ -1,68 +1,106 @@
-name: Deploy Pages
+#!/usr/bin/env python3
 
-on:
-  workflow_dispatch:
+import argparse
+import hashlib
+import json
+import shutil
+from datetime import datetime, timezone
+from pathlib import Path
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
 
-concurrency:
-  group: pages
-  cancel-in-progress: false
+def digest(path):
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(block)
+    return h.hexdigest()
 
-jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the reviewed revision
-        uses: actions/checkout@v4
 
-      - name: Use the supported JavaScript runtime
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
+def main():
+    parser = argparse.ArgumentParser(
+        description="Non-destructive WD.INPUT inventory and deduplication"
+    )
+    parser.add_argument("--root", default=".")
+    args = parser.parse_args()
 
-      - name: Validate the public experience
-        run: |
-          node --check app.js
-          node --check world/script.js
-          node --test tests/public-site.test.js
+    root = Path(args.root).resolve()
 
-      - name: Build the reviewed public bundle
-        shell: bash
-        run: |
-          set -euo pipefail
+    cfg = json.loads(
+        (root / "code/wd-system/wd-config.json").read_text()
+    )
 
-          test "$(tr -d '\r\n' < CNAME)" = "wenevergonnaclose.com"
-          test "$(wc -l < CNAME)" -eq 1
-          grep -Fq 'https://wenevergonnaclose.com/' index.html
-          grep -Fq 'https://wenevergonnaclose.com/sitemap.xml' robots.txt
+    inp = root / cfg["input_dir"]
+    arc = root / cfg["archive_dir"]
+    out = root / cfg["output_dir"]
+    rep = root / cfg["reports_dir"]
 
-          mkdir -p _site/templates _site/world
-          cp CNAME _site/
-          cp index.html guide.html styles.css app.js review-queue-manifest.js robots.txt sitemap.xml _site/
-          cp CRUMB_PROTOCOL.md PUBLIC_SYSTEM.md RELEASE_NOTES.md WHOLE_DONUTS_GUIDE.md _site/
-          cp templates/plus-u-build-your-table-template.md \
-             templates/plus-u-next-step-template.md \
-             templates/plus-u-share-a-crumb-template.md \
-             _site/templates/
-          cp world/index.html world/script.js world/styles.css _site/world/
+    for folder in (inp, arc, out, rep):
+        folder.mkdir(parents=True, exist_ok=True)
 
-          test "$(tr -d '\r\n' < _site/CNAME)" = "wenevergonnaclose.com"
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+    rows = []
+    seen = {}
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
+    for file in sorted(x for x in inp.rglob("*") if x.is_file()):
+        sha = digest(file)
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        status = "candidate"
+        reason = "unique file; manual review required"
+
+        if file.suffix.lower() not in cfg["allowed_extensions"]:
+            status = "quarantine"
+            reason = "extension not allowlisted"
+
+        elif sha in seen:
+            status = "duplicate"
+            reason = f"exact duplicate of {seen[sha]}"
+
+        else:
+            seen[sha] = str(file.relative_to(root))
+
+        if status == "candidate":
+            destination = out / "CANDIDATES" / file.name
+        else:
+            destination = arc / status / file.name
+
+        destination.parent.mkdir(parents=True, exist_ok=True)
+
+        if destination.exists():
+            destination = destination.with_name(
+                f"{destination.stem}_{sha[:8]}{destination.suffix}"
+            )
+
+        shutil.copy2(file, destination)
+
+        rows.append({
+            "source": str(file.relative_to(root)),
+            "sha256": sha,
+            "bytes": file.stat().st_size,
+            "status": status,
+            "reason": reason,
+            "copy": str(destination.relative_to(root))
+        })
+
+    report = {
+        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "destructive_actions": False,
+        "manual_approval_required": True,
+        "items": rows
+    }
+
+    report_file = rep / f"intake-{stamp}.json"
+
+    report_file.write_text(
+        json.dumps(report, indent=2),
+        encoding="utf-8"
+    )
+
+    print(json.dumps({
+        "processed": len(rows),
+        "report": str(report_file)
+    }, indent=2))
+
+
+if __name__ == "__main__":
+    main()
