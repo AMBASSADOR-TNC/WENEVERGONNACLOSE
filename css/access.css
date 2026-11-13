@@ -11,7 +11,7 @@ label { display: block; font-weight: 600; margin: 8px 0 4px; }
 html.a11y-big { font-size: 125%; }
 html.a11y-big body { font-size: 1.25rem; }
 html.a11y-contrast, html.a11y-contrast *:not(.skip-link) { background-color: #000 !important; background-image: none !important; color: #fff !important; border-color: #fff !important; text-shadow: none !important; }
-html.a11y-contrast a { color: #ffeb3b !important; text-decoration: underline; }
+html.a11y-contrast a:not(.skip-link) { color: #ffeb3b !important; text-decoration: underline; }
 html.a11y-contrast button, html.a11y-contrast input, html.a11y-contrast textarea { background: #000 !important; color: #fff !important; border: 2px solid #fff !important; }
 html.a11y-contrast .selected, html.a11y-contrast [aria-pressed="true"] { outline: 4px solid #ffeb3b !important; }
 html.a11y-spacing body { line-height: 1.8; letter-spacing: 0.06em; word-spacing: 0.16em; }
