@@ -179,3 +179,32 @@ test("the Ecosystem Proto T manifest preserves the Bathroom Door boundary", () =
     true
   );
 });
+
+test("a youth graduating several years from now can still reach The Table", () => {
+  const page = createPage();
+  const futureYear = new Date().getFullYear() + 5;
+
+  page.figures[2].click();
+  page.present[0].click();
+  page.future[0].click();
+  page.gradInput.value = String(futureYear);
+  page.gradInput.emit("input");
+  page.underCollegeConfirmed.checked = true;
+  page.routeButton.click();
+
+  assert.equal(page.location.destination, "table.html");
+});
+
+test("a graduation year more than 13 years ahead is still refused", () => {
+  const page = createPage();
+  const tooFar = new Date().getFullYear() + 14;
+
+  page.figures[2].click();
+  page.present[0].click();
+  page.future[0].click();
+  page.gradInput.value = String(tooFar);
+  page.gradInput.emit("input");
+  page.routeButton.click();
+
+  assert.equal(page.location.destination, undefined);
+});

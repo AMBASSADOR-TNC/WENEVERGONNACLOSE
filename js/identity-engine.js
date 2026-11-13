@@ -11,6 +11,8 @@ const ROUTES = {
   counter: "counter.html"
 };
 const currentYear = new Date().getFullYear();
+// Youth may be years away from graduating; allow up to 13 years ahead (a kindergartner today).
+const latestGradYear = currentYear + 13;
 
 function selectCard(group, value) {
   const cards = document.querySelectorAll(group);
@@ -56,7 +58,7 @@ function showMessage(message) {
 
 function setLaneFromGraduationYear() {
   const year = Number.parseInt(gradInput.value, 10);
-  if (!Number.isInteger(year) || year < 1900 || year > currentYear + 1) {
+  if (!Number.isInteger(year) || year < 1900 || year > latestGradYear) {
     state.gradYear = null;
     state.lane = null;
     collegeConfirmation.hidden = true;
@@ -75,7 +77,7 @@ function validateEntry() {
     return "Complete your stick-figure sequence first.";
   }
   if (!state.lane) {
-    return `Enter a graduation year from 1900 through ${currentYear + 1}.`;
+    return `Enter a graduation year from 1900 through ${latestGradYear}.`;
   }
   if (state.lane === "table" && !underCollegeConfirmed.checked) {
     return "Confirm the under-college path before continuing to The Table.";
