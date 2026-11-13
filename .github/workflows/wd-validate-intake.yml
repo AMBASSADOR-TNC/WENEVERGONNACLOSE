@@ -51,12 +51,29 @@ jobs:
           python -m json.tool wd-system/wd-config.json > /dev/null
           echo "WD CONFIGURATION VALID"
 
+      - name: Smoke-test WD.INPUT on sample files (originals must stay untouched)
+        run: |
+          T="$RUNNER_TEMP/wdtest"
+          mkdir -p "$T/code/wd-system" "$T/runtime/WD.INPUT/sub"
+          cp wd-system/wd-config.json "$T/code/wd-system/"
+          echo "crumb" > "$T/runtime/WD.INPUT/a.md"
+          cp "$T/runtime/WD.INPUT/a.md" "$T/runtime/WD.INPUT/sub/a.md"
+          echo "x" > "$T/runtime/WD.INPUT/tool.exe"
+          before=$(cd "$T" && find runtime/WD.INPUT -type f -exec sha256sum {} + | sort)
+          python wd-system/wd_input.py --root "$T"
+          after=$(cd "$T" && find runtime/WD.INPUT -type f -exec sha256sum {} + | sort)
+          test "$before" = "$after"
+          test -f "$T/runtime/WD.OUTPUT/CANDIDATES/a.md"
+          test -f "$T/runtime/WD.ARCHIVE/duplicate/a.md"
+          test -f "$T/runtime/WD.ARCHIVE/quarantine/tool.exe"
+          echo "WD.INPUT SMOKE TEST PASSED"
+
       - name: WD release validation
         run: |
           echo "================================"
           echo "WD VALIDATION PASSED"
           echo "================================"
           echo "WD.INPUT code: PASS"
-          echo "72-hour monitor: PASS"
+          echo "72-hour monitor: file compiles (a real 72-hour run is still pending)"
           echo "Configuration: PASS"
           echo "Next gate: controlled WD.INPUT"
