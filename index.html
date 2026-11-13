@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>wenevergonnaclose · Universal Entry</title>
   <link rel="stylesheet" href="css/identity.css">
+  <link rel="stylesheet" href="css/access.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
 </head>
 <body>
   <main id="engine">
@@ -16,19 +18,19 @@
       <h2>1. Choose your base stick figure</h2>
       <div class="figure-grid">
         <button class="figure-card" type="button" data-base="adult-man" aria-pressed="false">
-          <div class="stick-figure" aria-hidden="true"></div>
+          <div class="stick-figure" aria-hidden="true"><span class="arms"></span><span class="leg-left"></span><span class="leg-right"></span></div>
           <span>Adult Man +U</span>
         </button>
         <button class="figure-card" type="button" data-base="adult-woman" aria-pressed="false">
-          <div class="stick-figure" aria-hidden="true"></div>
+          <div class="stick-figure" aria-hidden="true"><span class="arms"></span><span class="leg-left"></span><span class="leg-right"></span></div>
           <span>Adult Woman +U</span>
         </button>
         <button class="figure-card" type="button" data-base="youth-boy" aria-pressed="false">
-          <div class="stick-figure" aria-hidden="true"></div>
+          <div class="stick-figure" aria-hidden="true"><span class="arms"></span><span class="leg-left"></span><span class="leg-right"></span></div>
           <span>Youth Boy +U</span>
         </button>
         <button class="figure-card" type="button" data-base="youth-girl" aria-pressed="false">
-          <div class="stick-figure" aria-hidden="true"></div>
+          <div class="stick-figure" aria-hidden="true"><span class="arms"></span><span class="leg-left"></span><span class="leg-right"></span></div>
           <span>Youth Girl +U</span>
         </button>
       </div>
@@ -77,7 +79,16 @@
       <p class="step-note">This selects your next safe step: The Table for youth, or The Counter for adults.</p>
       <div class="grad-input">
         <label for="gradYear">Graduation year</label>
-        <input type="number" id="gradYear" min="1900" inputmode="numeric" autocomplete="off" placeholder="YYYY">
+        <input type="number" id="gradYear" min="1900" inputmode="numeric" autocomplete="off" placeholder="YYYY" aria-describedby="noYearHelp">
+      </div>
+      <div class="grad-input">
+        <label for="noYear">No graduation year? That's okay.</label>
+        <select id="noYear" aria-describedby="noYearHelp">
+          <option value="">I have a year (typed above)</option>
+          <option value="school">I'm still in school, or not sure of my year</option>
+          <option value="adult">I'm an adult who finished another way, or didn't finish</option>
+        </select>
+        <p id="noYearHelp" class="step-note">Certificates, GED, homeschool, special education, and every other path count.</p>
       </div>
     </section>
 
@@ -103,5 +114,6 @@
   </main>
 
   <script src="js/identity-engine.js"></script>
+  <script src="js/access.js"></script>
 </body>
 </html>

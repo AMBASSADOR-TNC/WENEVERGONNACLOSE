@@ -46,6 +46,8 @@ function createPage() {
   const underCollegeConfirmed = makeElement();
   const routeButton = makeElement();
   const routeMessage = makeElement();
+  const noYear = makeElement();
+  noYear.value = "";
   const location = { replace: destination => { location.destination = destination; } };
   const groups = {
     ".figure-card": figures,
@@ -57,7 +59,8 @@ function createPage() {
     collegeConfirmation,
     underCollegeConfirmed,
     routeButton,
-    routeMessage
+    routeMessage,
+    noYear
   };
   const document = {
     querySelectorAll: selector => groups[selector] || [],
@@ -72,6 +75,7 @@ function createPage() {
     future,
     gradInput,
     location,
+    noYear,
     present,
     routeButton,
     routeMessage,
@@ -207,4 +211,27 @@ test("a graduation year more than 13 years ahead is still refused", () => {
   page.routeButton.click();
 
   assert.equal(page.location.destination, undefined);
+});
+
+test("someone with no graduation year who is still in school reaches The Table", () => {
+  const page = createPage();
+  page.figures[2].click();
+  page.present[0].click();
+  page.future[0].click();
+  page.noYear.value = "school";
+  page.noYear.emit("change");
+  page.underCollegeConfirmed.checked = true;
+  page.routeButton.click();
+  assert.equal(page.location.destination, "table.html");
+});
+
+test("an adult who finished another way, or didn't finish, reaches The Counter", () => {
+  const page = createPage();
+  page.figures[0].click();
+  page.present[0].click();
+  page.future[0].click();
+  page.noYear.value = "adult";
+  page.noYear.emit("change");
+  page.routeButton.click();
+  assert.equal(page.location.destination, "counter.html");
 });
