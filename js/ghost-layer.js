@@ -57,7 +57,11 @@
     table: ["no-judgement", "no-money", "hands", "plus", "u"],
     counter: ["no-judgement", "pause", "hands", "arrow"],
     path: ["pause", "no-judgement", "hands", "figure-rise"],
-    guide: ["no-money", "no-faces", "plus-u", "hands"]
+    guide: ["no-money", "no-faces", "plus-u", "hands"],
+    // pages that ask for support or sell things: no "No $" sign there, it would not make sense
+    store: ["no-judgement", "hands", "plus", "u"],
+    foundation: ["no-judgement", "hands", "plus-u", "arrow"],
+    feelings: ["no-judgement", "hands", "plus", "u"]
   };
   const LOOP = ["figure-calm", "figure-hope", "figure-cane", "figure-chair", "arrow", "figure-together", "figure-rise", "plus-u"];
 
