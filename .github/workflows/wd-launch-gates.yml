@@ -1,0 +1,107 @@
+name: WD Launch Gates
+
+# PROTO T BLAST, Stage Six: full validation, then one release gate.
+# Read-only. It changes nothing, publishes nothing and never touches DNS.
+# Green "WD RELEASE GATE" = ready for human review and merge. Red = stop.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  structure:
+    name: Structure and manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Required current files are present
+        run: |
+          for f in index.html table.html counter.html counter-path.html guide.html CNAME \
+                   ecosystem-proto-t.json bathroom-door-routing.json \
+                   wd-system/wd_input.py wd-system/wd_monitor.py wd-system/wd-config.json; do
+            test -f "$f" || { echo "MISSING: $f"; exit 1; }
+          done
+          test "$(tr -d '[:space:]' < CNAME)" = "wenevergonnaclose.com" || { echo "CNAME changed"; exit 1; }
+          echo "All required current files present"
+      - name: Every JSON manifest parses
+        run: |
+          find . -name '*.json' -not -path './.git/*' -not -path './node_modules/*' -print0 \
+            | xargs -0 -n1 python3 -m json.tool > /dev/null
+          echo "All JSON valid"
+
+  routing:
+    name: Routing and browser-behavior tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Entry, Youth, Adult, fallback, Road to The Counter, ghost layer, Pages readiness
+        run: node --test tests/*.test.js
+      - name: Page scripts parse
+        run: for f in js/*.js app.js storefront-config.js review-queue-manifest.js; do [ -f "$f" ] && node --check "$f"; done; echo ok
+
+  intake:
+    name: WD.INPUT safe-failure check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Intake never deletes or changes an original
+        run: |
+          python -m py_compile wd-system/wd_input.py wd-system/wd_monitor.py
+          T="$RUNNER_TEMP/wd"; mkdir -p "$T/code/wd-system" "$T/runtime/WD.INPUT/sub"
+          cp wd-system/wd-config.json "$T/code/wd-system/"
+          echo crumb > "$T/runtime/WD.INPUT/a.md"; cp "$T/runtime/WD.INPUT/a.md" "$T/runtime/WD.INPUT/sub/a.md"
+          echo x > "$T/runtime/WD.INPUT/b.exe"
+          before=$(cd "$T/runtime/WD.INPUT" && find . -type f -exec sha256sum {} + | sort)
+          python wd-system/wd_input.py --root "$T"
+          after=$(cd "$T/runtime/WD.INPUT" && find . -type f -exec sha256sum {} + | sort)
+          test "$before" = "$after" || { echo "An original changed"; exit 1; }
+          ls "$T/runtime/WD.REPORTS"/intake-*.json > /dev/null
+          echo "Originals untouched; report written; unsupported file held"
+
+  privacy:
+    name: Nothing private in the repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan tracked files for keys, tokens and passwords
+        run: |
+          pat='ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|sk_live_[A-Za-z0-9]{10,}|rk_live_[A-Za-z0-9]{10,}|sk-[A-Za-z0-9]{32,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|-----BEGIN [A-Z ]*PRIVATE KEY|xox[bpa]-[0-9A-Za-z-]{10,}'
+          if git grep -I -n -E "$pat" -- . ':!.github/workflows/wd-launch-gates.yml'; then echo "Secret-like text found. Stop."; exit 1; fi
+          if git ls-files | grep -i -E '(\.pem|\.key|\.p12|\.pfx|\.kdbx|\.env|id_rsa|recovery.?codes|backup.?codes)$'; then echo "Key file tracked. Stop."; exit 1; fi
+          echo "No credentials found"
+
+  rollback:
+    name: Rollback is available
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Record last known good main
+        run: |
+          git fetch -q origin main
+          good=$(git rev-parse origin/main)
+          echo "Last known good main: $good"
+          echo "To roll back: revert the merge commit, or reset Pages to $good."
+          echo "### Rollback point: \`$good\`" >> "$GITHUB_STEP_SUMMARY"
+
+  release-gate:
+    name: WD RELEASE GATE
+    needs: [structure, routing, intake, privacy, rollback]
+    runs-on: ubuntu-latest
+    steps:
+      - name: All gates green
+        run: |
+          echo "WD RELEASE GATE: GREEN"
+          echo "Next: human review. Confirm only expected changes are included, then merge."
+          echo "Porkbun stays last: no DNS change until the 72-hour observation passes."
+          echo "## WD RELEASE GATE: GREEN" >> "$GITHUB_STEP_SUMMARY"

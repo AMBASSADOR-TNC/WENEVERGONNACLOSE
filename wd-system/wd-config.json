@@ -12,6 +12,7 @@
     ".md",
     ".txt",
     ".json",
+    ".csv",
     ".yml",
     ".yaml",
     ".html",
