@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "wd-system/**"
+      - ".github/workflows/wd-validate-intake.yml"
 
 jobs:
   validate:
@@ -14,19 +15,65 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Show WD file locations
+        run: |
+          echo "=== REPOSITORY ROOT ==="
+          pwd
+
+          echo "=== WD FILES ==="
+          find . -maxdepth 4 -type f | sort
+
+      - name: Confirm required files exist
+        run: |
+          test -f wd-system/wd_input.py
+          test -f wd-system/wd_monitor.py
+          test -f wd-system/wd-config.json
+
+          echo "ALL REQUIRED WD FILES FOUND"
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Validate Python files
+      - name: Validate WD.INPUT Python
         run: |
           python -m py_compile wd-system/wd_input.py
+          echo "WD.INPUT PYTHON VALID"
+
+      - name: Validate 72-hour monitor Python
+        run: |
           python -m py_compile wd-system/wd_monitor.py
+          echo "WD MONITOR PYTHON VALID"
 
       - name: Validate WD configuration
         run: |
           python -m json.tool wd-system/wd-config.json > /dev/null
+          echo "WD CONFIGURATION VALID"
 
-      - name: WD validation complete
-        run: echo "WD INPUT AND 72-HOUR MONITOR VALIDATION PASSED"
+      - name: Smoke-test WD.INPUT on sample files (originals must stay untouched)
+        run: |
+          T="$RUNNER_TEMP/wdtest"
+          mkdir -p "$T/code/wd-system" "$T/runtime/WD.INPUT/sub"
+          cp wd-system/wd-config.json "$T/code/wd-system/"
+          echo "crumb" > "$T/runtime/WD.INPUT/a.md"
+          cp "$T/runtime/WD.INPUT/a.md" "$T/runtime/WD.INPUT/sub/a.md"
+          echo "x" > "$T/runtime/WD.INPUT/tool.exe"
+          before=$(cd "$T" && find runtime/WD.INPUT -type f -exec sha256sum {} + | sort)
+          python wd-system/wd_input.py --root "$T"
+          after=$(cd "$T" && find runtime/WD.INPUT -type f -exec sha256sum {} + | sort)
+          test "$before" = "$after"
+          test -f "$T/runtime/WD.OUTPUT/CANDIDATES/a.md"
+          test -f "$T/runtime/WD.ARCHIVE/duplicate/a.md"
+          test -f "$T/runtime/WD.ARCHIVE/quarantine/tool.exe"
+          echo "WD.INPUT SMOKE TEST PASSED"
+
+      - name: WD release validation
+        run: |
+          echo "================================"
+          echo "WD VALIDATION PASSED"
+          echo "================================"
+          echo "WD.INPUT code: PASS"
+          echo "72-hour monitor: file compiles (a real 72-hour run is still pending)"
+          echo "Configuration: PASS"
+          echo "Next gate: controlled WD.INPUT"

@@ -74,7 +74,7 @@ body {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid #000;
+  border: 2px solid currentColor;
   transform: translateX(-50%);
 }
 
@@ -86,7 +86,7 @@ body {
   left: 50%;
   width: 2px;
   height: 32px;
-  background: #000;
+  background: currentColor;
   transform: translateX(-50%);
 }
 
@@ -97,7 +97,7 @@ body {
   left: 50%;
   width: 40px;
   height: 2px;
-  background: #000;
+  background: currentColor;
   transform: translateX(-50%);
 }
 
@@ -108,7 +108,7 @@ body {
   top: 56px;
   width: 2px;
   height: 24px;
-  background: #000;
+  background: currentColor;
 }
 
 .stick-figure .leg-left {
@@ -206,3 +206,4 @@ body {
     padding: 1.5rem 0.75rem 2.5rem;
   }
 }
+
