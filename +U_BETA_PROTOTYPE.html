@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="table">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>+U | The Hubs (prototype)</title>
+<style>
+:root,html[data-theme="counter"]{
+  --bg:#f6efe4; --ink:#2b2320; --soft:#6b5d55; --wood:#8a5a3b; --wood2:#6e452c; --wall:#efe4d3;
+  --accent:#d9902a; --pink:#d06a4c; --ghost:#2b2320; --card:#fffaf2; --line:#d8c9b5; --focus:#1f5fbf;
+  --bubble:#fffdf8; --prof:#55606b; --neon:#e8264a; --signtext:#f6efe4; --gop:.07;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+html[data-theme="table"]{
+  --bg:#17132a; --ink:#f5f2ff; --soft:#cfc8ee; --wood:#3b2f78; --wood2:#2a2256; --wall:#1f1a38;
+  --accent:#7cf2c8; --pink:#ff5fa2; --ghost:#ffffff; --card:#241e44; --line:#4f4590; --focus:#ffd23f;
+  --bubble:#241e44; --prof:#cfc8ee; --neon:#ff5fa2; --signtext:#ffffff; --gop:.1;
+  --font:"Trebuchet MS","Avenir Next",system-ui,sans-serif;
+}
+html.hc{
+  --bg:#000; --ink:#fff; --soft:#fff; --wood:#000; --wood2:#000; --wall:#000; --accent:#ffd400; --pink:#ffd400;
+  --ghost:#fff; --card:#000; --line:#fff; --focus:#ffd400; --bubble:#000; --prof:#fff; --neon:#ffd400; --signtext:#fff; --gop:.18;
+}
+html.size1{font-size:118%} html.size2{font-size:136%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.5 var(--font)}
+.skip{position:absolute;left:-999px;top:0;background:var(--card);color:var(--ink);padding:.5rem 1rem;z-index:10}
+.skip:focus{left:.5rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+header{padding:.75rem 1rem;border-bottom:1px solid var(--line)}
+.top{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between}
+header h1{font-size:1.1rem;margin:0;letter-spacing:.04em}
+html[data-theme="table"] header h1{font-style:italic;font-weight:900;color:var(--accent)}
+.access{display:flex;flex-wrap:wrap;gap:.4rem}
+.access button,.access label{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:.35rem .75rem;cursor:pointer;min-height:44px;display:inline-flex;align-items:center;gap:.35rem}
+.access button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.access input{width:1.1rem;height:1.1rem;margin:0}
+nav{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem}
+nav a{color:var(--ink);text-decoration:none;border:2px solid var(--line);border-radius:12px;padding:.35rem .7rem;min-height:44px;display:inline-flex;align-items:center;font-size:.88rem;background:var(--card)}
+nav a[aria-current="page"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+nav .grp{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);align-self:center;margin:0 .2rem 0 .5rem}
+main{max-width:980px;margin:0 auto;padding:1rem}
+.scene{position:relative;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--wall)}
+.scene svg{display:block;width:100%;height:auto;color:var(--ink)}
+.bubble{position:absolute;max-width:48%;background:var(--bubble);color:var(--ink);border:2px solid var(--ink);border-radius:16px;padding:.5rem .8rem;font-size:.95rem;line-height:1.35;transition:opacity .4s,transform .4s}
+html[data-theme="table"] .bubble{border-color:var(--accent);box-shadow:4px 4px 0 var(--pink)}
+.bubble b{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+#mainBubble{left:3%;bottom:4%}
+body.demo #mainBubble{display:none}
+#profBubble{right:3%;top:4%;border-style:dashed;opacity:0;transform:translateY(-6px);pointer-events:none}
+#profBubble.on{opacity:1;transform:none}
+.whisper{position:absolute;left:3%;top:2.5%;margin:0;font-style:italic;font-size:.88rem;color:var(--soft);background:var(--wall);padding:.1rem .5rem;border-radius:8px;transition:opacity 1.2s;max-width:44%}
+.whisper.fade{opacity:0}
+.caption{margin:.6rem 0 0;min-height:3.2rem;border:2px solid var(--accent);border-radius:14px;padding:.5rem .8rem;background:var(--card)}
+.caption .lbl{display:block;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.demos{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.8rem}
+.demos h2{font-size:1rem;margin:0 .4rem 0 0}
+.dbtn{font:inherit;font-size:.88rem;border:2px solid var(--ink);background:transparent;color:var(--ink);border-radius:12px;padding:.4rem .75rem;cursor:pointer;min-height:44px;text-align:left}
+.dbtn small{display:block;color:var(--soft);font-size:.75rem}
+.dbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.dbtn[aria-pressed="true"] small{color:var(--bg)}
+h2{font-size:1.15rem;margin:1.1rem 0 .2rem}
+.muted{color:var(--soft);margin:.2rem 0 .8rem}
+.note{border-left:4px solid var(--accent);padding:.4rem .8rem;background:var(--card);border-radius:6px;margin:.6rem 0}
+.items{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.6rem}
+.item{font:inherit;text-align:left;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:14px;padding:.65rem .85rem;cursor:pointer;min-height:56px}
+.item:hover{border-color:var(--ink)}
+.item small{display:block;color:var(--soft)}
+.item[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.item[aria-disabled="true"]{opacity:.6;cursor:default}
+.actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.btn{font:inherit;font-weight:700;border:2px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:999px;padding:.55rem 1.2rem;cursor:pointer;min-height:48px}
+.btn.alt{background:transparent;color:var(--ink)}
+.detail{margin-top:1rem;background:var(--card);border:2px solid var(--accent);border-radius:18px;padding:.9rem 1.1rem}
+.detail h3{margin:.1rem 0 .3rem;font-size:1.05rem}
+.detail p{margin:.3rem 0}
+.detail ol{padding-left:1.3rem}
+.tag{display:inline-block;font-size:.78rem;border:1px solid var(--ink);border-radius:999px;padding:.05rem .55rem;margin-top:.3rem}
+.hidden{display:none!important}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem;margin-top:.8rem}
+.gal.wide{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.gsec{margin:1rem 0 .2rem;font-size:1rem}
+.gcard{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:.5rem}
+.gart svg{width:100%;height:auto;display:block;border-radius:8px}
+.gcard figcaption{font-size:.85rem;margin-top:.35rem;display:flex;justify-content:space-between;align-items:center;gap:.3rem;flex-wrap:wrap}
+.copy{font:inherit;font-size:.78rem;border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:.2rem .65rem;min-height:32px;cursor:pointer}
+.sw{display:flex;align-items:center;gap:.5rem;font-size:.85rem}
+.sw i{display:inline-block;width:2.2rem;height:2.2rem;border-radius:8px;border:1px solid var(--line)}
+.gart .bob{animation:bob 3s ease-in-out infinite}
+footer{max-width:980px;margin:0 auto;padding:0 1rem 2rem;color:var(--soft);font-size:.85rem}
+
+/* figures */
+.face>*{display:none}
+.fig[data-face="neutral"] .f-neutral,.fig[data-face="smile"] .f-smile,.fig[data-face="wink"] .f-wink,
+.fig[data-face="laugh"] .f-laugh,.fig[data-face="proud"] .f-proud,.fig[data-face="listen"] .f-listen,.fig[data-face="think"] .f-think{display:inline}
+.arms>*{display:none}
+.fig[data-arms="rest"] .a-rest,.fig[data-arms="hold"] .a-hold,.fig[data-arms="upR"] .a-upR,.fig[data-arms="upL"] .a-upL,
+.fig[data-arms="stir"] .a-stir,.fig[data-arms="key"] .a-key,.fig[data-arms="cane"] .a-cane,.fig[data-arms="wave"] .a-wave,
+.fig[data-arms="wcane"] .a-wcane,.fig[data-arms="dog"] .a-dog,.fig[data-arms="aac"] .a-aac,.fig[data-arms="crutch"] .a-crutch,
+.fig[data-arms="signA"] .a-signA,.fig[data-arms="signB"] .a-signB{display:inline}
+.fig.wheel .acc-wheel,.fig.shades .acc-shades,.fig.dog .acc-dog,.fig.aids .acc-aids,.fig.prost .acc-prost,.fig.defenders .acc-defenders{display:inline}
+.fig.wheel .legs{display:none}
+.wheelspin{transform-box:fill-box;transform-origin:center}
+.walking .wheelspin{animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cast{margin-top:.5rem}
+.cast summary{cursor:pointer;min-height:44px;display:inline-flex;align-items:center;font-size:.9rem;font-weight:700}
+.castgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.5rem .9rem;padding:.4rem 0 .6rem}
+.castgrid label{display:flex;flex-direction:column;font-size:.85rem;gap:.2rem}
+.castgrid select,.castgrid input[type=range]{font:inherit;font-size:.85rem;min-height:40px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:.2rem .4rem}
+.castnote{font-size:.8rem;color:var(--soft);margin:.2rem 0}
+.acc{display:none}
+.fig.cap .acc-cap,.fig.sash .acc-sash,.fig.phones .acc-phones{display:inline}
+.mover{transition:transform 1.1s cubic-bezier(.45,.05,.3,1)}
+.prof{opacity:.22;transition:opacity .8s,transform .8s;transform-origin:650px 250px}
+.prof.on{opacity:1;transform:scale(1.08)}
+.prof .point{display:none}.prof.on .point{display:inline}.prof.on .rest{display:none}
+.ghost{color:var(--ghost);opacity:var(--gop)}
+.slot{transition:transform .5s}
+.slot.lit{transform:translateY(-8px)}
+.slot.lit .sbody{stroke:var(--accent);stroke-width:5}
+.sign{fill:var(--signtext)}
+.door{transform-box:fill-box;transform-origin:left center;transition:transform 1.4s ease-in-out}
+.door.open{transform:scaleX(.12)}
+.liquid{transition:fill .8s}
+.legs path{transform-box:fill-box;transform-origin:top center}
+.spark{opacity:0}
+.donut{transform-box:fill-box;transform-origin:center;animation:glow 2.4s ease-in-out infinite}
+@keyframes glow{50%{transform:scale(1.06);opacity:.8}}
+.doorleaf{transform-box:fill-box;transform-origin:left center;transition:transform 1.2s ease-in-out}
+.doorleaf.open{transform:scaleX(.15)}
+.chip.lit rect,.door.lit rect.dframe{stroke:var(--accent);stroke-width:6}
+#guestMove{transition-property:transform,opacity}
+
+/* motion (switched off by Calm) */
+.ghost{animation:drift 18s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(14px,-8px)}}
+.sway{transform-origin:400px 120px;animation:sway 5s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
+.bob{animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+html[data-theme="table"] .beat{animation:beat .9s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.a-stir{transform-box:fill-box;transform-origin:left top;animation:stir 2.6s ease-in-out infinite}
+@keyframes stir{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(6deg)}}
+.steam path{animation:steam 4s ease-in infinite;opacity:0}
+.steam path:nth-child(2){animation-delay:1.3s}.steam path:nth-child(3){animation-delay:2.6s}
+@keyframes steam{0%{opacity:0;transform:translateY(10px)}30%{opacity:.55}100%{opacity:0;transform:translateY(-40px)}}
+.walking .legs path:first-child{animation:legA .5s ease-in-out infinite alternate}
+.walking .legs path:last-child{animation:legA .5s ease-in-out infinite alternate-reverse}
+@keyframes legA{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+.spark.go{animation:spark 1.2s ease-out}
+@keyframes spark{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(1.6)}}
+.spark{transform-box:fill-box;transform-origin:center}
+.drop{animation:drop .9s ease-in forwards}
+@keyframes drop{from{transform:translateY(-170px)}to{transform:translateY(0);opacity:.2}}
+.bubbleup{animation:bub 1.4s ease-out forwards}
+@keyframes bub{from{transform:translateY(0);opacity:.9}to{transform:translateY(-30px);opacity:0}}
+/* the 24/7 arrow: blinks once a second, bulbs chase (well under 3 flashes per second) */
+.neon{color:var(--neon)}
+.neon .outline{animation:blink 1s steps(1,end) infinite}
+@keyframes blink{0%{opacity:1}50%{opacity:.25}}
+.neon .bulb{animation:chase 1.6s linear infinite;opacity:.25}
+@keyframes chase{0%,30%{opacity:1}31%,100%{opacity:.25}}
+html.calm *,html.calm *::before,html.calm *::after{animation:none!important;transition:none!important}
+html.calm .neon .bulb{opacity:1}
+html.calm .steam path{opacity:.35}
+</style>
+</head>
+<body>
+<a class="skip" href="#items-h">Skip to the choices</a>
+<header>
+  <div class="top">
+    <h1><span aria-hidden="true">+U </span><span id="viewTitle">The Hubs</span></h1>
+    <div class="access" role="group" aria-label="Comfort settings">
+      <button type="button" id="voiceBtn" aria-pressed="false">Voices</button>
+      <button type="button" id="calmBtn" aria-pressed="false">Calm motion</button>
+      <button type="button" id="hcBtn" aria-pressed="false">High contrast</button>
+      <button type="button" id="sizeBtn" aria-label="Text size: normal. Press to change.">Text A</button>
+      <label><input type="checkbox" id="guideChk" checked> Professor helps after 14 seconds</label>
+    </div>
+  </div>
+  <details class="cast" id="castPanel"><summary>Voice cast: who sounds like what</summary>
+    <div class="castgrid" id="castGrid"></div>
+    <p class="castnote" id="castNote">Voices come from your own device, so the accents you hear depend on which voices it has. Phones and computers usually have many; add more in your device's speech settings.</p>
+  </details>
+  <nav aria-label="Hubs">
+    <a href="#entry">Front Door</a>
+    <span class="grp" aria-hidden="true">Table</span>
+    <a href="#table">The Table</a><a href="#wd-store">Store</a><a href="#wd-library">Library</a><a href="#wd-vault">Crumb Vault</a>
+    <span class="grp" aria-hidden="true">Counter</span>
+    <a href="#counter">The Counter</a><a href="#nc-store">Store</a><a href="#nc-library">Library</a><a href="#nc-vault">Recipe Vault</a>
+    <span class="grp" aria-hidden="true">Both</span>
+    <a href="#sponsors">+U Sponsors</a><a href="#gallery">The Gallery</a>
+  </nav>
+</header>
+
+<main id="page">
+  <div class="scene">
+    <svg id="svg" viewBox="0 0 800 520" aria-hidden="true" focusable="false"></svg>
+    <div class="bubble" id="mainBubble" aria-hidden="true"><b id="mainName">Chef</b><span id="mainText"></span></div>
+    <div class="bubble" id="profBubble" aria-hidden="true"><b>Professor</b><span id="profText"></span></div>
+    <p class="whisper" id="whisper"><span class="sr">Whisper: </span><span id="whisperText">psst… no rush.</span></p>
+  </div>
+  <p class="sr" id="sceneDesc"></p>
+  <div class="sr" aria-live="polite" id="live"></div>
+  <div class="caption hidden" id="caption" aria-live="polite"><span class="lbl" id="capLbl"></span><span id="capText"></span></div>
+
+  <div class="demos" role="group" aria-labelledby="demos-h">
+    <h2 id="demos-h">Watch a demo</h2>
+    <button type="button" class="dbtn" data-d="0" aria-pressed="false"></button>
+    <button type="button" class="dbtn" data-d="1" aria-pressed="false"></button>
+    <button type="button" class="dbtn" data-d="2" aria-pressed="false"></button>
+    <button type="button" class="btn alt hidden" id="stopBtn">Stop demo</button>
+  </div>
+
+  <h2 id="items-h" tabindex="-1"></h2>
+  <p class="muted" id="intro"></p>
+  <p class="note" id="statusNote"></p>
+  <div class="items" id="items"></div>
+  <div class="actions">
+    <button type="button" class="btn hidden" id="serveBtn"></button>
+    <button type="button" class="btn alt hidden" id="againBtn">Start over</button>
+  </div>
+  <section class="detail" id="detail" hidden>
+    <h3 id="dTitle" tabindex="-1"></h3><p id="dBody"></p><ol id="dList"></ol><span class="tag" id="dTag"></span><div id="gal"></div>
+  </section>
+</main>
+<footer>Prototype. Nothing here is for sale yet, nothing you choose is saved or sent anywhere, the member key and vaults are demo only, and voices use your device's built-in speech.</footer>
+
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+var root=document.documentElement, svg=$("svg"), SVGNS="http://www.w3.org/2000/svg";
+
+/* ================= drawing ================= */
+var GHOST=(function(){
+  var h="M400 332 C330 332 250 306 232 236 C226 206 248 196 262 216 C258 190 284 182 294 206 C292 180 320 178 324 204 C326 184 352 186 350 212 C352 240 370 262 400 270 M336 300 C318 276 324 252 352 246";
+  return '<g class="ghost" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">'+
+  '<path d="'+h+'"/><path d="'+h+'" transform="translate(800 0) scale(-1 1)"/>'+
+  '<g fill="currentColor" stroke="none"><circle cx="372" cy="236" r="7"/><circle cx="398" cy="226" r="6"/><circle cx="424" cy="238" r="7"/><circle cx="386" cy="208" r="5"/><circle cx="440" cy="206" r="4.5"/><circle cx="476" cy="196" r="4"/><circle cx="508" cy="190" r="3.5"/></g>'+
+  '<path d="M410 150 v40 M390 170 h40" stroke-width="8"/><path d="M540 176 v24 M528 188 h24" stroke-width="5"/></g>';
+})();
+var PROFSVG='<rect x="560" y="70" width="190" height="200" rx="10" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="2 8" opacity=".5"/>'+
+  '<g class="prof" id="prof" stroke="var(--prof)" fill="none" stroke-width="4" stroke-linecap="round">'+
+  '<path d="M622 118 L650 106 L678 118 L650 130 Z" fill="var(--prof)"/><line x1="672" y1="120" x2="674" y2="138"/>'+
+  '<circle cx="650" cy="150" r="20"/><circle cx="642" cy="149" r="5" stroke-width="2.5"/><circle cx="658" cy="149" r="5" stroke-width="2.5"/><line x1="647" y1="149" x2="653" y2="149" stroke-width="2.5"/>'+
+  '<path d="M643 160 Q650 164 657 160" stroke-width="2.5"/><line x1="650" y1="170" x2="650" y2="262"/>'+
+  '<g class="rest"><path d="M650 192 L628 226 L652 232"/><rect x="646" y="220" width="22" height="16" rx="2" fill="var(--wall)"/><path d="M650 192 L676 228"/></g>'+
+  '<g class="point"><path d="M650 192 L628 228"/><path d="M650 192 L690 168 L714 150"/></g></g>';
+var FACES='<g class="face" stroke-width="3.5">'+
+  '<g class="f-neutral"><circle cx="-9" cy="-4" r="2.5" fill="currentColor"/><circle cx="9" cy="-4" r="2.5" fill="currentColor"/><path d="M-9 11 L9 11"/></g>'+
+  '<g class="f-smile"><circle cx="-9" cy="-4" r="2.5" fill="currentColor"/><circle cx="9" cy="-4" r="2.5" fill="currentColor"/><path d="M-11 8 Q0 19 11 8"/></g>'+
+  '<g class="f-wink"><circle cx="-9" cy="-4" r="2.5" fill="currentColor"/><path d="M4 -3 Q9 -8 14 -3"/><path d="M-11 8 Q0 19 11 8"/></g>'+
+  '<g class="f-laugh"><path d="M-14 -2 Q-9 -9 -4 -2"/><path d="M4 -2 Q9 -9 14 -2"/><path d="M-12 6 Q0 24 12 6 Z" fill="currentColor"/></g>'+
+  '<g class="f-proud"><path d="M-14 -4 Q-9 -9 -4 -4"/><path d="M4 -4 Q9 -9 14 -4"/><path d="M-13 7 Q0 21 13 7"/></g>'+
+  '<g class="f-listen"><path d="M-14 -13 L-4 -15 M4 -15 L14 -13"/><circle cx="-9" cy="-4" r="2.5" fill="currentColor"/><circle cx="9" cy="-4" r="2.5" fill="currentColor"/><circle cx="0" cy="12" r="3.5"/></g>'+
+  '<g class="f-think"><path d="M-14 -12 L-4 -12 M4 -15 L14 -12"/><circle cx="-9" cy="-4" r="2.5" fill="currentColor"/><circle cx="9" cy="-5" r="2.5" fill="currentColor"/><path d="M-8 11 Q2 9 10 12"/></g></g>';
+var CHEFHAT='<path d="M-24 -22 C-38 -24 -42 -48 -26 -52 C-24 -70 -2 -74 4 -62 C14 -74 36 -66 30 -50 C44 -44 40 -22 24 -22 Z" fill="var(--bg)"/><line x1="-22" y1="-22" x2="22" y2="-22"/>';
+var PROFHAT='<path d="M-30 -20 L0 -34 L30 -20 L0 -8 Z" fill="var(--prof)" stroke-width="3"/><path d="M24 -18 L26 2" stroke-width="3"/>';
+var GLASSES='<g stroke-width="2.5"><circle cx="-9" cy="-4" r="7"/><circle cx="9" cy="-4" r="7"/><path d="M-2 -4 h4"/></g>';
+var CAP='<g class="acc acc-cap"><path d="M-24 -6 C-26 -34 24 -34 24 -6 Z" fill="var(--pink)" stroke-width="3"/><path d="M-22 -10 L-44 -4" stroke-width="5"/></g>';
+var PHONES='<g class="acc acc-phones"><path d="M-28 4 C-30 -40 30 -40 28 4" stroke-width="4"/><rect x="-33" y="-6" width="9" height="18" rx="3" fill="var(--accent)" stroke-width="2.5"/><rect x="24" y="-6" width="9" height="18" rx="3" fill="var(--accent)" stroke-width="2.5"/></g>';
+var SHADES='<g class="acc acc-shades"><path d="M-18 -8 h13 v8 h-13 Z M5 -8 h13 v8 h-13 Z" fill="currentColor" stroke-width="2"/><path d="M-5 -5 h10" stroke-width="2"/></g>';
+var AIDS='<g class="acc acc-aids"><path d="M-25 -8 q-8 6 0 14 M25 -8 q8 6 0 14" stroke="var(--accent)" stroke-width="5"/></g>';
+var DEFS='<g class="acc acc-defenders"><path d="M-27 2 C-30 -42 30 -42 27 2" stroke-width="5"/><rect x="-37" y="-11" width="13" height="25" rx="5" fill="var(--pink)" stroke-width="2.5"/><rect x="24" y="-11" width="13" height="25" rx="5" fill="var(--pink)" stroke-width="2.5"/></g>';
+var WHEEL='<g class="acc acc-wheel"><path d="M-14 84 L-14 140 M-14 84 L-26 78 M-14 132 L32 132"/><path d="M0 128 L34 130 L36 174 L50 174"/><g class="wheelspin"><circle cx="2" cy="150" r="40" stroke-width="4"/><path d="M2 110 V190 M-38 150 H42 M-26 122 L30 178 M30 122 L-26 178" stroke-width="2"/></g><circle cx="46" cy="184" r="6" stroke-width="3"/></g>';
+var PROST='<g class="acc acc-prost"><path d="M12 158 L22 190" stroke="var(--accent)" stroke-width="7"/><circle cx="11" cy="157" r="4.5" fill="var(--accent)" stroke="none"/></g>';
+var DOG='<g class="acc acc-dog" stroke-width="4"><ellipse cx="84" cy="160" rx="26" ry="12" fill="var(--bg)"/><circle cx="112" cy="146" r="9" fill="var(--bg)"/><path d="M116 140 l6 -6 M66 170 L64 190 M74 172 L74 190 M94 172 L94 190 M102 170 L104 190 M58 156 L48 146"/><path d="M40 110 L72 150" stroke="var(--accent)" stroke-width="4"/><rect x="70" y="146" width="24" height="8" fill="var(--accent)" stroke="none"/></g>';
+var SASH='<g class="acc acc-sash"><path d="M-14 30 L16 118" stroke="var(--accent)" stroke-width="9"/><circle cx="2" cy="76" r="7" fill="var(--pink)" stroke="none"/></g>';
+function figure(id,kind,o){
+  o=o||{};
+  var badge=kind==="friend"?'<circle cx="0" cy="74" r="13" fill="var(--bg)" stroke-width="3"/><text x="0" y="79" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor" stroke="none" font-family="system-ui,sans-serif">+U</text>':
+    kind==="chef"?'<path d="M-10 26 L0 40 L10 26" stroke-width="3"/>':'';
+  var hat=kind==="chef"?CHEFHAT:kind==="prof"?PROFHAT:"";
+  if(kind==="prof")badge=GLASSES;
+  var legs=o.legs?'<g class="legs"><path d="M0 130 L-22 190"/><path d="M0 130 L22 190"/></g>'+(o.sneakers?'<path d="M-30 190 h12 M18 190 h12" stroke="var(--pink)" stroke-width="7"/>':''):'';
+  return '<g class="fig'+(o.cls?" "+o.cls:"")+'" id="'+id+'" data-face="smile" data-arms="'+(o.arms||"rest")+'" stroke="currentColor" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><g class="gbody">'+
+    '<circle cx="0" cy="0" r="24" fill="var(--bg)"/>'+hat+CAP+PHONES+DEFS+FACES+SHADES+AIDS+
+    '<line x1="0" y1="24" x2="0" y2="130"/>'+SASH+badge+legs+PROST+WHEEL+DOG+
+    '<g class="arms">'+
+      '<g class="a-rest"><path d="M0 50 L-30 92 L-24 120"/><path d="M0 50 L30 92 L24 120"/></g>'+
+      '<g class="a-hold"><path d="M0 50 L-30 92 L-24 120"/><path d="M0 50 L32 28 L40 -8"/><rect class="held" x="26" y="-44" width="30" height="36" rx="3" fill="var(--accent)" stroke-width="3"/></g>'+
+      '<g class="a-upR"><path d="M0 50 L-30 92 L-24 120"/><path d="M0 50 L30 12 L38 -30"/></g>'+
+      '<g class="a-upL"><path d="M0 50 L30 92 L24 120"/><path d="M0 50 L-30 12 L-38 -30"/></g>'+
+      '<g class="a-wave"><path d="M0 50 L-30 92 L-24 120"/><path d="M0 50 L34 20 L30 -20"/></g>'+
+      '<g class="a-key"><path d="M0 50 L-30 92 L-24 120"/><path d="M0 50 L32 28 L42 -2"/><circle cx="44" cy="-14" r="9" fill="var(--accent)" stroke-width="3"/><path d="M44 -5 L44 14 M44 8 L50 8" stroke-width="3"/></g>'+
+      '<g class="a-cane"><path d="M0 50 L-26 90 L-30 118"/><path d="M-30 118 L-38 190 M-30 118 l-10 -4" stroke-width="4"/><path d="M0 50 L30 92 L24 120"/></g>'+
+      '<g class="a-wcane"><path d="M0 50 L-30 92 L-24 120"/><path d="M0 50 L26 90 L32 112"/><path d="M32 112 L66 190" stroke-width="5"/><path d="M60 176 L66 190" stroke="#e8264a" stroke-width="6"/></g>'+
+      '<g class="a-dog"><path d="M0 50 L-30 92 L-24 120"/><path d="M0 50 L28 90 L40 110"/></g>'+
+      '<g class="a-aac"><path d="M0 50 L-16 84 L6 92"/><path d="M0 50 L28 84 L34 92"/><rect x="2" y="78" width="40" height="28" rx="3" fill="var(--card)" stroke-width="3"/><path d="M8 86 h6 M18 86 h6 M28 86 h6 M8 96 h6 M18 96 h6 M28 96 h6" stroke="var(--accent)" stroke-width="4"/></g>'+
+      '<g class="a-crutch"><path d="M0 50 L-20 96 L-30 108"/><path d="M0 50 L20 96 L30 108"/><path d="M-26 62 L-40 190 M-34 60 L-18 64 M26 62 L40 190 M18 64 L34 60" stroke-width="4"/></g>'+
+      '<g class="a-signA"><path d="M0 50 L-20 80 L-4 60"/><circle cx="-4" cy="57" r="5" fill="var(--bg)" stroke-width="3"/><path d="M0 50 L24 76 L14 48"/><circle cx="14" cy="45" r="5" fill="var(--bg)" stroke-width="3"/></g>'+
+      '<g class="a-signB"><path d="M0 50 L-24 72 L-14 46"/><circle cx="-14" cy="43" r="5" fill="var(--bg)" stroke-width="3"/><path d="M0 50 L20 82 L6 64"/><circle cx="6" cy="61" r="5" fill="var(--bg)" stroke-width="3"/></g>'+
+      '<g class="a-stir"><path d="M0 50 L52 90 L84 96"/><line x1="84" y1="96" x2="138" y2="120" stroke-width="4"/></g>'+
+      '<g class="a-stir"><path d="M0 50 L-38 90 L-24 146"/></g>'+
+    '</g></g></g>';
+}
+function mover(id,x,y,inner,extra){return '<g class="mover" id="'+id+'" style="transform:translate('+x+'px,'+y+'px)'+(extra||"")+'">'+inner+'</g>';}
+function shelfSlots(slots,kind){
+  return slots.map(function(s,i){
+    var w=s.w||50,h=s.h||60,body;
+    if(kind==="book") body='<rect class="sbody" x="'+(s.x-w/2)+'" y="'+s.y+'" width="'+w+'" height="'+h+'" rx="3" fill="'+s.c+'" stroke="currentColor" stroke-width="3"/><line x1="'+(s.x-w/2+8)+'" y1="'+(s.y+10)+'" x2="'+(s.x+w/2-8)+'" y2="'+(s.y+10)+'" stroke="#2b2320" stroke-width="2"/><text x="'+s.x+'" y="'+(s.y+h-10)+'" text-anchor="middle" font-size="14" font-weight="700" fill="#2b2320" font-family="system-ui,sans-serif">'+(s.t||"")+'</text>';
+    else if(kind==="tile") body='<rect class="sbody" x="'+(s.x-32)+'" y="'+s.y+'" width="64" height="64" rx="8" fill="'+s.c+'" stroke="currentColor" stroke-width="3"/><text x="'+s.x+'" y="'+(s.y+36)+'" text-anchor="middle" font-size="26" font-weight="900" fill="#17132a" font-family="system-ui,sans-serif">'+s.t+'</text><text x="'+s.x+'" y="'+(s.y+56)+'" text-anchor="middle" font-size="10" font-weight="700" fill="#17132a" font-family="system-ui,sans-serif">'+s.n+'</text>';
+    else if(kind==="jar") body='<rect class="sbody" x="'+(s.x-18)+'" y="'+s.y+'" width="36" height="44" rx="8" fill="'+s.c+'" stroke="currentColor" stroke-width="3"/><rect x="'+(s.x-14)+'" y="'+(s.y-8)+'" width="28" height="9" rx="2" fill="var(--wall)" stroke="currentColor" stroke-width="2.5"/>';
+    else body='<rect class="sbody" x="'+(s.x-w/2)+'" y="'+s.y+'" width="'+w+'" height="'+h+'" rx="8" fill="'+s.c+'" stroke="currentColor" stroke-width="3"/><circle cx="'+s.x+'" cy="'+(s.y+h/2)+'" r="'+Math.min(w,h)/5+'" fill="var(--wall)" stroke="currentColor" stroke-width="2.5"/>';
+    return '<g class="slot" data-i="'+i+'">'+body+'</g>';
+  }).join("");
+}
+function shelvesBack(x1,x2,ys){
+  return '<g stroke="currentColor" stroke-width="4" stroke-linecap="round">'+ys.map(function(y){return '<line x1="'+x1+'" y1="'+y+'" x2="'+x2+'" y2="'+y+'"/>';}).join("")+
+    '<line x1="'+x1+'" y1="'+(ys[0]-90)+'" x2="'+x1+'" y2="'+ys[ys.length-1]+'"/><line x1="'+x2+'" y1="'+(ys[0]-90)+'" x2="'+x2+'" y2="'+ys[ys.length-1]+'"/></g>';
+}
+function hipSign(text,x,y,size){
+  return '<text x="'+(x+3)+'" y="'+(y+3)+'" text-anchor="middle" font-size="'+size+'" font-weight="900" font-style="italic" fill="var(--pink)" font-family="Trebuchet MS,system-ui,sans-serif" letter-spacing="3">'+text+'</text>'+
+         '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+size+'" font-weight="900" font-style="italic" fill="var(--accent)" font-family="Trebuchet MS,system-ui,sans-serif" letter-spacing="3">'+text+'</text>';
+}
+function plainSign(text,x,y,size){return '<text class="sign" x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+size+'" font-weight="700" letter-spacing="5" font-family="system-ui,sans-serif">'+text+'</text>';}
+function floorSign(theme,text){return theme==="table"?hipSign(text,600,506,22):'<text x="600" y="505" text-anchor="middle" font-size="18" font-weight="700" letter-spacing="5" fill="currentColor" font-family="system-ui,sans-serif">'+text+'</text>';}
+var COLORS=["#e9a447","#62c2c4","#9bd15c","#f07a5a","#8fa2f0","#f5c542","#d38be0","#6fd39a","#f28b9c","#6aa8e8"];
+var HIP=["#7cf2c8","#ff5fa2","#ffd23f","#8fa2f0","#f5a25d","#c58bff"];
+
+/* ================= the hubs ================= */
+var STEPS16=["Core","Behavior","Intelligence","Unity","Emergence","Movement","Awareness","Evolution","Protocol","Archive","Funding","Outreach","Viral Exposure","Organizational Impact","Module Generation","Replication"];
+var SHORT16=["Who you are at the center.","What you actually do, day to day.","Learning from what happens.","Doing it together with other people.","New things growing out of small steps.","Momentum others can join.","Noticing yourself and the people around you.","Changing on purpose.","Steps anyone can repeat.","Keeping what worked.","Paying for the work fairly.","Going to people instead of waiting.","Letting good things spread.","Changing how a whole crew works.","Turning what works into a piece others can use.","Others running it on their own."];
+var SIDE={table:0,"wd-store":0,"wd-library":0,"wd-vault":0,counter:2,"nc-store":2,"nc-library":2,"nc-vault":2,sponsors:1,gallery:1,entry:0};
+var DOORX=[120,400,680], DOORNAME=["The Table","Both Sides","The Counter"];
+var ROOMS={
+"entry":{title:"Front Door",theme:"table",who:"door",entry:true,
+  heading:"Where to?",intro:"Every visit starts here. How are U doing? Walk in, then choose a door. Choosing one takes you there.",
+  status:"No account, no name. Nothing you choose here is saved.",
+  greet:"How are U doing? Walk in whenever you're ready.",
+  items:[
+    {n:"The Table",d:"youth · Table door",go:"table",face:"smile",say:"The Table door. Feelings, tiles, your crew.",body:"Build your table from the Emotional Table.",tag:"Table side"},
+    {n:"Whole Donuts Store",d:"Table door",go:"wd-store",face:"smile",say:"Through the Table door to the Store.",body:"Look at what's on the shelf. Nothing is for sale yet.",tag:"Table side"},
+    {n:"Whole Donuts Library",d:"Table door",go:"wd-library",face:"smile",say:"Through the Table door to the Library.",body:"The 16-step ladder.",tag:"Table side"},
+    {n:"Crumb Vault",d:"Table door · members",go:"wd-vault",face:"smile",say:"Through the Table door to the Crumb Vault.",body:"A member's vault. Demo only.",tag:"Table side"},
+    {n:"The Counter",d:"Counter door",go:"counter",face:"smile",say:"The Counter door. Pull up a stool.",body:"Put three ingredients in the pot.",tag:"Counter side"},
+    {n:"Nurtured Chef Store",d:"Counter door",go:"nc-store",face:"smile",say:"Through the Counter door to the Store.",body:"See what's behind the counter. Nothing is for sale yet.",tag:"Counter side"},
+    {n:"Nurtured Chef Library",d:"Counter door",go:"nc-library",face:"smile",say:"Through the Counter door to the Library.",body:"Nine books and the templates.",tag:"Counter side"},
+    {n:"Recipe Vault",d:"Counter door · members",go:"nc-vault",face:"smile",say:"Through the Counter door to the Recipe Vault.",body:"A member's vault. Demo only.",tag:"Counter side"},
+    {n:"+U Sponsors",d:"middle door",go:"sponsors",face:"smile",say:"The middle door, both sides, to the Sponsors.",body:"The +U Sponsors banner and questions.",tag:"Both sides"},
+    {n:"The Gallery",d:"middle door",go:"gallery",face:"smile",say:"The middle door, both sides, to The Gallery.",body:"Every face and every template.",tag:"Both sides"}],
+  prof:["Choose a door below. Any one.","Start with The Table if you're young, The Counter if you're grown. Either is fine.","Choose one. You can always come back to the front door."],
+  whispers:["we never gonna close.","walk in when you're ready.","how are U doing, really?"]},
+"table":{title:"The Table",theme:"table",who:"friend",multi:3,
+  heading:"Build your table",intro:"Choose 3 feeling tiles from the Emotional Table, in any order. Your +U Friend puts each one on the table.",
+  status:"Free. No account, no name.",serve:"Set the table",serveSay:"That's your table. You built that, for real.",resultH:"Your table today",
+  greet:"Yo, you made it! Grab a seat. Pick three feelings and we'll build your table.",
+  items:[
+    {n:"Calm",t:"Ca",d:"slow it down",face:"smile",say:"Calm. Smooth, like a slow beat.",step:"Put on one song and just listen. Nothing else."},
+    {n:"Hope",t:"Ho",d:"the spark",face:"proud",say:"Hope! That's the spark, for real.",step:"Write down one thing you're looking forward to."},
+    {n:"Joy",t:"Jy",d:"turn it up",face:"laugh",say:"Joy! Okay, we love to see it.",step:"Text someone the thing that made you smile."},
+    {n:"Sadness",t:"Sd",d:"it's allowed",face:"listen",say:"Sadness is allowed here. No fixing it, just sitting with it.",step:"Tell one person you're having a heavy day."},
+    {n:"Overwhelm",t:"Ov",d:"too much at once",face:"think",say:"Too much at once? Bet. One piece at a time.",step:"Pick the one smallest thing and do only that."},
+    {n:"Anger",t:"An",d:"it's got heat",face:"think",say:"Anger's got heat. It's pointing at something that matters.",step:"Walk it off for five minutes before you reply."}],
+  prof:["Choose one feeling tile. Any one. That's the whole step.","No wrong feeling here. Choose the one that's closest.","Start with Calm if you can't decide."],
+  whispers:["no pressure, fr.","you're good here.","take a breath, then tap."]},
+"wd-store":{title:"Whole Donuts Store",theme:"table",who:"friend",
+  heading:"What's on the shelf?",intro:"Choose anything to take a closer look. Your +U Friend grabs it for you.",
+  status:"Not open yet. Nothing here has a price, and nothing can be bought until payments are verified.",
+  greet:"Hey hey, welcome in! Look around. Nothing's for sale yet, so zero pressure.",
+  items:[
+    {n:"The Emotional Table field guide",d:"118 feelings, one step each",face:"proud",say:"This one's the big one. A hundred and eighteen feelings, every one with a move.",body:"A field guide built from the Emotional Table of Healing. Each feeling gets a plain-words page and one small thing to try. Planned as the first book.",tag:"Planned book"},
+    {n:"Table928 word cards",d:"101 everyday words",face:"smile",say:"A hundred and one words. Flip any card and there's a +U step on the back.",body:"Table928 holds 101 everyday feeling words in five life-stage groups, each with a +U step.",tag:"Idea for a card set"},
+    {n:"Build Your Table templates",d:"Next Step, Share a Crumb",face:"wink",say:"Templates. Print it, fill it, it's yours. Easy.",body:"The free templates: Next Step, Share a Crumb, and Build Your Table.",tag:"Free already"},
+    {n:"The 10-minute tryout",d:"12 feelings in 4 chapters",face:"laugh",say:"The tryout! Ten minutes, and sharing it unlocks the next chapter.",body:"A short ebook: 12 feelings in 4 chapters. Sharing unlocks the next one. Nothing is sent anywhere.",tag:"Built"},
+    {n:"Welcome Friend picture book",d:"the diner scene, in stick figures",face:"proud",say:"Welcome Friend. Stick figures only. That's the vibe.",body:"A picture book built on the Welcome Friend diner scene. It still needs text for its 9 images.",tag:"Planned book"}],
+  prof:["Choose one thing on the shelf. Just to look.","Nothing here costs anything today. Choose one.","Start with the field guide if you can't decide."],
+  whispers:["looking is free, fr.","nobody's counting your clicks.","take your time on the shelf."]},
+"wd-library":{title:"Whole Donuts Library",theme:"table",who:"friend",
+  heading:"The ladder: 16 steps",intro:"Choose a step. Your +U Friend climbs the rolling ladder to grab it. These are the short versions; the full pages are in the library on the site.",
+  status:"Free to read. No account, no name.",
+  greet:"Welcome to the library. Sixteen steps up this ladder. Point, I climb.",
+  items:STEPS16.map(function(n,i){var f=["smile","think","proud","laugh","wink","proud"];return {n:(i+1)+". "+n,d:SHORT16[i],face:f[i%6],say:"Step "+(i+1)+", "+n+". "+SHORT16[i],body:SHORT16[i]+" This is the short version; the full page is in the library on the site.",tag:"Step "+(i+1)+" of 16"};}),
+  prof:["Begin at step 1, Core. The ladder goes in order.","Choose one step. Your friend does the climbing.","You don't need all sixteen today. One is enough."],
+  whispers:["one rung at a time.","the ladder's not going anywhere.","you can always climb back down."]},
+"wd-vault":{title:"Crumb Vault",theme:"table",who:"friend",vault:true,
+  heading:"Inside your vault",intro:"A member's key opens the vault. Choose anything inside to see it. Everything here is pretend demo data.",
+  status:"Planned, not switched on. Nothing is saved. The real key would keep only its fingerprint, never your name.",
+  greet:"This is the Crumb Vault. Your key, your stuff. Pick something and the door swings open.",
+  items:[
+    {n:"Your crumbs",d:"demo: 12 crumbs",face:"proud",say:"Twelve crumbs! Every one's a small thing you actually did.",body:"Each crumb is one small step you took. In this demo it shows 12.",tag:"Demo data"},
+    {n:"Your next step",d:"the one you picked",face:"smile",say:"Your next step, saved right where you left it.",body:"The one small step you chose last time, waiting for you.",tag:"Demo data"},
+    {n:"Your invitation key",d:"how you got in",face:"wink",say:"Your key. It opens the door, and only its fingerprint is kept.",body:"The key that opened this vault. In the planned design only a fingerprint of the key is stored, and it can be replaced if you lose it.",tag:"Planned feature"},
+    {n:"Crumbs you shared",d:"passed to others",face:"laugh",say:"Crumbs you passed on. That's how the table gets bigger.",body:"Crumbs you shared with someone else. Recognition never measures anyone's worth.",tag:"Demo data"},
+    {n:"Your last table",d:"three feelings",face:"smile",say:"Your table from last time. Calm, Hope, Joy. Nice set.",body:"The three feeling tiles you put on The Table last visit.",tag:"Demo data"}],
+  prof:["Choose one thing in the vault. The door will open.","Start with Your crumbs.","Choose one. It's only a demo; nothing is kept."],
+  whispers:["your stuff, your rules.","nothing in here is graded.","the vault waits for you."]},
+"counter":{title:"The Counter",theme:"counter",who:"chef",multi:3,counter:true,
+  heading:"What goes in the pot today?",intro:"Choose any 3, in any order. Every one counts.",
+  status:"Free. No account, no name.",serve:"Serve it up",serveSay:"There. Made with your own hands. That's The Counter, friend.",resultH:"Your recipe for today",
+  greet:"Ah, there you are! Pull up a stool. The pot's been waiting on ya.",
+  items:[
+    {n:"A pinch of patience",d:"for the slow cook",c:"#c98b3a",face:"smile",say:"Patience! Grand. Slow fire makes the best stew, so it does.",step:"Wait one full breath before you answer someone today."},
+    {n:"A splash of honesty",d:"clears the broth",c:"#5f9ea0",face:"wink",say:"Honesty, is it? That'll clear the broth right up.",step:"Say one true thing you have been holding back."},
+    {n:"A handful of help asked",d:"nobody cooks alone",c:"#8bab4f",face:"laugh",say:"Asking for a hand? Sure, that's the secret ingredient.",step:"Ask one person for one small thing."},
+    {n:"A crumb to share",d:"for someone else's plate",c:"#d06a4c",face:"proud",say:"A crumb for somebody else. The pot gets fuller when you give.",step:"Pass on one kind word or one useful tip."},
+    {n:"A dash of rest",d:"even the stove cools",c:"#7d8fc4",face:"smile",say:"Rest! Even the stove needs a breather. Good call.",step:"Take five minutes with nothing to do."},
+    {n:"A spoon of courage",d:"a bit of heat",c:"#e0a030",face:"laugh",say:"Courage. There's a bit of heat in that one. Lovely.",step:"Do the small thing you have been putting off."}],
+  prof:["Here's the move: choose one ingredient below. Any one.","Still with us? Choose the one that sounds easiest. Easy counts.","No wrong answer here. You choose, the Chef does the rest."],
+  whispers:["psst… no rush. The stool's yours.","you belong at this counter.","nobody's keeping score here."]},
+"nc-store":{title:"Nurtured Chef Store",theme:"counter",who:"chef",
+  heading:"What's behind the counter?",intro:"Choose anything and the Chef will hand it over for a look.",
+  status:"Not open yet. Nothing here has a price, and nothing can be bought until payments are verified.",
+  greet:"Ah, come in, come in! Have a nose around. Nothing's for sale just yet, so look all you like.",
+  items:[
+    {n:"Food • Service • Family handbook",d:"the hospitality book",face:"proud",say:"The handbook! Everything I know about a good kitchen, between two covers.",body:"Built from the Black Book, the Education System, the consulting packets and This Chef's Flava. It needs to grow into a full book.",tag:"Planned book"},
+    {n:"The Black Book",d:"for success in hospitality",face:"wink",say:"The Black Book. Don't let the colour fool ya, it's all good news inside.",body:"The Nurtured Chef Foundation Black Book for Success in Hospitality.",tag:"Exists as a PDF"},
+    {n:"Printable kitchen templates",d:"six of them",face:"smile",say:"Six templates. Print them, stick them on the wall, done.",body:"The six printable templates from the Nurtured Chef library.",tag:"Built"},
+    {n:"Neighborhood Chef training",d:"a program for cooks",face:"laugh",say:"Neighborhood Chef! Every street deserves a cook who looks out for it.",body:"A training program for cooks, built on the cook development path. The program tools are still to be built.",tag:"To build"},
+    {n:"Restaurant partnership",d:"consulting, by invitation",face:"think",say:"Partnership. That's me coming to your kitchen, if we're a good fit.",body:"The Consulting Intro and Selected Restaurant Partnership Packet.",tag:"Service, by invitation"}],
+  prof:["Choose one item. The Chef will hand it over.","There is nothing to pay today. Choose one to see what it is.","Start with the Black Book if you can't decide."],
+  whispers:["psst… looking is free.","the kettle's always on here.","no one is rushing you."]},
+"nc-library":{title:"Nurtured Chef Library",theme:"counter",who:"chef",
+  heading:"The shelf: nine books and the templates",intro:"Choose a book and the Chef will pull it down. These are the short versions; the full pages are in the library on the site.",
+  status:"Free to read. Money Sense, Fundraising, Events and Finding Staff are new drafts still waiting for the owner's review.",
+  greet:"The library! Mind the flour on the spines. Pick one and I'll pull it down.",
+  items:[
+    {n:"The Standard",d:"where it all starts",face:"proud",say:"The Standard. Read this one first, so you will.",body:"The mission, the three pillars, One Team, Last Guest, Sense and Dollars, Invisible Operations, No Pass, the five-second read and the non-negotiables.",tag:"From the Black Book"},
+    {n:"Restaurant Systems",d:"open, serve, close",face:"smile",say:"Systems. They're what let you have fun at nine o'clock on a Friday.",body:"Opening, service and closing checklists for every station, plus a five-minute shift huddle.",tag:"From your writing"},
+    {n:"Management and Leadership",d:"leaders growing leaders",face:"think",say:"Good leaders make more leaders, not more followers.",body:"Leaders developing leaders, accountability with respect, F.O.O.D., the weekly experience exchange, a scorecard and the first 30 days.",tag:"From your writing"},
+    {n:"Cook Development and Skills",d:"the six-step path",face:"proud",say:"Week one is clean hands and a clean station, then we climb.",body:"Week-one sanitation, the six-step training path, a skills ladder by station, and the 30/90-day learning record.",tag:"From your writing"},
+    {n:"Money Sense",d:"numbers without fear",face:"wink",say:"Numbers are just a recipe with a dollar sign.",body:"Running a kitchen's numbers in plain words.",tag:"Draft, needs your review"},
+    {n:"Fundraising",d:"feeding a cause",face:"smile",say:"A good meal opens wallets and hearts both.",body:"Using food and service to raise money for a cause.",tag:"Draft, needs your review"},
+    {n:"Creating Unique Events",d:"nights people remember",face:"laugh",say:"Events! The nights people talk about for years.",body:"Planning and running events guests remember.",tag:"Draft, needs your review"},
+    {n:"Finding Staff",d:"built on Hire Me",face:"think",say:"Hire for heart, teach the knife work.",body:"Hiring, built on the Hire Me protocol.",tag:"Draft, needs your review"},
+    {n:"Guest Intelligence and Recovery",d:"when things go wrong",face:"listen",say:"A mistake handled well makes a regular for life.",body:"Reading guests and turning a bad moment around.",tag:"From your writing"},
+    {n:"The six templates",d:"print and use",face:"smile",say:"Print, pin, use. Simple as that.",body:"Six printable templates that go with the library pages.",tag:"Built"}],
+  prof:["Begin with The Standard. Everything else builds on it.","Choose one book. The Chef will bring it down.","One page is plenty for today."],
+  whispers:["psst… one page is plenty.","read it out loud if that helps.","the library never closes on you."]},
+"nc-vault":{title:"Recipe Vault",theme:"counter",who:"chef",vault:true,
+  heading:"Inside your vault",intro:"A member's key opens the vault. Choose anything inside to see it. Everything here is pretend demo data.",
+  status:"Planned, not switched on. Nothing is saved. The real key would keep only its fingerprint, never your name.",
+  greet:"The Recipe Vault! Your key, your recipes. Pick one and I'll swing the door.",
+  items:[
+    {n:"Your recipe cards",d:"demo: 4 cards",face:"proud",say:"Four recipe cards, all yours. Each one a day you showed up.",body:"Each recipe card is a day's three ingredients and the steps you took. This demo shows 4.",tag:"Demo data"},
+    {n:"Your skills ladder step",d:"demo: station 2",face:"smile",say:"Station two on the ladder. Climbing nicely, so you are.",body:"Where you are on the cook skills ladder.",tag:"Demo data"},
+    {n:"Your invitation key",d:"how you got in",face:"wink",say:"Your key. Opens the door, and only its fingerprint is kept.",body:"The key that opened this vault. In the planned design only a fingerprint of the key is stored, and it can be replaced if you lose it.",tag:"Planned feature"},
+    {n:"Your 30/90-day record",d:"what you've learned",face:"think",say:"Your thirty and ninety days. Look how far you've come.",body:"The 30/90-day learning record from Cook Development.",tag:"Demo data"},
+    {n:"Your kitchen notes",d:"just for you",face:"smile",say:"Your notes. Nobody reads these but you.",body:"Private notes, kept for you only.",tag:"Demo data"}],
+  prof:["Choose one thing in the vault. The door will open.","Start with Your recipe cards.","Choose one. It's only a demo; nothing is kept."],
+  whispers:["your recipes, your rules.","nothing in here is graded.","the vault waits for you."]},
+"gallery":{title:"The Gallery",theme:"table",who:"friend",gallery:true,
+  heading:"Every face, every template",intro:"Choose a wall. Your +U Friend walks you over, and everything on that wall shows up below, ready to copy.",
+  status:"Made for Whole Donuts and Nurtured Chef. Templates have [brackets] where your own words go. Copy SVG puts the drawing on your clipboard.",
+  greet:"Welcome to The Gallery! Every face we make, every template we use. Pick a wall.",
+  items:[
+    {n:"Faces: +U Friend",d:"every expression",face:"laugh",say:"That's me! Every face I've got.",body:"The +U Friend, the Table side's guide, in every expression. The first card plays them all in a loop.",tag:"Expressions"},
+    {n:"Faces: Chef",d:"every expression",face:"wink",say:"And the Chef, every mood, flour and all.",body:"The Chef, the Counter side's host, in every expression.",tag:"Expressions"},
+    {n:"Faces: Professor",d:"every expression",face:"think",say:"The Professor. Quiet in the back, direct when it counts.",body:"The Professor, the background guide on both sides, in every expression.",tag:"Expressions"},
+    {n:"Faces: Guests",d:"everyone who walks in",face:"smile",say:"Our guests. Young, grown, gentle, sponsors, all of them.",body:"The visitor figures from the demos, in every expression, plus the young guest, the member with a key and the sponsor.",tag:"Expressions"},
+    {n:"Poses",d:"hold, wave, key, cane, stir",face:"proud",say:"Poses! Holding, waving, the key, the cane, the stir.",body:"Every pose the figures use in the hubs.",tag:"Poses"},
+    {n:"Table brand kit",d:"colors, signs, badge",face:"laugh",say:"The Table kit. Mint, pink, sunshine, night.",body:"The Table side's colors, signs, +U badge and the ghosted hands mark.",tag:"Branding"},
+    {n:"Counter brand kit",d:"colors, signs, hat",face:"smile",say:"The Counter kit. Warm wood, cream, a bit of copper.",body:"The Counter side's colors, signs, chef's hat mark and the ghosted hands mark.",tag:"Branding"},
+    {n:"Social post templates",d:"square and story",face:"wink",say:"Posts and stories, ready for your words.",body:"Square posts and tall stories for both sides. Replace the [brackets] with your words.",tag:"Templates"},
+    {n:"Posters, name tags, sticker",d:"print-ready",face:"proud",say:"Posters, name tags and a sticker. Print and go.",body:"Posters and name tags for both sides, plus the round +U sticker.",tag:"Templates"},
+    {n:"Sponsor banner",d:"with the 24/7 arrow",face:"laugh",say:"The sponsor banner, arrow and all.",body:"The +U Sponsors banner held by two figures, with the arrow sign, in both palettes.",tag:"Templates"},
+    {n:"Every ability, every language",d:"everyone who walks in",face:"proud",say:"Everybody. Every ability, every language. That's the whole point.",body:"Visitors with many kinds of disability, each using the hubs their own way, and the 16 languages visitors say hello in.",tag:"Everyone"}],
+  prof:["Choose one wall. Start with the faces.","Every template is free to copy. Choose one to see it.","Choose the Table brand kit if you need colors."],
+  whispers:["look as long as you like.","every face here belongs.","copy anything you need."]},
+"sponsors":{title:"+U Sponsors",theme:"counter",who:"pair",
+  heading:"Follow the arrow",intro:"Two friends, one from each side, hold up the banner. Choose a question and they'll answer.",
+  status:"Not open yet. Sponsorship starts after the attorney review, and no payments are taken here.",
+  greet:"Hey! We're holding this up for the people who hold us up.",
+  items:[
+    {n:"What is a +U Sponsor?",d:"the short answer",speaker:"friend",face:"smile",say:"Someone who helps keep The Table and The Counter free for everyone who walks in.",body:"A person, business or group that helps keep The Table and The Counter free to use for everyone.",tag:"Draft wording"},
+    {n:"What does a sponsor get?",d:"thanks, out loud",speaker:"chef",face:"proud",say:"Their name on this banner, and a proper thank you from the both of us.",body:"Recognition, such as a name on the sponsors banner. Exactly what sponsors receive is still the owner's decision.",tag:"Owner decides"},
+    {n:"What never changes?",d:"the promises",speaker:"friend",face:"wink",say:"Nobody's data gets sold, nobody's face gets used, and nobody gets turned away.",body:"Sponsors never get visitors' data, never get to use anyone's face, and never decide who is welcome.",tag:"Draft wording"},
+    {n:"How do I become one?",d:"not open yet",speaker:"chef",face:"think",say:"Not open just yet. When it is, this arrow will point you straight to the door.",body:"Sponsorship opens after the attorney review.",tag:"Not open yet"}],
+  prof:["Choose a question below the arrow.","Start with the first one: what a sponsor is.","Choose one. They'll answer it."],
+  whispers:["you don't have to sponsor to belong.","holding something up together is lighter.","everyone's welcome under this banner."]}
+};
+
+/* ================= demos ================= */
+var DEMOS={
+ table:[
+  {btn:"First-time guest",sub:"walks in free · young person",label:"Demo 1 of 3 · First-time guest · walks in free · young person",way:"free",cls:"cap phones",walk:1700,sneakers:true,line:"First time here. Can I just look around?",hi:"Yo, welcome! First time? You're good. Look around."},
+  {btn:"Returning member",sub:"invited, with a key · adult",label:"Demo 2 of 3 · Returning member · invited, with a key · adult",way:"key",cls:"",walk:2300,line:"I'm back. Picking up where I left off.",hi:"Ayy, you're back! Your spot's still here."},
+  {btn:"Uses access tools",sub:"sponsor · older adult or caregiver",label:"Demo 3 of 3 · Uses access tools · sponsor · older adult or caregiver",way:"sponsor",cls:"sash",walk:3600,cane:true,stoop:5,line:"Thank you. The bigger text helps a lot.",hi:"Thank you for holding us up. Take all the time you need."}],
+ counter:[
+  {btn:"First-time guest",sub:"walks in free · lively",label:"Demo 1 of 3 · First-time guest · walks in free · lively",way:"free",cls:"",walk:1500,bounce:true,line:"Mind if I pull up a stool?",hi:"Ah, a new face! Welcome, welcome."},
+  {btn:"Returning member",sub:"invited, with a key · steady",label:"Demo 2 of 3 · Returning member · invited, with a key · steady",way:"key",cls:"",walk:2400,line:"Back again. Same seat as last time.",hi:"There they are! Back for more, are ya?"},
+  {btn:"Uses access tools",sub:"sponsor · slow and gentle",label:"Demo 3 of 3 · Uses access tools · sponsor · slow and gentle",way:"sponsor",cls:"sash",walk:3800,stoop:7,line:"Thanks. The bigger print is a help.",hi:"Thanks a million for the support. No rush at all, friend."}]
+};
+
+/* ================= visitors: every language, every ability ================= */
+var HUBS=["entry","table","wd-store","wd-library","wd-vault","counter","nc-store","nc-library","nc-vault","sponsors","gallery"];
+var PERSONAS=[
+ {hello:"¡Hola!",say:"¡Hola!",lang:"Spanish",web:"es-MX",esp:"es-419",en:"en-US",espEn:"en-US+f2",ep:58},
+ {hello:"Namaste!",say:"नमस्ते!",lang:"Hindi",web:"hi-IN",esp:"hi",en:"en-IN",espEn:"en-GB-x-gbcwmd+m2",ep:48},
+ {hello:"Habari!",say:"Habari!",lang:"Swahili",web:"sw-KE",esp:"sw",en:"en-KE",espEn:"en-GB-x-rp+f4",ep:56},
+ {hello:"Marhaba!",say:"مرحبا!",lang:"Arabic",web:"ar-SA",esp:"ar",en:"en-GB",espEn:"en-GB-x-rp+m4",ep:44},
+ {hello:"Nǐ hǎo!",say:"你好!",lang:"Mandarin",web:"zh-CN",esp:"cmn",en:"en-SG",espEn:"en-US+f4",ep:60},
+ {hello:"Bonjour !",say:"Bonjour !",lang:"French",web:"fr-CA",esp:"fr",en:"en-CA",espEn:"en-US+m3",ep:46},
+ {hello:"Bonjou!",say:"Bonjou!",lang:"Haitian Creole",web:"ht-HT",esp:"ht",en:"en-US",espEn:"en-029+m2",ep:47},
+ {hello:"Olá!",say:"Olá!",lang:"Portuguese",web:"pt-BR",esp:"pt-BR",en:"en-US",espEn:"en-US-nyc+f3",ep:57},
+ {hello:"Xin chào!",say:"Xin chào!",lang:"Vietnamese",web:"vi-VN",esp:"vi",en:"en-AU",espEn:"en-GB-x-gbclan+f2",ep:59},
+ {hello:"Annyeong haseyo!",say:"안녕하세요!",lang:"Korean",web:"ko-KR",esp:"ko",en:"en-US",espEn:"en-US+m6",ep:50},
+ {hello:"Selam!",say:"ሰላም!",lang:"Amharic",web:"am-ET",esp:"am",en:"en-GB",espEn:"en-GB-x-rp+f2",ep:55},
+ {hello:"Kia ora!",say:"Kia ora!",lang:"Māori",web:"mi-NZ",esp:"mi",en:"en-NZ",espEn:"en-GB-x-gbclan+m3",ep:45},
+ {hello:"Dia duit!",say:"Dia duit!",lang:"Irish",web:"ga-IE",esp:"ga",en:"en-IE",espEn:"en-GB-scotland+f3",ep:57},
+ {hello:"Vanakkam!",say:"வணக்கம்!",lang:"Tamil",web:"ta-IN",esp:"ta",en:"en-IN",espEn:"en-GB-x-gbcwmd+f3",ep:58},
+ {hello:"Osiyo!",say:"Osiyo!",lang:"Cherokee",web:"chr-US",esp:"en-US",en:"en-US",espEn:"en-US+m1",ep:44},
+ {hello:"Wah gwaan!",say:"Wah gwaan!",lang:"Jamaican Patois",web:"en-JM",esp:"en-029",en:"en-JM",espEn:"en-029+m3",ep:46}];
+var DIS={
+ wheel:{label:"wheelchair user",cls:"wheel",arms:"rest",note:"Rolls in. No steps, no dragging, no timers: everything works by touch, keyboard, voice or a switch.",line:"Love that there's room to roll right in."},
+ deaf:{label:"Deaf, signs",cls:"",arms:"signA",deaf:true,note:"Captions carry every word. Voices are optional, never needed.",line:"I'm good. The captions are perfect."},
+ blind:{label:"blind, white cane",cls:"shades",arms:"wcane",sr:true,note:"A screen reader describes each scene in words.",line:"Thanks. The screen reader tells me everything."},
+ aac:{label:"speaks with a talking tablet",cls:"",arms:"aac",aac:true,note:"Speaks through a talking tablet. Nobody rushes the reply.",line:"Hello. I am happy to be here."},
+ dog:{label:"low vision, guide dog",cls:"dog",arms:"dog",note:"Turns on the biggest text and high contrast.",line:"My dog likes it here too.",comfort:{calm:true,hc:true,size2:true}},
+ prost:{label:"prosthetic leg",cls:"prost",arms:"rest",note:"Walks in at their own pace, like anybody.",line:"Same as everybody: just walking in."},
+ crutch:{label:"uses crutches",cls:"",arms:"crutch",note:"Takes their time. There is no clock anywhere.",line:"No rush here, right? Good.",comfort:{calm:true}},
+ sound:{label:"sound-sensitive, ear defenders",cls:"defenders",arms:"rest",mute:true,note:"Turns on Calm motion. Voices stay off unless they choose them.",line:"Nice and calm in here. Thank you.",comfort:{calm:true}},
+ lowvis:{label:"low vision",cls:"",arms:"rest",note:"Turns on Calm motion, the biggest text and high contrast.",line:"The bigger text helps a lot.",comfort:{calm:true,hc:true,size2:true}},
+ cane:{label:"walks with a cane",cls:"",arms:"cane",note:"Walks in slowly. Nothing on the page has a timer.",line:"Thank you. I'll take my time, then.",comfort:{calm:true}},
+ aids:{label:"hearing aids",cls:"aids",arms:"rest",note:"Hears the voices, reads the captions too.",line:null}};
+var DISROT=[
+ ["","","","sound","","","","","","deaf",""],
+ ["aids","","prost","","aids","","aids","","prost","","aids"],
+ ["wheel","deaf","blind","aac","dog","wheel","prost","crutch","sound","lowvis","cane"]];
+function buildDemo(theme,d,key){
+  var base=DEMOS[theme][d], hi=Math.max(0,HUBS.indexOf(key)), dk=DISROT[d][hi], dis=DIS[dk]||null;
+  var P=PERSONAS[(hi*3+d)%PERSONAS.length];
+  var D=Object.assign({},base,{dis:dis,disKey:dk,persona:P,greeted:false});
+  D.cls=((base.cls||"")+" "+(dis?dis.cls:"")).trim();
+  D.arms=dis?dis.arms:(base.cane&&theme==="table"?"cane":"rest");
+  if(dis&&(dk==="wheel"||dk==="crutch"))D.stoop=0;
+  if(dis&&dis.line)D.line=dis.line;
+  D.sub=base.sub+(dis?" · "+dis.label:"");
+  D.label=base.label+(dis?" · "+dis.label:"")+" · says hello in "+P.lang;
+  return D;
+}
+
+/* ================= scene builders ================= */
+var LIB_ROWS=[70,150,230,310];
+function guestSvg(R){
+  var stand=R.slotsFront?{y:378,s:.72}:{y:318,s:.8};
+  R.guestY=stand.y; R.guestS=stand.s;
+  return '<g class="mover hidden" id="guestMove" style="transform:translate(-90px,'+stand.y+'px) scale('+stand.s+')">'+figure("guest","guest",{legs:true})+'</g>';
+}
+var CHIPS=[["Heavy",280],["Okay",400],["Hopeful",520]];
+function entrySvg(hideSteps){
+  var s=GHOST+PROFSVG;
+  s+=hipSign("WE NEVER GONNA CLOSE",470,42,26);
+  s+='<g class="donut"><circle cx="400" cy="108" r="36" fill="none" stroke="var(--accent)" stroke-width="22"/><circle cx="400" cy="108" r="36" fill="none" stroke="var(--pink)" stroke-width="3" stroke-dasharray="3 9"/></g>';
+  s+='<text x="400" y="116" text-anchor="middle" font-size="22" font-weight="900" fill="currentColor" font-family="system-ui,sans-serif">+U</text>';
+  s+='<text x="400" y="180" text-anchor="middle" font-size="22" font-weight="800" fill="currentColor" font-family="system-ui,sans-serif">How are U doing?</text>';
+  s+='<g id="walkBtn"><rect x="345" y="194" width="110" height="38" rx="19" fill="var(--accent)" stroke="currentColor" stroke-width="3"/><text x="400" y="219" text-anchor="middle" font-size="17" font-weight="800" fill="#17132a" font-family="system-ui,sans-serif">Walk In</text></g>';
+  s+='<g id="chips"'+(hideSteps?' class="hidden"':'')+'>'+CHIPS.map(function(c,k){return '<g class="chip" data-k="'+k+'"><rect x="'+(c[1]-48)+'" y="246" width="96" height="32" rx="16" fill="var(--card)" stroke="var(--line)" stroke-width="3"/><text x="'+c[1]+'" y="268" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor" font-family="system-ui,sans-serif">'+c[0]+'</text></g>';}).join("")+'</g>';
+  var doors=[["THE TABLE","var(--pink)"],["BOTH SIDES","var(--accent)"],["THE COUNTER","#8a5a3b"]];
+  s+='<g id="doors"'+(hideSteps?' class="hidden"':'')+'>'+doors.map(function(dd,k){var x=DOORX[k]-55;
+    return '<g class="door" data-k="'+k+'"><text x="'+DOORX[k]+'" y="316" text-anchor="middle" font-size="15" font-weight="900" font-style="italic" fill="currentColor" font-family="Trebuchet MS,system-ui,sans-serif" letter-spacing="2">'+dd[0]+'</text>'+
+      '<rect x="'+x+'" y="326" width="110" height="144" fill="var(--bg)"/><rect class="doorleaf" x="'+x+'" y="326" width="110" height="144" fill="'+dd[1]+'" stroke="currentColor" stroke-width="3"/>'+
+      '<rect class="dframe" x="'+x+'" y="326" width="110" height="144" fill="none" stroke="currentColor" stroke-width="4"/></g>';}).join("")+'</g>';
+  s+='<line x1="0" y1="470" x2="800" y2="470" stroke="currentColor" stroke-width="4"/>';
+  var E={}; s+=guestSvg(E); ENTRYG=E;
+  s+='<circle class="spark" id="spark" cx="0" cy="0" r="22" fill="none" stroke="var(--accent)" stroke-width="5"/>';
+  return s;
+}
+var ENTRYG=null, inEntry=false;
+function buildScene(key){
+  var R=ROOMS[key];
+  if(R.entry){ svg.innerHTML=entrySvg(false); R.slots=null; R.at=null; R.guestY=ENTRYG.guestY; R.guestS=ENTRYG.guestS; return; }
+  var s=GHOST+PROFSVG, T=R.theme, beat=T==="table"?' class="beat"':'';
+  R.slots=null; R.at=null; R.slotsFront=false;
+  if(key==="table"){
+    R.slots=R.items.map(function(it,i){return {x:[120,200,280][i%3],y:[80,160][Math.floor(i/3)],c:HIP[i],t:it.t,n:it.n};});
+    s+=hipSign("THE TABLE",400,52,34);
+    s+='<g id="slots">'+shelfSlots(R.slots,"tile")+'</g>';
+    s+=mover("mainMove",470,190,'<g'+beat+'>'+figure("fig1","friend",{legs:true,sneakers:true,cls:"cap"})+'</g>');
+    s+='<rect x="100" y="330" width="520" height="20" rx="6" fill="var(--wood)" stroke="currentColor" stroke-width="3"/><path d="M130 350 V470 M590 350 V470" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>';
+    s+='<g id="placed"></g><line x1="0" y1="470" x2="800" y2="470" stroke="currentColor" stroke-width="4"/>'+floorSign(T,"YOUTH · FREE · +U");
+    R.at=function(i){return {x:R.slots[i].x+90,y:190};};
+  }
+  else if(key==="counter"){
+    s+='<g class="steam" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"><path d="M418 262 q-10 -14 0 -28 q10 -14 0 -28"/><path d="M442 258 q-10 -14 0 -28 q10 -14 0 -28"/><path d="M466 262 q-10 -14 0 -28 q10 -14 0 -28"/></g><g id="drops"></g>';
+    s+=mover("mainMove",300,172,figure("fig1","chef",{arms:"stir"}));
+    s+='<path d="M382 282 C380 318 404 334 440 334 C476 334 500 318 498 282 Z" fill="#3a302b" stroke="currentColor" stroke-width="4"/><ellipse cx="440" cy="282" rx="60" ry="11" fill="#3a302b" stroke="currentColor" stroke-width="4"/><ellipse class="liquid" id="liquid" cx="440" cy="283" rx="50" ry="7" fill="#7d6f63"/><path d="M380 290 q-14 4 -10 16 M500 290 q14 4 10 16" stroke="currentColor" stroke-width="4" fill="none"/>';
+    s+='<rect x="0" y="330" width="800" height="26" fill="var(--wood)" stroke="currentColor" stroke-width="3"/><rect x="0" y="356" width="800" height="70" fill="var(--wood2)"/>'+plainSign("THE COUNTER",600,400,24);
+    s+='<g stroke="currentColor" stroke-width="5" stroke-linecap="round" fill="var(--wood)"><ellipse cx="180" cy="446" rx="44" ry="10"/><line x1="180" y1="456" x2="180" y2="500"/><ellipse cx="400" cy="446" rx="44" ry="10"/><line x1="400" y1="456" x2="400" y2="500"/><ellipse cx="620" cy="446" rx="44" ry="10"/><line x1="620" y1="456" x2="620" y2="500"/></g>';
+    R.slotsFront=true;
+  }
+  else if(key==="wd-store"||key==="nc-store"){
+    var pos=[[130,170],[250,170],[370,170],[190,260],[310,260]], pal=T==="table"?HIP:COLORS;
+    R.slots=pos.map(function(p,i){return {x:p[0],y:p[1]-60,w:70,h:56,c:pal[(i+(T==="table"?0:4))%pal.length]};});
+    s+=shelvesBack(70,440,[170,260])+'<g id="slots">'+shelfSlots(R.slots,"box")+'</g>';
+    s+=mover("mainMove",470,220,(T==="table"?'<g class="beat">':'<g>')+figure("fig1",R.who,{cls:T==="table"?"cap":""})+'</g>');
+    s+='<rect x="0" y="352" width="800" height="24" fill="var(--wood)" stroke="currentColor" stroke-width="3"/><rect x="0" y="376" width="800" height="144" fill="var(--wood2)"/>';
+    s+=T==="table"?hipSign("WHOLE DONUTS",600,458,26)+hipSign("STORE",600,492,18):plainSign("NURTURED CHEF",600,460,22)+plainSign("STORE",600,490,16);
+    R.at=function(i){var sl=R.slots[i];return {x:Math.max(110,Math.min(500,sl.x+60)),y:220};};
+    R.slotsFront=true;
+  }
+  else if(key==="nc-library"){
+    var xs=[100,165,230,295,360];
+    R.slots=R.items.map(function(it,i){return {x:xs[i%5],y:i<5?60:150,w:50,h:72,c:COLORS[i%COLORS.length],t:String(i+1)};});
+    s+=shelvesBack(66,394,[132,222])+'<g id="slots">'+shelfSlots(R.slots,"book")+'</g>';
+    s+='<line x1="0" y1="470" x2="800" y2="470" stroke="currentColor" stroke-width="4"/>';
+    s+=mover("mainMove",470,280,figure("fig1","chef",{legs:true}))+floorSign(T,"NURTURED CHEF LIBRARY");
+    R.at=function(i){return {x:R.slots[i].x+55,y:280};};
+  }
+  else if(key==="wd-library"){
+    var cx=[100,180,260,340];
+    R.slots=R.items.map(function(it,i){return {x:cx[i%4],y:LIB_ROWS[Math.floor(i/4)]-58,w:56,h:56,c:HIP[i%HIP.length],t:String(i+1)};});
+    s+=shelvesBack(60,380,LIB_ROWS)+'<g id="slots">'+shelfSlots(R.slots,"book")+'</g>';
+    s+='<line x1="0" y1="470" x2="800" y2="470" stroke="currentColor" stroke-width="4"/>';
+    var rungs="";for(var y=60;y<=460;y+=40)rungs+='<line x1="-30" y1="'+y+'" x2="30" y2="'+y+'"/>';
+    s+='<g class="mover" id="ladder" style="transform:translate(470px,0px)" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity=".6"><line x1="-30" y1="40" x2="-30" y2="470"/><line x1="30" y1="40" x2="30" y2="470"/>'+rungs+'</g>';
+    s+=mover("mainMove",470,280,figure("fig1","friend",{legs:true,sneakers:true,cls:"cap"}))+floorSign(T,"WHOLE DONUTS LIBRARY");
+    R.at=function(i){var row=Math.floor(i/4);return {x:Math.max(130,R.slots[i].x+70),y:[100,170,250,280][row]};};
+  }
+  else if(R.vault){
+    var jp=[[200,180],[260,180],[320,180],[230,262],[300,262]], pal2=T==="table"?HIP:COLORS;
+    R.slots=jp.map(function(p,i){return {x:p[0],y:p[1]-44,c:pal2[(i+2)%pal2.length]};});
+    s+='<circle cx="260" cy="230" r="128" fill="var(--wood2)" stroke="currentColor" stroke-width="5"/>';
+    s+='<g stroke="currentColor" stroke-width="3"><line x1="160" y1="180" x2="360" y2="180"/><line x1="170" y1="262" x2="350" y2="262"/></g>';
+    s+='<g id="slots">'+shelfSlots(R.slots,"jar")+'</g>';
+    s+='<g class="door" id="door"><circle cx="260" cy="230" r="120" fill="var(--wood)" stroke="currentColor" stroke-width="6"/><circle cx="260" cy="230" r="86" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="6 8"/>'+
+       '<g stroke="currentColor" stroke-width="6" stroke-linecap="round"><line x1="260" y1="190" x2="260" y2="270"/><line x1="220" y1="230" x2="300" y2="230"/></g><circle cx="260" cy="230" r="16" fill="var(--accent)" stroke="currentColor" stroke-width="4"/>'+
+       '<text x="260" y="148" text-anchor="middle" font-size="16" font-weight="800" letter-spacing="3" fill="var(--signtext)" font-family="system-ui,sans-serif">'+(T==="table"?"CRUMB VAULT":"RECIPE VAULT")+'</text></g>';
+    s+='<line x1="0" y1="470" x2="800" y2="470" stroke="currentColor" stroke-width="4"/>';
+    s+=mover("mainMove",470,280,(T==="table"?'<g class="beat">':'<g>')+figure("fig1",R.who,{legs:true,sneakers:T==="table",cls:T==="table"?"cap":""})+'</g>');
+    s+=floorSign(T,"MEMBERS · KEY ONLY");
+    R.at=function(i){return {x:440,y:280};};
+  }
+  else if(R.gallery){
+    var fx=[72,146,220,294,368,442];
+    R.slots=R.items.map(function(it,i){return {x:fx[i%6],y:i<6?70:170,c:HIP[i%HIP.length],face:it.face};});
+    s+=hipSign("THE GALLERY",300,46,30)+'<g id="slots">'+R.slots.map(function(sl,i){
+      return '<g class="slot" data-i="'+i+'"><rect class="sbody" x="'+(sl.x-34)+'" y="'+sl.y+'" width="68" height="78" rx="4" fill="var(--card)" stroke="'+sl.c+'" stroke-width="5"/>'+
+      '<g transform="translate('+sl.x+','+(sl.y+38)+') scale(.62)" stroke="currentColor" fill="none" stroke-width="3.5" stroke-linecap="round">'+(i===2?PROFHAT:i===1?CHEFHAT:'')+'<circle r="24" fill="var(--bg)" stroke-width="5"/>'+FACEP[sl.face]+'</g></g>';}).join("")+'</g>';
+    s+='<line x1="0" y1="470" x2="800" y2="470" stroke="currentColor" stroke-width="4"/>';
+    s+=mover("mainMove",470,280,'<g class="beat">'+figure("fig1","friend",{legs:true,sneakers:true,cls:"cap"})+'</g>')+floorSign("table","FACES + TEMPLATES");
+    R.at=function(i){return {x:R.slots[i].x+70,y:280};};
+  }
+  else if(key==="sponsors"){
+    s+='<line x1="0" y1="470" x2="800" y2="470" stroke="currentColor" stroke-width="4"/>';
+    s+='<g class="sway"><line x1="238" y1="250" x2="238" y2="96" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><line x1="562" y1="250" x2="562" y2="96" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>'+
+       '<rect x="238" y="100" width="324" height="92" rx="6" fill="var(--card)" stroke="currentColor" stroke-width="4"/>'+
+       '<text x="400" y="162" text-anchor="middle" font-size="46" font-weight="800" fill="currentColor" font-family="system-ui,sans-serif">+ U Sponsors</text></g>';
+    var pts=[[400,226],[400,252],[400,278],[400,304],[400,330],[372,312],[386,334],[428,312],[414,334],[400,356]];
+    s+='<g class="neon"><path class="outline" d="M384 214 H416 V316 H448 L400 372 L352 316 H384 Z" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>'+
+      pts.map(function(p,i){return '<circle class="bulb" cx="'+p[0]+'" cy="'+p[1]+'" r="6" fill="currentColor" style="animation-delay:'+(i*0.16).toFixed(2)+'s"/>';}).join("")+'</g>';
+    s+=mover("mainMove",200,280,'<g class="bob">'+figure("fig1","friend",{legs:true,arms:"upR"})+'</g>');
+    s+=mover("secondMove",600,280,'<g class="bob" style="animation-delay:-1.5s">'+figure("fig2","chef",{legs:true,arms:"upL"})+'</g>');
+  }
+  s+=guestSvg(R);
+  s+='<circle class="spark" id="spark" cx="0" cy="0" r="22" fill="none" stroke="var(--accent)" stroke-width="5"/>';
+  svg.innerHTML=s;
+}
+
+/* ================= speech: an international cast ================= */
+var voicesOn=false, speed=1, CAST={};
+var ROLEV={
+ chef:{name:"Chef",accent:"Irish English",prefs:["en-ie","en-gb","en"],rate:.95,pitch:.85,esp:"en-GB-scotland+m3",ep:38},
+ friend:{name:"+U Friend",accent:"Nigerian English",prefs:["en-ng","en-za","en-ke","en-jm","en-us","en"],rate:1.06,pitch:1.2,esp:"en-029+f3",ep:62},
+ prof:{name:"Professor",accent:"Indian English",prefs:["en-in","en-gb","en"],rate:.98,pitch:1,esp:"en-GB-x-rp+m1",ep:45},
+ door:{name:"+U (front door)",accent:"Australian English",prefs:["en-au","en-nz","en-us","en"],rate:1,pitch:1.1,esp:"en-US+f2",ep:55},
+ guest:{name:"Guests",accent:"a different language and accent for every visitor",prefs:["en"],rate:1,pitch:1,esp:"en-US",ep:50},
+ aac:{name:"Talking tablet",accent:"the tablet's own voice",prefs:["en-us","en"],rate:.9,pitch:1,esp:"en-US+klatt",ep:50}};
+try{CAST=JSON.parse(localStorage.getItem("plusu-cast")||"{}")||{};speed=+(localStorage.getItem("plusu-speed")||1)||1;}catch(e){}
+window.__speechLog=[];
+function allVoices(){try{return speechSynthesis.getVoices()||[];}catch(e){return [];}}
+function pickVoice(prefs){
+  var vs=allVoices();
+  for(var i=0;i<prefs.length;i++)for(var j=0;j<vs.length;j++)if(vs[j].lang&&vs[j].lang.toLowerCase().replace("_","-").indexOf(prefs[i])===0)return vs[j];
+  return null;
+}
+function castVoice(role){var uri=CAST[role]; if(!uri)return null; var vs=allVoices(); for(var i=0;i<vs.length;i++)if(vs[i].voiceURI===uri)return vs[i]; return null;}
+function speakParts(parts,role){
+  var R=ROLEV[role]||ROLEV.guest;
+  window.__speechLog.push({t:Date.now(),role:role,parts:parts.map(function(p){return {text:p.say||p.text,esp:p.esp||R.esp,ep:p.ep||R.ep};})});
+  if(!voicesOn||!("speechSynthesis" in window))return;
+  if(demo&&demo.dis&&demo.dis.mute)return;
+  try{
+    speechSynthesis.cancel();
+    parts.forEach(function(p){
+      var u=new SpeechSynthesisUtterance(p.say||p.text), v=castVoice(role);
+      if(!v&&p.lang){var l=p.lang.toLowerCase(); v=pickVoice([l,l.split("-")[0]]); if(!v&&l.indexOf("en")!==0)return;}
+      if(!v)v=pickVoice(R.prefs);
+      if(v){u.voice=v;u.lang=v.lang;} else if(p.lang)u.lang=p.lang;
+      u.rate=R.rate*speed; u.pitch=R.pitch;
+      speechSynthesis.speak(u);
+    });
+  }catch(e){}
+}
+function speak(text,who){ speakParts([{text:text}],who); }
+function buildCast(){
+  var g=$("castGrid"); if(!g)return;
+  var vs=allVoices().slice().sort(function(a,b){return (a.lang+a.name).localeCompare(b.lang+b.name);});
+  var h="";
+  ["chef","friend","prof","door","guest"].forEach(function(r){
+    var R=ROLEV[r];
+    h+='<label>'+R.name+' <select data-role="'+r+'"><option value="">Auto: '+R.accent+'</option>'+
+      vs.map(function(v){return '<option value="'+v.voiceURI.replace(/"/g,"&quot;")+'"'+(CAST[r]===v.voiceURI?" selected":"")+'>'+v.name.replace(/</g,"")+' ('+v.lang+')</option>';}).join("")+'</select></label>';
+  });
+  h+='<label>Speaking speed <input type="range" id="speedR" min="0.6" max="1.4" step="0.1" value="'+speed+'" aria-valuetext="'+speed+' times"></label>';
+  h+='<label>Try it <button type="button" class="btn alt" id="castTry">Hear the cast</button></label>';
+  g.innerHTML=h;
+  $("castNote").textContent=vs.length?"Your device has "+vs.length+" voices. Auto picks each accent when your device has it; add more voices in your device's speech settings.":"This browser has no voices to choose from. Captions always carry every word.";
+  Array.prototype.forEach.call(g.querySelectorAll("select"),function(sel){sel.addEventListener("change",function(){CAST[sel.getAttribute("data-role")]=sel.value; try{localStorage.setItem("plusu-cast",JSON.stringify(CAST))}catch(e){} });});
+  $("speedR").addEventListener("input",function(){speed=+this.value;this.setAttribute("aria-valuetext",speed+" times");try{localStorage.setItem("plusu-speed",String(speed))}catch(e){}});
+  $("castTry").addEventListener("click",function(){
+    var was=voicesOn; voicesOn=true;
+    try{speechSynthesis.cancel();}catch(e){}
+    var lines=[["chef","Ah, there you are!"],["friend","Yo, welcome in!"],["prof","Choose one. That's the whole step."],["door","How are U doing?"]];
+    lines.forEach(function(l){var R=ROLEV[l[0]];var u=new SpeechSynthesisUtterance(l[1]);var v=castVoice(l[0])||pickVoice(R.prefs);if(v)u.voice=v;u.rate=R.rate*speed;u.pitch=R.pitch;try{speechSynthesis.speak(u);}catch(e){}});
+    var P=PERSONAS[Math.floor(Math.random()*PERSONAS.length)], v2=pickVoice([P.web.toLowerCase(),P.web.split("-")[0]]);
+    if(v2){var u2=new SpeechSynthesisUtterance(P.say);u2.voice=v2;try{speechSynthesis.speak(u2);}catch(e){}}
+    voicesOn=was;
+  });
+}
+if("speechSynthesis" in window){try{speechSynthesis.addEventListener("voiceschanged",buildCast);}catch(e){}}
+function announce(t){var l=$("live");l.textContent="";setTimeout(function(){l.textContent=t},60);}
+
+/* ================= state ================= */
+var cur=null, sel=-1, picked=[], served=false, idleT=null, profT=null, profIdx=0, wIdx=0, demo=null;
+var NAMES={chef:"Chef",friend:"+U Friend",guest:"Guest",door:"+U"};
+function whoOf(R){return R.who==="pair"?"friend":R.who;}
+function figEl(who){ if(cur==="sponsors"&&who==="chef")return $("fig2"); return $("fig1"); }
+function setCaption(lbl,text){ if(lbl!==null)$("capLbl").textContent=lbl; $("capText").textContent=text; }
+function say(text,face,who){
+  var R=ROOMS[cur]; who=who||whoOf(R);
+  var f=figEl(who); if(f)f.setAttribute("data-face",face||"smile");
+  $("mainName").textContent=NAMES[who]; $("mainText").textContent=text;
+  if(demo)setCaption(null,NAMES[who]+": "+text); else announce(NAMES[who]+" says: "+text);
+  speak(text,who); describe();
+}
+var FACE={neutral:"a calm face",smile:"a smile",wink:"a wink",laugh:"a big laugh",proud:"a proud grin",listen:"raised eyebrows, listening",think:"a thinking face"};
+function describe(){
+  var R=ROOMS[cur], f1=$("fig1"), f=f1?f1.getAttribute("data-face"):"smile", d, it=sel>-1?R.items[sel]:null;
+  var prof=$("prof")&&$("prof").classList.contains("on")?" The Professor has stepped forward, pointing to the choices.":" The Professor waits quietly in the background.";
+  var ghost=" Ghosted hands holding a plus sign and crumbs sit faintly behind everything.";
+  var who=R.who==="chef"?"The Chef, a stick figure in a tall hat,":"The +U Friend, a stick figure in a backwards cap with a +U badge,";
+  if(inEntry||cur==="entry") d="The universal entry. A sign reads We never gonna close. A glowing +U donut, the question How are U doing?, a Walk In button, three feeling choices (Heavy, Okay, Hopeful), and three doors: The Table, Both Sides, and The Counter.";
+  else if(cur==="sponsors") d="Two stick figures, the +U Friend and the Chef, hold up a banner on two poles that reads plus U Sponsors. Below it, a lit arrow sign blinks and points down to the questions. The Friend has "+FACE[f]+".";
+  else if(cur==="table") d="A dark, bright room with feeling tiles on the wall, like a periodic table, and a long table. "+who+" bounces to a beat with "+FACE[f]+". "+picked.length+" of 3 tiles are on the table.";
+  else if(cur==="counter") d="A diner counter with stools. "+who+" stirs a big steaming pot with "+FACE[f]+". "+(picked.length?picked.length+" of 3 ingredients are in the pot.":"The pot is simmering, waiting.");
+  else if(cur==="wd-library") d="A library with four shelves of numbered books and a rolling ladder. "+who+" "+(it?"has climbed the ladder and holds book "+(sel+1):"stands at the foot of the ladder")+", with "+FACE[f]+".";
+  else if(cur==="nc-library") d="A library shelf of ten numbered books. "+who+" "+(it?"holds up "+it.n:"stands by the shelf")+", with "+FACE[f]+".";
+  else if(R.vault) d="A round vault door"+($("door")&&$("door").classList.contains("open")?", swung open to show shelves of jars inside":", closed")+". "+who+" stands beside it with "+FACE[f]+".";
+  else d="A shop with shelves of boxes behind a counter. "+who+" "+(it?"holds up "+it.n:"waits behind the counter")+", with "+FACE[f]+".";
+  if(demo&&$("guestMove")&&!$("guestMove").classList.contains("hidden"))d+=" A visitor has come in"+(demo.dis?" ("+demo.dis.label+")":"")+(demo.cls.indexOf("sash")>-1?", wearing a sponsor sash":"")+".";
+  $("sceneDesc").textContent=d+prof+ghost;
+}
+
+/* ================= 14-second Professor ================= */
+function profSteps(text){
+  $("prof").classList.add("on");$("profText").textContent=text;$("profBubble").classList.add("on");
+  ["fig1","fig2"].forEach(function(id){var f=$(id);if(f)f.setAttribute("data-face","listen");});
+  if(demo)setCaption(null,"Professor: "+text); else announce("The Professor steps forward and says: "+text);
+  speak(text,"prof"); describe();
+  clearTimeout(profT); profT=setTimeout(profBack,9000);
+}
+function profBack(){
+  clearTimeout(profT);
+  var p=$("prof"); if(!p)return;
+  p.classList.remove("on");$("profBubble").classList.remove("on");
+  ["fig1","fig2"].forEach(function(id){var f=$(id);if(f&&f.getAttribute("data-face")==="listen")f.setAttribute("data-face","smile");});
+  describe(); armIdle();
+}
+function armIdle(){
+  clearTimeout(idleT);
+  if(demo||!$("guideChk").checked||document.hidden||($("prof")&&$("prof").classList.contains("on")))return;
+  if(ROOMS[cur].multi&&served)return;
+  idleT=setTimeout(function(){var L=ROOMS[cur].prof;profSteps(L[profIdx%L.length]);profIdx++;},14000);
+}
+function activity(){var p=$("prof");if(!p||!p.classList.contains("on"))armIdle();}
+["pointerdown","keydown"].forEach(function(ev){document.addEventListener(ev,activity,true)});
+document.addEventListener("visibilitychange",armIdle);
+$("guideChk").addEventListener("change",function(){ if(!this.checked){clearTimeout(idleT);profBack();clearTimeout(idleT);} else armIdle(); });
+
+/* ================= whisper, always there ================= */
+var BASE_W=["psst… no rush.","you belong here.","one small thing is plenty."];
+setInterval(function(){
+  var list=ROOMS[cur].whispers.concat(BASE_W); wIdx=(wIdx+1)%list.length;
+  var w=$("whisper"),t=$("whisperText");
+  if(root.classList.contains("calm")){t.textContent=list[wIdx];return;}
+  w.classList.add("fade"); setTimeout(function(){t.textContent=list[wIdx];w.classList.remove("fade");},1200);
+},11000);
+
+/* ================= choosing ================= */
+function moveMain(p){
+  $("mainMove").style.transform="translate("+p.x+"px,"+p.y+"px)";
+  var l=$("ladder"); if(l)l.style.transform="translate("+p.x+"px,0px)";
+}
+function openDoor(){var d=$("door"); if(d&&!d.classList.contains("open"))d.classList.add("open");}
+function dropIn(color){
+  if(root.classList.contains("calm"))return;
+  var g=$("drops"); if(!g)return;
+  var c=document.createElementNS(SVGNS,"circle");
+  c.setAttribute("cx",420+Math.random()*40);c.setAttribute("cy","282");c.setAttribute("r","9");c.setAttribute("fill",color);c.setAttribute("class","drop");g.appendChild(c);
+  setTimeout(function(){ if(c.parentNode)g.removeChild(c);
+    for(var i=0;i<4;i++){var b=document.createElementNS(SVGNS,"circle");b.setAttribute("cx",405+Math.random()*70);b.setAttribute("cy","278");b.setAttribute("r",2+Math.random()*3);b.setAttribute("fill","none");b.setAttribute("stroke",color);b.setAttribute("stroke-width","2");b.setAttribute("class","bubbleup");g.appendChild(b);(function(x){setTimeout(function(){if(x.parentNode)g.removeChild(x)},1500)})(b);}
+  },900);
+}
+var POT=["#7d6f63","#b8894f","#d39a3e","#f0b43c"];
+function choose(i){
+  var R=ROOMS[cur], it=R.items[i];
+  if(R.multi){
+    if(served||picked.indexOf(i)>-1||picked.length>=R.multi)return;
+    picked.push(i); sel=i;
+  } else sel=i;
+  if($("prof").classList.contains("on"))profBack();
+  if(R.slots){
+    Array.prototype.forEach.call(document.querySelectorAll(".slot"),function(g,j){g.classList.toggle("lit",R.multi?picked.indexOf(j)>-1:j===i);});
+    if(R.at)moveMain(R.at(i));
+    var f=$("fig1"); f.setAttribute("data-arms","hold");
+    var held=f.querySelector(".held"); if(held)held.setAttribute("fill",R.slots[i].c);
+  }
+  if(R.vault)openDoor();
+  if(R.entry){
+    var k2=SIDE[it.go];
+    Array.prototype.forEach.call(document.querySelectorAll("#doors .door"),function(g2,j){g2.classList.toggle("lit",j===k2);var lf=g2.querySelector(".doorleaf");lf.classList.toggle("open",j===k2);});
+    if(!demo)setTimeout(function(){ if(cur==="entry")location.hash=it.go; },2200);
+  }
+  if(cur==="table"){
+    var k=picked.length-1, x=[300,370,440][k];
+    var g=document.createElementNS(SVGNS,"g");
+    g.innerHTML='<rect x="'+(x-26)+'" y="294" width="52" height="36" rx="6" fill="'+R.slots[i].c+'" stroke="currentColor" stroke-width="3"/><text x="'+x+'" y="318" text-anchor="middle" font-size="18" font-weight="900" fill="#17132a" font-family="system-ui,sans-serif">'+it.t+'</text>';
+    $("placed").appendChild(g);
+  }
+  if(R.counter){dropIn(it.c);$("liquid").setAttribute("fill",POT[Math.min(picked.length,3)]);}
+  renderItems();
+  if(R.multi){
+    var full=picked.length>=R.multi;
+    say(full?it.say+(R.counter?" That's a full pot now.":" That's three. Table's ready."):it.say,it.face);
+    if(full&&!demo)setTimeout(function(){var s=$("serveBtn");if(!s.classList.contains("hidden"))s.focus();},50);
+  } else {
+    $("detail").hidden=false; $("dTitle").textContent=it.n; $("dBody").textContent=it.body; $("dList").innerHTML=""; $("dTag").textContent=it.tag; $("dTag").classList.remove("hidden");
+    say(it.say,it.face,it.speaker);
+    if(R.gallery)renderGallery(i); else $("gal").innerHTML="";
+  }
+  armIdle();
+}
+function serve(){
+  var R=ROOMS[cur]; if(!R.multi||picked.length<R.multi||served)return;
+  served=true; clearTimeout(idleT);
+  if($("prof").classList.contains("on"))profBack();
+  $("detail").hidden=false; $("dTitle").textContent=R.resultH; $("dBody").textContent="You made this. Take one step from it before tonight.";
+  $("dTag").classList.add("hidden");
+  var ol=$("dList"); ol.innerHTML="";
+  picked.forEach(function(j){var it=R.items[j];var li=document.createElement("li");li.innerHTML="<b>"+it.n+":</b> "+it.step;ol.appendChild(li);});
+  var f=$("fig1"); if(cur==="table"){f.setAttribute("data-arms","upR");}
+  renderItems();
+  say(R.serveSay,"proud");
+  if(!demo)$("dTitle").focus();
+}
+function renderItems(){
+  var R=ROOMS[cur], box=$("items"); box.innerHTML="";
+  R.items.forEach(function(it,i){
+    var b=document.createElement("button"); b.type="button"; b.className="item";
+    var on=R.multi?picked.indexOf(i)>-1:i===sel;
+    b.setAttribute("aria-pressed",on?"true":"false");
+    if(R.multi&&!on&&(picked.length>=R.multi||served))b.setAttribute("aria-disabled","true");
+    b.innerHTML=(it.t?"<b>"+it.t+"</b> · ":"")+it.n+"<small>"+it.d+(R.multi&&on?" · on the "+(R.counter?"pot":"table"):"")+"</small>";
+    b.addEventListener("click",function(){ if(!demo)choose(i); });
+    box.appendChild(b);
+  });
+  if(R.multi){
+    $("serveBtn").textContent=R.serve;
+    $("serveBtn").classList.toggle("hidden",!(picked.length>=R.multi&&!served));
+    $("againBtn").classList.toggle("hidden",picked.length===0);
+    $("intro").textContent=served?"Done. Start over whenever you like.":R.intro+" ("+picked.length+" of "+R.multi+")";
+  } else { $("serveBtn").classList.add("hidden"); $("againBtn").classList.add("hidden"); }
+}
+$("serveBtn").addEventListener("click",function(){ if(!demo)serve(); });
+$("againBtn").addEventListener("click",function(){ if(demo)return; reset(); $("items-h").focus(); });
+
+
+/* ================= the gallery ================= */
+var PAL={
+ table:{bg:"#17132a",ink:"#f5f2ff",accent:"#7cf2c8",pink:"#ff5fa2",yellow:"#ffd23f",wood:"#3b2f78",wall:"#1f1a38",card:"#241e44",prof:"#cfc8ee",signtext:"#ffffff"},
+ counter:{bg:"#f6efe4",ink:"#2b2320",accent:"#d9902a",pink:"#d06a4c",yellow:"#e0a030",wood:"#8a5a3b",wall:"#efe4d3",card:"#fffaf2",prof:"#55606b",signtext:"#f6efe4"}};
+var FACEP={},ARMP={};
+FACES.replace(/<g class="f-(\w+)">(.*?)<\/g>/g,function(m,k,v){FACEP[k]=v;return m;});
+figure("x","friend",{legs:true}).replace(/<g class="a-(\w+)">(.*?)<\/g>(?=<g class="a-|<\/g>)/g,function(m,k,v){ARMP[k]=(ARMP[k]||"")+v;return m;});
+var FACE_ORDER=["neutral","smile","wink","laugh","proud","listen","think"];
+var FACE_NAME={neutral:"Calm",smile:"Smile",wink:"Wink",laugh:"Big laugh",proud:"Proud",listen:"Listening",think:"Thinking"};
+function colorize(str,P){
+  return str.replace(/var\(--bg\)/g,P.bg).replace(/var\(--accent\)/g,P.accent).replace(/var\(--pink\)/g,P.pink).replace(/var\(--wall\)/g,P.wall)
+    .replace(/var\(--prof\)/g,P.prof).replace(/var\(--card\)/g,P.card).replace(/var\(--wood\)/g,P.wood).replace(/var\(--signtext\)/g,P.signtext).replace(/currentColor/g,P.ink);
+}
+function sFig(kind,face,arms,P,o){
+  o=o||{};
+  var hat=kind==="chef"?CHEFHAT:kind==="prof"?PROFHAT:"";
+  var cap=o.cap?'<path d="M-24 -6 C-26 -34 24 -34 24 -6 Z" fill="var(--pink)" stroke-width="3"/><path d="M-22 -10 L-44 -4" stroke-width="5"/>':"";
+  var phones=o.phones?'<path d="M-28 4 C-30 -40 30 -40 28 4" stroke-width="4"/><rect x="-33" y="-6" width="9" height="18" rx="3" fill="var(--accent)" stroke-width="2.5"/><rect x="24" y="-6" width="9" height="18" rx="3" fill="var(--accent)" stroke-width="2.5"/>':"";
+  var badge=kind==="friend"?'<circle cx="0" cy="74" r="13" fill="var(--bg)" stroke-width="3"/><text x="0" y="79" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor" stroke="none" font-family="system-ui,sans-serif">+U</text>':kind==="chef"?'<path d="M-10 26 L0 40 L10 26" stroke-width="3"/>':"";
+  var extra=(o.shades?SHADES:"")+(o.aids?AIDS:"")+(o.defenders?DEFS:"");
+  var lower=(o.prost?PROST:"")+(o.wheel?WHEEL:"")+(o.dog?DOG:"");
+  var sash=o.sash?'<path d="M-14 30 L16 118" stroke="var(--accent)" stroke-width="9"/><circle cx="2" cy="76" r="7" fill="var(--pink)" stroke="none"/>':"";
+  var legs=o.wheel?"":'<path d="M0 130 L-22 190 M0 130 L22 190"/>'+(o.sneakers?'<path d="M-30 190 h12 M18 190 h12" stroke="var(--pink)" stroke-width="7"/>':"");
+  var g='<g stroke="currentColor" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"'+(o.tilt?' transform="rotate('+o.tilt+' 0 190)"':'')+'>'+
+    '<circle cx="0" cy="0" r="24" fill="var(--bg)"/>'+hat+cap+phones+'<g stroke-width="3.5">'+FACEP[face]+'</g>'+(kind==="prof"?GLASSES:"")+extra+
+    '<line x1="0" y1="24" x2="0" y2="130"/>'+sash+badge+legs+lower+ARMP[arms||"rest"]+'</g>';
+  return colorize(g.replace(/class="acc [^"]*"/g,"").replace(/class="wheelspin"/g,""),P);
+}
+function svgDoc(vb,P,inner,label,bgKey){
+  var v=vb.split(" ");
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+vb+'" role="img" aria-label="'+label+'"><rect x="'+v[0]+'" y="'+v[1]+'" width="'+v[2]+'" height="'+v[3]+'" fill="'+P[bgKey||"wall"]+'"/>'+inner+'</svg>';
+}
+var FIGVB="-80 -95 160 300";
+function hipT(t,x,y,sz,P,anchor){anchor=anchor||"middle";return '<text x="'+(x+3)+'" y="'+(y+3)+'" text-anchor="'+anchor+'" font-size="'+sz+'" font-weight="900" font-style="italic" fill="'+P.pink+'" font-family="Trebuchet MS,system-ui,sans-serif" letter-spacing="2">'+t+'</text><text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+sz+'" font-weight="900" font-style="italic" fill="'+P.accent+'" font-family="Trebuchet MS,system-ui,sans-serif" letter-spacing="2">'+t+'</text>';}
+function dinT(t,x,y,sz,P,fill,ls){return '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+sz+'" font-weight="700" letter-spacing="'+(ls==null?4:ls)+'" fill="'+(fill||P.ink)+'" font-family="system-ui,sans-serif">'+t+'</text>';}
+function txt(t,x,y,sz,fill,anchor,weight){return '<text x="'+x+'" y="'+y+'" text-anchor="'+(anchor||"middle")+'" font-size="'+sz+'" font-weight="'+(weight||400)+'" fill="'+fill+'" font-family="system-ui,sans-serif">'+t+'</text>';}
+function ghostMark(P,op,tr){return '<g opacity="'+op+'" transform="'+tr+'">'+GHOST.replace('class="ghost" ','').replace(/currentColor/g,P.ink)+'</g>';}
+function place(fig,x,y,sc){return '<g transform="translate('+x+' '+y+') scale('+sc+')">'+fig+'</g>';}
+var GSVG=[], reelT=null;
+function card(svg,label,live){
+  GSVG.push(svg); var idx=GSVG.length-1;
+  return '<figure class="gcard"><div class="gart"'+(live?' id="reel"':'')+'>'+(live?svg:svg.replace('<svg ','<svg class="'+(live?'':'')+'" '))+'</div><figcaption><span>'+label+'</span><button type="button" class="copy" data-c="'+idx+'" aria-label="Copy SVG: '+label+'">Copy SVG</button></figcaption></figure>';
+}
+function facesSection(kind,P,opt,title){
+  var h='<h4 class="gsec">'+title+'</h4><div class="gal">';
+  h+=card(svgDoc(FIGVB,P,'<g class="bob">'+sFig(kind,"smile","wave",P,opt)+'</g>',title+": all faces, playing"),"All faces (playing)",true);
+  FACE_ORDER.forEach(function(f){h+=card(svgDoc(FIGVB,P,'<g class="bob">'+sFig(kind,f,"rest",P,opt)+'</g>',title+": "+FACE_NAME[f]),FACE_NAME[f]);});
+  return h+'</div>';
+}
+function startReel(kind,P,opt){
+  clearInterval(reelT); var k=0;
+  reelT=setInterval(function(){var r=$("reel"); if(!r){clearInterval(reelT);return;} k=(k+1)%FACE_ORDER.length;
+    r.innerHTML=svgDoc(FIGVB,P,'<g class="bob">'+sFig(kind,FACE_ORDER[k],k%2?"wave":"rest",P,opt)+'</g>',"Face: "+FACE_NAME[FACE_ORDER[k]]);},1400);
+}
+function swatches(P,names){
+  return '<div class="gal">'+names.map(function(n){return '<div class="sw"><i style="background:'+P[n[0]]+'"></i><span>'+n[1]+'<br><code>'+P[n[0]]+'</code></span></div>';}).join("")+'</div>';
+}
+function socialSquare(theme){
+  var P=PAL[theme], t=theme==="table";
+  var inner=ghostMark(P,t?.12:.08,"translate(-200 30)")+
+    (t?hipT("TODAY'S FEELING",200,56,28,P):dinT("TODAY AT THE COUNTER",200,52,20,P))+
+    (t?'<rect x="40" y="110" width="140" height="140" rx="16" fill="'+P.pink+'" stroke="'+P.ink+'" stroke-width="5"/>'+txt("Ho",110,190,64,P.bg,"middle",900)+txt("Hope",110,232,20,P.bg,"middle",700)
+      :'<path d="M60 170 C58 220 80 244 120 244 C160 244 182 220 180 170 Z" fill="#3a302b" stroke="'+P.ink+'" stroke-width="5"/><ellipse cx="120" cy="170" rx="64" ry="12" fill="'+P.accent+'" stroke="'+P.ink+'" stroke-width="5"/>'+txt("today's special",120,140,16,P.ink,"middle",700))+
+    place(sFig(t?"friend":"chef",t?"proud":"laugh",t?"wave":"rest",P,{cap:t,sneakers:t}),300,150,.62)+
+    txt(t?"one small step:":"[ingredient of the day]",200,316,18,P.ink,"middle",700)+
+    txt(t?"[write one thing you're looking forward to]":"[one small step to try today]",200,344,15,P.ink)+
+    txt("+U",360,385,18,t?P.accent:P.accent,"middle",900);
+  return svgDoc("0 0 400 400",P,inner,(t?"Table":"Counter")+" square post template","bg");
+}
+function story(theme){
+  var P=PAL[theme], t=theme==="table";
+  var inner=ghostMark(P,t?.12:.08,"translate(-290 40) scale(1)")+
+    (t?hipT("THE TABLE",112,60,30,P):dinT("THE COUNTER",112,58,22,P))+
+    txt(t?"how are U doing?":"pull up a stool",112,92,15,P.ink)+
+    place(sFig(t?"friend":"chef","smile","wave",P,{cap:t,sneakers:t}),112,170,.8)+
+    '<rect x="22" y="342" width="181" height="40" rx="20" fill="'+P.accent+'"/>'+txt(t?"[walk in: link here]":"[walk in: link here]",112,368,14,P.bg,"middle",700);
+  return svgDoc("0 0 225 400",P,inner,(t?"Table":"Counter")+" story template","bg");
+}
+function poster(theme){
+  var P=PAL[theme], t=theme==="table";
+  var inner=ghostMark(P,t?.13:.09,"translate(-250 60)")+
+    (t?hipT("THE TABLE",150,62,42,P):dinT("THE COUNTER",150,60,30,P))+
+    txt(t?"youth · free · +U":"come as you are · +U",150,92,16,P.ink,"middle",700)+
+    place(sFig(t?"friend":"chef",t?"laugh":"wink","wave",P,{cap:t,sneakers:t}),150,170,.72)+
+    txt("[your event]",150,336,20,P.ink,"middle",800)+txt("[date · time · place]",150,362,14,P.ink)+
+    txt("no name needed. just walk in.",150,388,12,P.ink);
+  return svgDoc("0 0 300 400",P,inner,(t?"Table":"Counter")+" poster template","bg");
+}
+function nameTag(theme){
+  var P=PAL[theme], t=theme==="table";
+  var inner='<rect x="0" y="0" width="360" height="62" fill="'+P.accent+'"/>'+txt("HELLO",180,44,34,P.bg,"middle",900)+
+    txt("I'm",28,110,20,P.ink,"start",700)+'<line x1="70" y1="114" x2="270" y2="114" stroke="'+P.ink+'" stroke-width="3"/>'+
+    txt(t?"at The Table":"at The Counter",28,160,18,P.ink,"start",700)+txt("+U",28,196,22,P.pink,"start",900)+
+    place(sFig(t?"friend":"chef","smile","wave",P,{cap:t}),310,108,.42);
+  return svgDoc("0 0 360 220",P,inner,(t?"Table":"Counter")+" name tag template","card");
+}
+function sticker(){
+  var P=PAL.table;
+  var inner='<circle cx="100" cy="100" r="92" fill="'+P.bg+'" stroke="'+P.accent+'" stroke-width="10"/><circle cx="100" cy="100" r="74" fill="none" stroke="'+P.pink+'" stroke-width="3" stroke-dasharray="4 8"/>'+
+    txt("+U",103,124,72,P.pink,"middle",900)+txt("+U",100,120,72,P.accent,"middle",900);
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="+U sticker">'+inner+'</svg>';
+}
+function banner(theme){
+  var P=PAL[theme];
+  var neon=theme==="table"?P.pink:"#e8264a";
+  var inner='<line x1="0" y1="250" x2="400" y2="250" stroke="'+P.ink+'" stroke-width="3"/>'+
+    '<line x1="118" y1="160" x2="118" y2="40" stroke="'+P.ink+'" stroke-width="4"/><line x1="282" y1="160" x2="282" y2="40" stroke="'+P.ink+'" stroke-width="4"/>'+
+    '<rect x="118" y="44" width="164" height="50" rx="5" fill="'+P.card+'" stroke="'+P.ink+'" stroke-width="3"/>'+txt("+ U Sponsors",200,78,24,P.ink,"middle",800)+
+    '<path d="M192 104 H208 V150 H222 L200 176 L178 150 H192 Z" fill="none" stroke="'+neon+'" stroke-width="3"/>'+[112,124,136,148,160].map(function(y){return '<circle cx="200" cy="'+y+'" r="3.2" fill="'+neon+'"/>';}).join("")+
+    place(sFig("friend","smile","upR",P,{}),100,186,.33)+place(sFig("chef","laugh","upL",P,{}),300,186,.33);
+  return svgDoc("0 0 400 260",P,inner,"+U Sponsors banner, "+theme+" colors");
+}
+function signsTable(){
+  var P=PAL.table;
+  return [svgDoc("0 0 400 110",P,hipT("THE TABLE",200,72,54,P),"THE TABLE sign"),
+          svgDoc("0 0 400 110",P,hipT("WHOLE DONUTS",200,56,36,P)+hipT("STORE",200,92,22,P),"Whole Donuts Store sign"),
+          svgDoc("0 0 400 110",P,hipT("CRUMB VAULT",200,70,44,P),"Crumb Vault sign")];
+}
+function signsCounter(){
+  var P=PAL.counter, W=P.wood;
+  function plank(inner,label){return svgDoc("0 0 400 110",P,'<rect x="10" y="12" width="380" height="86" rx="6" fill="'+W+'" stroke="'+P.ink+'" stroke-width="3"/>'+inner,label);}
+  return [plank(dinT("THE COUNTER",200,68,34,P,P.signtext,8),"THE COUNTER sign"),
+          plank(dinT("NURTURED CHEF",200,54,26,P,P.signtext,6)+dinT("STORE",200,84,16,P,P.signtext,8),"Nurtured Chef Store sign"),
+          plank(dinT("RECIPE VAULT",200,68,30,P,P.signtext,7),"Recipe Vault sign")];
+}
+function renderGallery(i){
+  GSVG=[]; clearInterval(reelT);
+  var h="", T=PAL.table, C=PAL.counter;
+  if(i===0){h=facesSection("friend",T,{cap:true,sneakers:true},"+U Friend");startAfter("friend",T,{cap:true,sneakers:true});}
+  else if(i===1){h=facesSection("chef",C,{},"Chef");startAfter("chef",C,{});}
+  else if(i===2){h=facesSection("prof",C,{},"Professor");startAfter("prof",C,{});}
+  else if(i===3){
+    h=facesSection("guest",T,{},"Guest");
+    h+='<h4 class="gsec">Guest variations</h4><div class="gal">'+
+      card(svgDoc(FIGVB,T,'<g class="bob">'+sFig("guest","smile","rest",T,{cap:true,phones:true,sneakers:true})+'</g>',"Young guest with cap and headphones"),"Young guest")+
+      card(svgDoc(FIGVB,C,'<g class="bob">'+sFig("guest","smile","key",C,{})+'</g>',"Returning member holding a key"),"Member with key")+
+      card(svgDoc(FIGVB,T,'<g class="bob">'+sFig("guest","proud","cane",T,{sash:true,tilt:5})+'</g>',"Older sponsor with a cane and sash"),"Sponsor, with cane")+
+      card(svgDoc(FIGVB,C,'<g class="bob">'+sFig("guest","smile","rest",C,{sash:true,tilt:7})+'</g>',"Gentle sponsor with sash"),"Sponsor, gentle")+'</div>';
+    startAfter("guest",T,{});
+  }
+  else if(i===4){
+    h='<h4 class="gsec">Poses</h4><div class="gal">';
+    [["rest","Standing"],["hold","Holding up"],["wave","Waving"],["upR","Banner, right"],["upL","Banner, left"],["key","Showing a key"],["cane","With a cane"]].forEach(function(a){
+      h+=card(svgDoc(FIGVB,T,'<g class="bob">'+sFig("friend","smile",a[0],T,{cap:true,sneakers:true})+'</g>',"Pose: "+a[1]),a[1]);});
+    h+=card(svgDoc("-80 -95 240 300",C,sFig("chef","laugh","stir",C,{}),"Pose: Chef stirring"),"Chef stirring")+'</div>';
+  }
+  else if(i===5){
+    h='<h4 class="gsec">Colors</h4>'+swatches(T,[["bg","Night"],["wall","Wall"],["accent","Mint"],["pink","Pink"],["yellow","Sunshine"],["wood","Grape"],["ink","Chalk"]]);
+    h+='<h4 class="gsec">Signs</h4><div class="gal wide">'+signsTable().map(function(sv,k){return card(sv,["THE TABLE","Store sign","Vault sign"][k]);}).join("")+'</div>';
+    h+='<h4 class="gsec">Marks</h4><div class="gal">'+card(sticker(),"+U badge")+card(svgDoc("200 120 400 240",T,ghostMark(T,.6,"translate(0 0)"),"Ghosted hands mark"),"Ghosted hands")+'</div>';
+  }
+  else if(i===6){
+    h='<h4 class="gsec">Colors</h4>'+swatches(C,[["bg","Cream"],["wall","Wall"],["accent","Copper"],["pink","Brick"],["wood","Counter wood"],["prof","Slate"],["ink","Ink"]]);
+    h+='<h4 class="gsec">Signs</h4><div class="gal wide">'+signsCounter().map(function(sv,k){return card(sv,["THE COUNTER","Store sign","Vault sign"][k]);}).join("")+'</div>';
+    h+='<h4 class="gsec">Marks</h4><div class="gal">'+card(svgDoc("-60 -80 120 120",C,colorize('<g stroke="currentColor" fill="none" stroke-width="5" stroke-linecap="round">'+CHEFHAT+'</g>',C),"Chef's hat mark"),"Chef's hat")+card(svgDoc("200 120 400 240",C,ghostMark(C,.5,"translate(0 0)"),"Ghosted hands mark"),"Ghosted hands")+'</div>';
+  }
+  else if(i===7){
+    h='<h4 class="gsec">Square posts</h4><div class="gal wide">'+card(socialSquare("table"),"Table post")+card(socialSquare("counter"),"Counter post")+'</div>';
+    h+='<h4 class="gsec">Stories</h4><div class="gal">'+card(story("table"),"Table story")+card(story("counter"),"Counter story")+'</div>';
+  }
+  else if(i===8){
+    h='<h4 class="gsec">Posters</h4><div class="gal wide">'+card(poster("table"),"Table poster")+card(poster("counter"),"Counter poster")+'</div>';
+    h+='<h4 class="gsec">Name tags and sticker</h4><div class="gal wide">'+card(nameTag("table"),"Table name tag")+card(nameTag("counter"),"Counter name tag")+card(sticker(),"+U sticker")+'</div>';
+  }
+  else if(i===10){
+    var AB=[["wheel","Wheelchair user",{wheel:true},"smile"],["deaf","Deaf, signing",{},"laugh","signA"],["blind","Blind, white cane",{shades:true},"smile","wcane"],["aac","Talking tablet",{},"smile","aac"],
+      ["dog","Guide dog",{dog:true},"proud","dog"],["prost","Prosthetic leg",{prost:true},"smile"],["crutch","Crutches",{},"smile","crutch"],["sound","Ear defenders",{defenders:true},"neutral"],
+      ["aids","Hearing aids",{aids:true},"wink"],["cane","Cane",{tilt:5},"smile","cane"],["lowvis","Low vision: big text",{},"proud"],["sash","Sponsor in a wheelchair",{wheel:true,sash:true},"proud"]];
+    h='<h4 class="gsec">Every ability</h4><div class="gal">'+AB.map(function(a,k){var P2=k%2?C:T;
+      return card(svgDoc(a[2].dog?"-80 -95 220 300":FIGVB,P2,'<g class="bob">'+sFig("guest",a[3],a[4]||"rest",P2,a[2])+'</g>',"Visitor: "+a[1]),a[1]);}).join("")+'</div>';
+    h+='<h4 class="gsec">Every language</h4><div class="gal">'+PERSONAS.map(function(p,k){var P2=k%2?C:T;
+      return card(svgDoc("0 0 200 120",P2,'<rect x="10" y="10" width="180" height="70" rx="22" fill="'+P2.card+'" stroke="'+P2.ink+'" stroke-width="4"/><path d="M50 78 L40 104 L74 80" fill="'+P2.card+'" stroke="'+P2.ink+'" stroke-width="4"/>'+txt(p.hello,100,54,p.hello.length>12?18:24,P2.ink,"middle",800),p.hello+" ("+p.lang+")"),p.lang);}).join("")+'</div>';
+  }
+  else if(i===9){
+    h='<h4 class="gsec">Sponsor banner</h4><div class="gal wide">'+card(banner("counter"),"Warm colors")+card(banner("table"),"Table colors")+'</div>';
+  }
+  $("gal").innerHTML=h;
+  Array.prototype.forEach.call($("gal").querySelectorAll(".copy"),function(b){
+    b.addEventListener("click",function(){
+      var t=GSVG[+b.getAttribute("data-c")];
+      try{navigator.clipboard.writeText(t).then(function(){b.textContent="Copied";},function(){b.textContent="Copy blocked here";});}catch(e){b.textContent="Copy blocked here";}
+      setTimeout(function(){b.textContent="Copy SVG";},2500);
+    });
+  });
+}
+function startAfter(kind,P,opt){setTimeout(function(){startReel(kind,P,opt);},0);}
+
+/* ================= hubs by #name ================= */
+function reset(){
+  var R=ROOMS[cur]; sel=-1; picked=[]; served=false; profIdx=0; clearTimeout(profT); clearTimeout(idleT);
+  root.setAttribute("data-theme",R.theme);
+  buildScene(cur);
+  $("profBubble").classList.remove("on");
+  $("items-h").textContent=R.title+": "+R.heading; $("intro").textContent=R.intro; $("statusNote").textContent=R.status;
+  $("detail").hidden=true; $("gal").innerHTML=""; clearInterval(reelT); renderItems();
+  $("whisperText").textContent=R.whispers[0];
+  Array.prototype.forEach.call(document.querySelectorAll(".dbtn"),function(b,i){var Di=buildDemo(R.theme,i,cur);b.innerHTML=Di.btn+"<small>"+Di.sub+" · "+Di.persona.lang+"</small>";b.setAttribute("aria-label","Demo "+(i+1)+": "+Di.btn+", "+Di.sub+", says hello in "+Di.persona.lang);});
+  say(R.greet,R.who==="chef"?"laugh":"smile",whoOf(R));
+  armIdle();
+}
+function go(first){
+  var key=(location.hash||"").replace("#",""); if(!ROOMS[key])key="entry";
+  if(key===cur)return;
+  stopDemo(true);
+  cur=key; var R=ROOMS[key];
+  document.title="+U | "+R.title+" (prototype)";
+  $("viewTitle").textContent=R.title.replace(/^\+U /,"");
+  Array.prototype.forEach.call(document.querySelectorAll("nav a"),function(a){ if(a.getAttribute("href")==="#"+key)a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  reset();
+  if(!first)$("items-h").focus();
+}
+window.addEventListener("hashchange",function(){go(false)});
+
+/* ================= demos ================= */
+var token=0, saved=null;
+function sleep(ms){var t=token;return new Promise(function(res,rej){setTimeout(function(){t===token?res():rej("stopped")},ms);});}
+function sparkAt(x,y){var s=$("spark"); if(!s)return; s.setAttribute("cx",x); s.setAttribute("cy",y); s.classList.remove("go"); void s.getBBox(); s.classList.add("go");}
+function guestSay(t){
+  var D=demo, P=D&&D.persona, dis=D&&D.dis, first=D&&!D.greeted;
+  if(D)D.greeted=true;
+  var hello=first&&P?'"'+P.hello+'" (hello in '+P.lang+') ':"";
+  if(dis&&dis.deaf){
+    setCaption(null,"Guest (signing): "+(first&&P?"waves hello. ":"")+t);
+    var g=$("guest"), n=0; if(!g||root.classList.contains("calm"))return;
+    var iv=setInterval(function(){ if(!demo||n++>7){clearInterval(iv);g.setAttribute("data-arms","signA");return;} g.setAttribute("data-arms",n%2?"signB":"signA"); },380);
+    return;
+  }
+  if(dis&&dis.aac){ setCaption(null,"Guest (through a talking tablet): "+t); speakParts([{text:t}],"aac"); return; }
+  setCaption(null,"Guest"+(dis&&dis.cls==="aids"?"":"")+": "+hello+t);
+  var parts=[]; if(first&&P)parts.push({text:P.hello,say:P.say,lang:P.web,esp:P.esp,ep:P.ep});
+  parts.push({text:t,lang:P?P.en:null,esp:P?P.espEn:null,ep:P?P.ep:null});
+  speakParts(parts,"guest");
+}
+function setComfort(calm,hc,size2){
+  if(root.classList.contains("calm")!==calm)$("calmBtn").click();
+  if(root.classList.contains("hc")!==hc)$("hcBtn").click();
+  while((size2?2:0)!==size)$("sizeBtn").click();
+}
+function dressGuest(g,D,theme){
+  (D.cls||"").split(" ").filter(Boolean).forEach(function(c){g.classList.add(c);});
+  g.setAttribute("data-arms",D.arms||"rest");
+  if(D.stoop)g.querySelector(".gbody").setAttribute("transform","rotate("+D.stoop+" 0 190)");
+}
+async function walkGuest(x,y,sc,ms,D,fromX){
+  var g=$("guest"), gm=$("guestMove"), calm=root.classList.contains("calm");
+  gm.classList.remove("hidden");
+  if(fromX!=null){gm.style.transition="none"; gm.style.opacity="1"; gm.style.transform="translate("+fromX+"px,"+y+"px) scale("+sc+")"; void gm.getBBox();}
+  gm.style.transition="transform "+ms+"ms "+(D.bounce?"cubic-bezier(.3,1.4,.6,1)":"ease-in-out")+", opacity .8s";
+  g.classList.add("walking");
+  gm.style.transform="translate("+x+"px,"+y+"px) scale("+sc+")";
+  describe();
+  await sleep(calm?700:ms+150);
+  g.classList.remove("walking");
+}
+async function entrySequence(d,target,D,theme){
+  inEntry=true; root.setAttribute("data-theme","table"); $("whisperText").textContent="we never gonna close.";
+  svg.innerHTML=entrySvg(true); $("profBubble").classList.remove("on");
+  var g=$("guest"), y=ENTRYG.guestY, sc=ENTRYG.guestS, slow=D.walk;
+  dressGuest(g,D,theme);
+  setCaption(D.label+" · through the universal entry","Every visit starts at the universal entry, the front door.");
+  await sleep(1800);
+  await walkGuest(400,y,sc,Math.round(slow*1.1),D,-90);
+  var rest=g.getAttribute("data-arms"); g.setAttribute("data-arms",D.dis&&(D.dis.aac||D.dis.deaf)?rest:"upR");
+  sparkAt(400,213); setCaption(null,"Taps Walk In.");
+  await sleep(1400);
+  say("How are U doing?","smile","door"); await sleep(2000);
+  $("chips").classList.remove("hidden");
+  var k=[1,2,0][d], cx=CHIPS[k][1], feel=CHIPS[k][0];
+  g.setAttribute("data-arms",rest);
+  await walkGuest(cx,y,sc,700,D);
+  if(!(D.dis&&(D.dis.aac||D.dis.deaf)))g.setAttribute("data-arms","upR"); sparkAt(cx,262);
+  document.querySelector('#chips .chip[data-k="'+k+'"]').classList.add("lit");
+  guestSay(feel==="Okay"?"I'm okay.":feel==="Hopeful"?"Feeling hopeful today.":"Kind of heavy, honestly.");
+  await sleep(2200);
+  say(feel==="Okay"?"Okay is a good place to start.":feel==="Hopeful"?"Hopeful! Let's keep that going.":"Heavy is allowed. Come in and sit.","smile","door");
+  await sleep(2600);
+  g.setAttribute("data-arms",rest);
+  $("doors").classList.remove("hidden");
+  var side=target==="entry"?[0,2,1][d]:SIDE[target], dx=DOORX[side];
+  setCaption(null,"Three doors. Nothing was saved. Heads for "+DOORNAME[side]+(target==="entry"?".":", on the way to "+ROOMS[target].title+"."));
+  await walkGuest(dx,y,sc,Math.round(slow*.9),D);
+  var dg=document.querySelector('#doors .door[data-k="'+side+'"]'); dg.classList.add("lit"); dg.querySelector(".doorleaf").classList.add("open");
+  await sleep(1300);
+  $("guestMove").style.opacity="0";
+  await sleep(1100);
+  inEntry=false;
+}
+async function runDemo(d){
+  stopDemo(true);
+  var target=cur, R=ROOMS[cur], D=buildDemo(R.theme,d,cur); token++; var my=token;
+  window.__demoDone=false;
+  demo=D; document.body.classList.add("demo"); clearTimeout(idleT); clearTimeout(profT);
+  Array.prototype.forEach.call(document.querySelectorAll(".dbtn"),function(b,i){b.setAttribute("aria-pressed",i===d?"true":"false");});
+  $("stopBtn").classList.remove("hidden"); $("caption").classList.remove("hidden");
+  try{
+    var cf=D.dis&&D.dis.comfort, noted=false;
+    if(cf){
+      saved={calm:root.classList.contains("calm"),hc:root.classList.contains("hc"),size:size};
+      setCaption(D.label,D.dis.note+" (From the comfort bar.)");
+      setComfort(!!cf.calm,!!cf.hc,!!cf.size2); noted=true;
+      await sleep(2800);
+    }
+    await entrySequence(d,target,D,R.theme);
+    if(target==="entry"){
+      setCaption(null,"And they're in. That's the universal entry: one front door for everyone.");
+      await sleep(3000);
+      throw "done";
+    }
+    reset(); demo=D; clearTimeout(idleT);
+    var g=$("guest"), ty=R.guestY, sc=R.guestS, tx=110;
+    if(D.dis&&D.dis.sr){ setCaption(D.label,"A screen reader reads the scene aloud: "+$("sceneDesc").textContent.split(". ").slice(0,2).join(". ")+"."); await sleep(4400); }
+    else if(D.dis&&!noted){ setCaption(D.label,D.dis.note); await sleep(2800); }
+    dressGuest(g,D,R.theme);
+    setCaption(D.label,D.way==="free"?"Comes in through the door. No sign-up, no name.":D.way==="key"?"Comes in with an invitation key.":"Comes in wearing the +U Sponsor sash.");
+    await walkGuest(tx,ty,sc,D.walk,D,-90);
+    if(D.way==="key"){
+      g.setAttribute("data-arms","key");
+      setCaption(null,"Shows the invitation key. (Planned feature: in this demo nothing is checked or saved.)");
+      sparkAt(tx+44*sc,ty-14*sc); if(R.vault)openDoor();
+      await sleep(2600);
+      setCaption(null,"Key accepted. Welcome back, member.");
+      await sleep(1600);
+      g.setAttribute("data-arms",D.arms||"rest");
+    } else if(D.way==="sponsor"){ sparkAt(tx,ty+76*sc); await sleep(1200); } else { await sleep(800); }
+    guestSay(D.line); await sleep(2600);
+    say(D.hi, D.way==="sponsor"?"proud":"smile", whoOf(R)); await sleep(3200);
+    if(d===0){
+      setCaption(null,"Not sure what to pick. After 14 seconds with no choice, the Professor steps forward:");
+      await sleep(2400);
+      profSteps(R.prof[0]); await sleep(4600); profBack(); clearTimeout(idleT);
+    }
+    var n=R.items.length, picks;
+    if(R.multi) picks=[[0,1,2],[2,3,4],[5,0,3]][d].map(function(x){return x%n;});
+    else if(cur==="wd-library") picks=[[0,4],[8,13],[3,15]][d];
+    else picks=[[0,1],[2,3],[1,n-1]][d].map(function(x){return x%n;});
+    for(var k=0;k<picks.length;k++){ choose(picks[k]); await sleep(3800); }
+    if(R.multi){ serve(); await sleep(3800); }
+    g.setAttribute("data-arms","wave"); g.setAttribute("data-face","laugh");
+    setCaption(null,"That's how "+["a first-time guest","a returning member","a visitor who uses access tools"][d]+" ("+D.sub+") gets from the front door into "+R.title+".");
+    await sleep(3200);
+  }catch(e){ if(e!=="stopped"&&e!=="done")throw e; }
+  inEntry=false;
+  if(my===token)stopDemo(false);
+}
+function stopDemo(silent){
+  if(!demo&&!saved){return;}
+  token++;
+  demo=null; document.body.classList.remove("demo");
+  $("stopBtn").classList.add("hidden"); $("caption").classList.add("hidden");
+  Array.prototype.forEach.call(document.querySelectorAll(".dbtn"),function(b){b.setAttribute("aria-pressed","false");});
+  if(saved){ setComfort(saved.calm,saved.hc,false); while(size!==saved.size)$("sizeBtn").click(); saved=null; }
+  try{speechSynthesis.cancel()}catch(e){}
+  window.__demoDone=true;
+  if(!silent){ reset(); announce("Demo finished."); }
+}
+Array.prototype.forEach.call(document.querySelectorAll(".dbtn"),function(b){b.addEventListener("click",function(){runDemo(+b.getAttribute("data-d"));});});
+$("stopBtn").addEventListener("click",function(){stopDemo(false);$("demos-h").scrollIntoView({block:"nearest"});});
+
+/* ================= comfort settings ================= */
+function toggle(btn,cls,store){
+  var on=btn.getAttribute("aria-pressed")!=="true";
+  btn.setAttribute("aria-pressed",on); root.classList.toggle(cls,on);
+  if(store&&!demo)try{localStorage.setItem("plusu-"+cls,on?"1":"0")}catch(e){}
+}
+$("calmBtn").addEventListener("click",function(){toggle(this,"calm",true)});
+$("hcBtn").addEventListener("click",function(){toggle(this,"hc",true)});
+$("voiceBtn").addEventListener("click",function(){
+  voicesOn=this.getAttribute("aria-pressed")!=="true"; this.setAttribute("aria-pressed",voicesOn);
+  if(voicesOn)speak($("mainText").textContent, $("mainName").textContent==="Chef"?"chef":"friend"); else try{speechSynthesis.cancel()}catch(e){}
+});
+var size=0, SIZES=["normal","large","largest"];
+$("sizeBtn").addEventListener("click",function(){
+  size=(size+1)%3; root.classList.remove("size1","size2"); if(size)root.classList.add("size"+size);
+  this.textContent="Text "+["A","A+","A++"][size]; this.setAttribute("aria-label","Text size: "+SIZES[size]+". Press to change.");
+});
+try{
+  if(localStorage.getItem("plusu-calm")==="1")toggle($("calmBtn"),"calm",false);
+  if(localStorage.getItem("plusu-hc")==="1")toggle($("hcBtn"),"hc",false);
+}catch(e){}
+if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches&&!root.classList.contains("calm"))toggle($("calmBtn"),"calm",false);
+if(window.matchMedia&&matchMedia("(prefers-contrast: more)").matches&&!root.classList.contains("hc"))toggle($("hcBtn"),"hc",false);
+if(!("speechSynthesis" in window)){$("voiceBtn").disabled=true;$("voiceBtn").title="Your browser has no built-in voices";}
+
+window.__runDemo=runDemo;
+buildCast();
+go(true);
+})();
+</script>
+
+<section id="whisperWalk" aria-label="Walk with TheWhisper" style="position:fixed;left:.6rem;bottom:.6rem;z-index:20;max-width:min(24rem,calc(100vw - 1.2rem));background:var(--card);color:var(--ink);border:2px solid var(--accent);border-radius:16px;padding:.5rem .7rem;box-shadow:0 2px 10px rgba(0,0,0,.25);font:inherit">
+<button type="button" id="wwBtn" aria-pressed="false" style="font:inherit;font-weight:700;min-height:44px;border:2px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:999px;padding:.4rem 1rem;cursor:pointer">Walk with TheWhisper</button>
+<button type="button" id="wwStop" hidden style="font:inherit;min-height:44px;border:2px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:.4rem .9rem;cursor:pointer;margin-left:.3rem">Stop</button>
+<p id="wwCap" aria-live="polite" style="margin:.4rem 0 0;font-style:italic;min-height:1.4em"></p>
+<p id="wwNote" style="margin:.2rem 0 0;font-size:.8rem;opacity:.8"></p>
+</section>
+<script>
+(function(){
+"use strict";
+var L=[
+["Shh… come in, little one. You've just stepped into a whole new world, and look… you're a stick figure. Simple lines. Nothing to prove yet.",0],
+["Pick the one that feels like you. Grown or growing, there's no wrong door here.",10.37],
+["Now tell me, honestly, how are you today? Heavy is allowed. I've carried heavy too.",15.856],
+["And how would you like to feel? Just name it. Naming it is the first step.",22.387],
+["When did you finish school, or when will you? That tells me which way to walk you.",27.638],
+["This is The Table. A seat is saved for you. Come sit, eat, and grow with us.",33.045],
+["This is The Counter. You've lived some life, and here it gets put to good use.",38.922],
+["See your figure? Shoulders a little low. That's okay. Everyone starts somewhere.",45.035],
+["Pick one small thing you'll really do. Just one. Watch what happens.",50.521],
+["There… standing taller. A little smile. Arms opening up. That's you, choosing it.",56.085],
+["Feel that warmth? That's your +U showing. You did that, nobody else.",63.791],
+["Look around. All these figures, every one of them started just like you. You're not alone.",69.512],
+["Now pass a little of it forward, sweetheart. That's how this world keeps growing. I'll be right here whenever you come back.",76.356]];
+var b=document.getElementById("wwBtn"),st=document.getElementById("wwStop"),cap=document.getElementById("wwCap"),note=document.getElementById("wwNote");
+var au=null,idx=-1,mode="",t=null;
+function show(i){idx=i;cap.textContent=L[i][0];}
+function stop(){if(au){au.pause();au=null;}if(window.speechSynthesis)speechSynthesis.cancel();clearTimeout(t);mode="";b.setAttribute("aria-pressed","false");st.hidden=true;cap.textContent="";}
+function speakFrom(i){
+  if(mode!=="tts")return; if(i>=L.length){stop();return;}
+  show(i);
+  var u=new SpeechSynthesisUtterance(L[i][0]);u.rate=.88;u.pitch=1;
+  u.onend=function(){speakFrom(i+1)};u.onerror=function(){};
+  speechSynthesis.speak(u);
+}
+function startTTS(){
+  if(!("speechSynthesis" in window)){note.textContent="Captions only: this device has no built-in voice.";mode="cap";var i=0;(function n(){if(mode!=="cap")return;if(i>=L.length){stop();return;}show(i);var d=(i+1<L.length?L[i+1][1]-L[i][1]:8)*1000;i++;t=setTimeout(n,d);})();return;}
+  mode="tts";note.textContent="Using your device's own voice.";speakFrom(0);
+}
+b.addEventListener("click",function(){
+  if(mode){stop();return;}
+  b.setAttribute("aria-pressed","true");st.hidden=false;
+  var a=new Audio("TheWhisper.mp3");a.preload="auto";
+  a.addEventListener("timeupdate",function(){var c=a.currentTime,k=0;for(var j=0;j<L.length;j++)if(c>=L[j][1])k=j;if(k!==idx)show(k);});
+  a.addEventListener("ended",stop);
+  a.addEventListener("error",function(){if(au===a){au=null;startTTS();}});
+  au=a;mode="mp3";note.textContent="TheWhisper's own voice. Nothing is saved or sent.";
+  var pr=a.play();if(pr&&pr.catch)pr.catch(function(){if(au===a){au=null;startTTS();}});
+});
+st.addEventListener("click",stop);
+})();
+</script>
+</body>
+</html>
