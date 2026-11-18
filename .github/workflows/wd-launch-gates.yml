@@ -20,7 +20,7 @@ jobs:
       - name: Required current files are present
         run: |
           for f in index.html table.html counter.html counter-path.html guide.html CNAME \
-                   ecosystem-proto-t.json bathroom-door-routing.json \
+                   ecosystem-proto-t.json \
                    wd-system/wd_input.py wd-system/wd_monitor.py wd-system/wd-config.json; do
             test -f "$f" || { echo "MISSING: $f"; exit 1; }
           done

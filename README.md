@@ -1,60 +1,52 @@
-# Wenevergonnaclose
+# Whole Donuts Universe
 
-`wenevergonnaclose.com` is a static, private browser-only entry for Whole
-Donuts and The Nurtured Chef.
+This repository is the canonical public entry bundle for
+[`wenevergonnaclose.com`](https://wenevergonnaclose.com/). The broader Sunshine
+repository is the canonical Whole Donuts LLC code ecosystem; reviewed public
+intent and compatible fixes are integrated here without turning internal source
+or operations into public destinations.
 
-Guests choose a base stick figure, current feeling, hoped-for feeling, and
-high school graduation year. Current and future graduation years enter
-[The Table](table.html), while earlier graduation years enter
-[The Counter](counter.html). The selections are held only in page memory for
-the current visit; no name, email address, account, profile, analytics event,
-or server request is created.
+## Public experience
 
-## What is available
+- `index.html`, `styles.css`, and `app.js` provide the credential-free +U
+  gateway, Table, Counter, library, reviewed archive, and optional support
+  disclosures.
+- `world/` provides an optional local stick-figure experience. Its pose and
+  color choices stay in page memory and clear on reset or reload.
+- `guide.html`, `PUBLIC_SYSTEM.md`, `WHOLE_DONUTS_GUIDE.md`, and the tracked
+  templates document public paths and their privacy boundaries.
+- `review-queue-manifest.js` contains curated review metadata already shipped
+  with the site. The browser does not discover repositories, scan networks, or
+  publish changes.
 
-- **The Table** is the Whole Donuts side with a free next step and a pass-it-on
-  prompt.
-- **The Counter** is the Nurtured Chef side with a free next step and a
-  pass-it-on prompt.
-- **The universal-entry guide** explains the public flow and professional
-  boundaries.
+The public bundle has no account, email registration, analytics, tracker,
+profile, or submission runtime. Gateway and World choices are temporary and
+are not sent or stored. Repository links are not primary visitor actions.
 
-Each side has a clearly marked e-store handoff placeholder. A real e-store link
-must not be added until its owner verifies the destination, privacy terms, and
-free-item experience.
+## Deployment
 
-## Important limits
+The manual [`Deploy Pages`](.github/workflows/deploy-pages.yml) workflow uses
+Node.js 22 to syntax-check the public scripts and run the public contract tests.
+It then stages only its named static-file allowlist and verifies that `CNAME`
+is exactly `wenevergonnaclose.com`.
 
-This static site cannot enforce one entry per IP address or email address,
-verify a mailbox, create a single-use token, or prevent someone from opening a
-destination URL directly. Those capabilities require a separately deployed
-and reviewed server-side service. The public site does not claim that they
-exist.
+In **Settings -> Pages**, select **GitHub Actions** as the source and keep the
+custom domain configured and verified. Dispatch only after the reviewed
+revision is on `main`, then confirm the generated Pages deployment and custom
+domain are healthy.
 
-## Delivery and checks
+## Maintainer boundaries
 
-The site is compatible with the repository's current GitHub Pages delivery.
-Configure `wenevergonnaclose.com` as the Pages custom domain and enable HTTPS
-in the Pages settings before treating the public entry as live.
+Read [`PUBLIC_SYSTEM.md`](PUBLIC_SYSTEM.md) before changing public behavior.
+Preserve the credential-free entry, same-site canonical paths, human-reviewed
+publication, and truthful availability labels. Do not add credentials,
+analytics, automatic intake, automatic publication, or internal operational
+configuration to the public artifact.
 
-The `Test` workflow runs `node --test tests/identity-engine.test.js` and an
-offline static Pages deployment-contract check on every pull request and on
-updates to `main`. The Pages check validates only repository content: the
-custom-domain file, public entry assets, and domain metadata. It does not
-perform DNS or TLS checks, so it does not interfere with certificate
-remediation.
+## Pull request checks
 
-Configure `Test / Identity engine tests` and `Test / Pages deployment readiness`
-as required status checks for `main`. This repository currently has one
-administrator, so it should not require an approval until an independent
-reviewer has been added.
-
-## Legacy-domain routing
-
-The requested Whole Donuts, The Nurtured Chef, The Nutur3d Chef, and
-JustTryPlusUSA hosts are catalogued in
-[`domains/domain-routing-manifest.json`](domains/domain-routing-manifest.json).
-Every first visit is routed to the universal entry; each host then has its own
-designated-side, Vault, overview, program, or hidden-reserve role. Returning
-private-code access requires a reviewed server-side resolver. The current
-browser-only entry does not pretend to provide that security boundary.
+The `Test` workflow syntax-checks both public scripts and runs
+`node --test tests/public-site.test.js` on every pull request and on updates to
+`main`. Configure `Test / Public experience tests` as the required status check
+for `main`. This repository currently has one administrator, so it should not
+require an approval until an independent reviewer has been added.

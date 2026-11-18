@@ -19,8 +19,6 @@ test("the Pages deployment contract has the custom domain and public entry asset
     "guide.html",
     "world/index.html",
     "ecosystem-proto-t.json",
-    "css/identity.css",
-    "js/identity-engine.js",
     "robots.txt",
     "sitemap.xml"
   ]) {
@@ -37,9 +35,9 @@ test("the public metadata consistently identifies the configured Pages domain", 
   assert.match(read("world/index.html"), new RegExp(`https://${domain}/world/`));
 });
 
-test("the public system contract links to the Ecosystem Proto T source boundary", () => {
-  assert.match(read("PUBLIC_SYSTEM.md"), /ecosystem-proto-t\.json/);
-  assert.match(read("RELEASE_NOTES.md"), /Ecosystem Proto T source boundary/);
+test("the public system contract describes the canonical public entry", () => {
+  assert.match(read("PUBLIC_SYSTEM.md"), /canonical public entry bundle/);
+  assert.match(read("RELEASE_NOTES.md"), /Canonical ecosystem integration/);
 });
 
 test("private intake follows the Bathroom Door protocol and requires explicit review", () => {
