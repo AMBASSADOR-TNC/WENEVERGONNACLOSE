@@ -1,0 +1,89 @@
+{
+  "schema": "whole-donuts-ecosystem-proto-t/v1",
+  "canonical_entry": "https://wenevergonnaclose.com/",
+  "routing_protocol": "bathroom-door-routing/v1",
+  "gateway_outputs": [
+    {
+      "source": "js/identity-engine.js",
+      "destination": "table.html",
+      "lane": "table",
+      "status": "canonical"
+    },
+    {
+      "source": "js/identity-engine.js",
+      "destination": "counter.html",
+      "lane": "counter",
+      "status": "canonical"
+    }
+  ],
+  "system_references": [
+    {
+      "path": "guide.html",
+      "role": "universal-entry-guide",
+      "status": "canonical-reference"
+    },
+    {
+      "path": "PUBLIC_SYSTEM.md",
+      "role": "public-system-contract",
+      "status": "canonical-reference"
+    },
+    {
+      "path": "WHOLE_DONUTS_GUIDE.md",
+      "role": "whole-donuts-guide",
+      "status": "canonical-reference"
+    },
+    {
+      "path": "CRUMB_PROTOCOL.md",
+      "role": "human-review-policy",
+      "status": "canonical-reference"
+    }
+  ],
+  "preserved_non_gateway": [
+    {
+      "path": "world/",
+      "role": "optional-visual-experience",
+      "status": "preserved",
+      "boundary": "It remains a static public experience that returns to universal entry and is not a lane output."
+    }
+  ],
+  "review_gated": [
+    {
+      "path": "templates/",
+      "role": "reusable-template-source",
+      "status": "owner-review-required",
+      "boundary": "Do not publish a derivative or collect responses until reuse scope and privacy review are confirmed."
+    },
+    {
+      "path": "domains/",
+      "role": "ecosystem-routing-and-private-access-contracts",
+      "status": "activation-review-required",
+      "boundary": "No external or protected destination becomes a gateway output without its documented activation gate."
+    },
+    {
+      "path": "review-queue-manifest.js",
+      "role": "provenance-review-metadata",
+      "status": "review-only",
+      "boundary": "It is not a public-content source or automatic publication mechanism."
+    },
+    {
+      "path": "PRIVATE_INTAKE_CONTRACT.md",
+      "role": "owner-selected-private-intake-policy",
+      "status": "private-review-boundary",
+      "boundary": "It permits only narrow owner-selected review and cannot scan devices, collect material automatically, or create a public route."
+    }
+  ],
+  "operational_support": [
+    ".github/workflows/test.yml",
+    "tests/",
+    "CNAME",
+    "robots.txt",
+    "sitemap.xml",
+    "storefront-config.js"
+  ],
+  "invariants": [
+    "Only tracked first-party static Table and Counter pages are gateway outputs.",
+    "No identity, account, analytics, payment, submission, or server-side access capability is created by this manifest.",
+    "External destinations remain blocked until their ownership, reachability, intended use, privacy, and launch approval are verified.",
+    "Review-gated sources require human review and never publish automatically."
+  ]
+}

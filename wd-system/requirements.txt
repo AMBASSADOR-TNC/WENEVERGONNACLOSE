@@ -1,0 +1,3 @@
+# Whole Donuts WD System
+# Python 3 standard library only.
+# No external Python packages required.
