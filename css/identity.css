@@ -1,0 +1,124 @@
+/* Whole Donuts identity — shared engine styles for table.html, counter.html,
+   counter-path.html. Brand (locked): Whole Donuts = white backdrop ALWAYS,
+   The Nurtured Chef = black backdrop ALWAYS, electric blue + silver + black.
+   No gold, no red, no navy. */
+:root{
+  --ink:#101418;
+  --paper:#ffffff;
+  --blue:#1e6fff;
+  --blue-light:#7db4ff;
+  --deep:#0b3d91;
+  --silver:#c9d1d9;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100dvh;
+  background:var(--paper);
+  color:var(--ink);
+  font:400 1.05rem/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+/* The Nurtured Chef side is black, always. */
+body[data-ghost="counter"]{
+  background:#000;
+  color:#fff;
+}
+main#engine{
+  max-width:44rem;
+  margin:0 auto;
+  padding:clamp(2rem,5vw,4rem) clamp(1.2rem,4vw,2rem) 5rem;
+  min-height:100dvh;
+}
+.engine-header h1{
+  margin:.25rem 0 .5rem;
+  font:700 clamp(2rem,5vw,3rem)/1.05 Georgia,serif;
+}
+.engine-header p{max-width:38rem}
+.engine-step{
+  margin:1.5rem 0;
+  padding:1.25rem;
+  border:2px solid var(--ink);
+  border-radius:1rem;
+  background:#fff;
+  box-shadow:6px 6px 0 var(--blue);
+}
+body[data-ghost="counter"] .engine-step{
+  background:#0a0a0a;
+  border-color:#fff;
+}
+.engine-step h2{
+  margin:.1rem 0 .5rem;
+  font:700 1.4rem/1.2 Georgia,serif;
+}
+.engine-step p{margin:.4rem 0}
+a{color:var(--blue)}
+body[data-ghost="counter"] a{color:var(--blue-light)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:3px solid var(--blue);
+  outline-offset:3px;
+}
+label{display:block;font-weight:700;margin:.75rem 0 .3rem}
+input,select,textarea{
+  width:100%;
+  padding:.7rem .8rem;
+  border:2px solid var(--ink);
+  border-radius:.6rem;
+  background:#fff;
+  color:var(--ink);
+  font:inherit;
+}
+body[data-ghost="counter"] input,
+body[data-ghost="counter"] select,
+body[data-ghost="counter"] textarea{
+  background:#111;
+  color:#fff;
+  border-color:#fff;
+}
+fieldset{border:2px solid var(--ink);border-radius:.75rem;padding:1rem;margin:.75rem 0}
+body[data-ghost="counter"] fieldset{border-color:#fff}
+fieldset label{font-weight:400}
+button{
+  border:0;
+  border-radius:999px;
+  padding:.9rem 1.2rem;
+  background:var(--blue);
+  color:#fff;
+  font:900 1rem/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;
+  cursor:pointer;
+}
+button:disabled{opacity:.5;cursor:not-allowed}
+.grad-input{margin-bottom:.75rem}
+.confirmation{display:flex;gap:.6rem;align-items:flex-start;font-weight:400}
+.confirmation input{width:auto;margin-top:.25rem}
+.pause-note{
+  display:flex;
+  gap:1rem;
+  align-items:flex-start;
+  margin:1.5rem 0;
+  padding:1rem;
+  border:2px solid var(--blue);
+  border-radius:1rem;
+  background:#e8f1ff;
+}
+body[data-ghost="counter"] .pause-note{background:#06122e}
+.pause-note svg{flex:0 0 3rem;width:3rem;height:3rem;color:var(--blue)}
+.pause-note p{margin:0}
+.route-message{font-weight:700;margin:1rem 0}
+.engine-footer{
+  margin-top:2.5rem;
+  padding-top:1rem;
+  border-top:2px solid var(--silver);
+  font-size:.95rem;
+}
+.engine-footer a{margin-right:1rem}
+.visually-hidden{
+  position:absolute!important;
+  width:1px;height:1px;
+  margin:-1px;padding:0;border:0;
+  clip:rect(0 0 0 0);clip-path:inset(50%);
+  overflow:hidden;white-space:nowrap;
+}
+@media(max-width:760px){
+  .pause-note{flex-direction:column}
+}

@@ -1,14 +1,14 @@
 :root {
   color-scheme: dark;
-  --bg-top: #130f1f;
+  --bg-top: #05070d;
   --bg-bottom: #07080d;
   --panel: rgba(12, 15, 27, 0.72);
   --panel-border: rgba(255, 255, 255, 0.1);
-  --text: #f6ead6;
-  --muted: #c5b79d;
-  --glow: #ffb95e;
-  --glow-soft: rgba(255, 185, 94, 0.16);
-  --aqua: #8de0d2;
+  --text: #f2f5fa;
+  --muted: #aab4c4;
+  --glow: #5ea0ff;
+  --glow-soft: rgba(94, 160, 255, 0.16);
+  --aqua: #9db8e8;
   --line: rgba(255, 255, 255, 0.82);
 }
 
@@ -21,7 +21,7 @@ body {
   min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
   background:
-    radial-gradient(circle at top, rgba(86, 68, 126, 0.5), transparent 34%),
+    radial-gradient(circle at top, rgba(30, 111, 255, 0.28), transparent 34%),
     linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
   color: var(--text);
 }
@@ -53,7 +53,7 @@ select {
   text-transform: uppercase;
   color: transparent;
   -webkit-text-stroke: 1px rgba(255, 240, 223, 0.28);
-  text-shadow: 0 0 32px rgba(255, 185, 94, 0.18);
+  text-shadow: 0 0 32px rgba(94, 160, 255, 0.18);
 }
 
 .ghost-presence span:nth-child(1) {
@@ -147,11 +147,11 @@ h1 {
   border: none;
   border-radius: 999px;
   padding: 0.95rem 1.4rem;
-  background: linear-gradient(135deg, #ffe0a9, var(--glow));
-  color: #241000;
+  background: linear-gradient(135deg, #bcd6ff, var(--glow));
+  color: #06122e;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 14px 34px rgba(255, 185, 94, 0.24);
+  box-shadow: 0 14px 34px rgba(94, 160, 255, 0.24);
 }
 
 .primary-button:hover,
@@ -200,13 +200,13 @@ h1 {
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
-  filter: drop-shadow(0 0 12px rgba(255, 185, 94, 0.18));
+  filter: drop-shadow(0 0 12px rgba(94, 160, 255, 0.18));
 }
 
 .jacks-cloud {
-  stroke: #fff7ef;
+  stroke: #f2f5fa;
   stroke-width: 2.5;
-  fill: rgba(255, 185, 94, 0.35);
+  fill: rgba(94, 160, 255, 0.35);
 }
 
 .experience {
@@ -236,7 +236,7 @@ h1 {
   border-radius: 24px;
   overflow: hidden;
   background:
-    radial-gradient(circle at top, rgba(141, 224, 210, 0.1), transparent 30%),
+    radial-gradient(circle at top, rgba(94, 160, 255, 0.12), transparent 30%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06));
 }
 
@@ -245,7 +245,7 @@ h1 {
   position: absolute;
   inset: auto 0 0;
   height: 34%;
-  background: linear-gradient(180deg, transparent, rgba(255, 185, 94, 0.1));
+  background: linear-gradient(180deg, transparent, rgba(94, 160, 255, 0.1));
 }
 
 .stick-figure {
@@ -306,6 +306,23 @@ h1 {
   color: var(--text);
 }
 
+.unlock-hint-button {
+  justify-self: start;
+  margin-top: 0.5rem;
+  border: 2px solid var(--glow);
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.unlock-state:not(.locked) .unlock-hint-button {
+  display: none;
+}
+
 .customizer {
   display: grid;
   gap: 1rem;
@@ -343,7 +360,7 @@ h1 {
 .home-figure-card {
   padding: 1rem;
   border-radius: 18px;
-  background: linear-gradient(180deg, rgba(255, 185, 94, 0.1), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(180deg, rgba(94, 160, 255, 0.1), rgba(255, 255, 255, 0.02));
 }
 
 .home-figure-card p {
@@ -371,8 +388,8 @@ h1 {
 }
 
 .completed .unlock-state {
-  border-color: rgba(255, 185, 94, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(255, 185, 94, 0.16);
+  border-color: rgba(94, 160, 255, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(94, 160, 255, 0.16);
 }
 
 .completed .unlock-copy strong::after {

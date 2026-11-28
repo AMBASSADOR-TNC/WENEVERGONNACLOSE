@@ -3,13 +3,15 @@ const customFigure = document.getElementById("customFigure");
 const enterButton = document.getElementById("enterButton");
 const progressText = document.getElementById("progressText");
 const unlockState = document.getElementById("unlockState");
+const unlockHint = document.getElementById("unlockHint");
+const unlockHintButton = document.getElementById("unlockHintButton");
 const customizer = document.getElementById("customizer");
 const poseSelect = document.getElementById("poseSelect");
 const accentInput = document.getElementById("accentInput");
 const resetButton = document.getElementById("resetButton");
 const pageShell = document.querySelector(".page-shell");
 
-const defaultState = { completed: false, pose: "open", accent: "#ffb95e" };
+const defaultState = { completed: false, pose: "open", accent: "#5ea0ff" };
 let state = { ...defaultState };
 const fieldFigures = [
   { x: 6, y: 50, scale: 1, tilt: "-4deg", pose: "open" },
@@ -104,6 +106,11 @@ function applyState() {
   progressText.textContent = state.completed
     ? "The field is open. Your visual choices stay on this page until you reset or reload."
     : "The field is ready to explore.";
+  if (unlockHint) {
+    unlockHint.textContent = state.completed
+      ? "Open — your Pose and Accent choices are live below."
+      : "Locked — tap “Step underground +” above first, then come back here to play.";
+  }
   unlockState.classList.toggle("locked", !state.completed);
   pageShell.classList.toggle("completed", state.completed);
   renderCustomFigure(state);
@@ -112,10 +119,16 @@ function applyState() {
 function completeJourney() {
   state.completed = true;
   applyState();
-  unlockState.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (typeof unlockState.scrollIntoView === "function") unlockState.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 enterButton.addEventListener("click", completeJourney);
+if (unlockHintButton) {
+  unlockHintButton.addEventListener("click", () => {
+    if (typeof enterButton.scrollIntoView === "function") enterButton.scrollIntoView({ behavior: "smooth", block: "center" });
+    enterButton.focus();
+  });
+}
 customizer.addEventListener("input", () => {
   state.pose = poseSelect.value;
   state.accent = accentInput.value;

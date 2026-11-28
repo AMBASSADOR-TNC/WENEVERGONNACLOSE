@@ -58,8 +58,8 @@
           >
             <defs>
               <linearGradient id="handGlow" x1="0%" x2="100%" y1="0%" y2="100%">
-                <stop offset="0%" stop-color="#ffe7c2" />
-                <stop offset="100%" stop-color="#e7a86a" />
+                <stop offset="0%" stop-color="#bcd6ff" />
+                <stop offset="100%" stop-color="#5ea0ff" />
               </linearGradient>
             </defs>
             <path
@@ -191,7 +191,8 @@
           <div id="unlockState" class="unlock-state locked">
             <div class="unlock-copy">
               <strong>Locked</strong>
-              <span>Step underground to explore the temporary visual settings.</span>
+              <span id="unlockHint">Locked — tap “Step underground +” above first, then come back here to play.</span>
+              <button id="unlockHintButton" class="unlock-hint-button" type="button">Go to the entrance</button>
             </div>
 
             <form id="customizer" class="customizer" autocomplete="off">
@@ -205,7 +206,7 @@
               </label>
               <label>
                 Accent glow
-                <input id="accentInput" name="accent" type="color" value="#ffb95e" />
+                <input id="accentInput" name="accent" type="color" value="#5ea0ff" />
               </label>
               <button id="resetButton" class="primary-button" type="button">Reset page choices</button>
             </form>

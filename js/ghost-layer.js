@@ -7,18 +7,18 @@
 
   // One drawing per idea. Red ring and slash = the classic "not here" sign.
   const SYMBOLS = {
-    "no-judgement": '<circle cx="50" cy="50" r="42" fill="none" stroke="#c8102e" stroke-width="8"/>' +
+    "no-judgement": '<circle cx="50" cy="50" r="42" fill="none" stroke="#1e6fff" stroke-width="8"/>' +
       '<g fill="currentColor"><rect x="54" y="16" width="16" height="30" rx="3" transform="rotate(-45 62 31)"/>' +
       '<rect x="44.5" y="28" width="7" height="40" rx="3" transform="rotate(45 48 48)"/><rect x="54" y="70" width="26" height="8" rx="2"/></g>' +
-      '<line x1="21" y1="21" x2="79" y2="79" stroke="#c8102e" stroke-width="8"/>',
-    "no-money": '<circle cx="50" cy="50" r="42" fill="none" stroke="#c8102e" stroke-width="8"/>' +
+      '<line x1="21" y1="21" x2="79" y2="79" stroke="#1e6fff" stroke-width="8"/>',
+    "no-money": '<circle cx="50" cy="50" r="42" fill="none" stroke="#1e6fff" stroke-width="8"/>' +
       '<text x="50" y="68" text-anchor="middle" font-size="52" font-weight="700" font-family="system-ui,sans-serif" fill="currentColor">$</text>' +
-      '<line x1="21" y1="21" x2="79" y2="79" stroke="#c8102e" stroke-width="8"/>',
-    "no-faces": '<circle cx="50" cy="50" r="42" fill="none" stroke="#c8102e" stroke-width="8"/>' +
+      '<line x1="21" y1="21" x2="79" y2="79" stroke="#1e6fff" stroke-width="8"/>',
+    "no-faces": '<circle cx="50" cy="50" r="42" fill="none" stroke="#1e6fff" stroke-width="8"/>' +
       '<g fill="none" stroke="currentColor" stroke-width="4"><circle cx="50" cy="50" r="22"/><path d="M40 57 q10 8 20 0"/></g>' +
       '<g fill="currentColor"><circle cx="42" cy="44" r="3"/><circle cx="58" cy="44" r="3"/></g>' +
-      '<line x1="21" y1="21" x2="79" y2="79" stroke="#c8102e" stroke-width="8"/>',
-    "pause": '<circle cx="50" cy="50" r="42" fill="none" stroke="#b36b00" stroke-width="8"/>' +
+      '<line x1="21" y1="21" x2="79" y2="79" stroke="#1e6fff" stroke-width="8"/>',
+    "pause": '<circle cx="50" cy="50" r="42" fill="none" stroke="#1e6fff" stroke-width="8"/>' +
       '<g fill="currentColor"><rect x="36" y="32" width="9" height="36" rx="2"/><rect x="55" y="32" width="9" height="36" rx="2"/></g>',
     "plus": '<g fill="currentColor"><rect x="42" y="18" width="16" height="64" rx="4"/><rect x="18" y="42" width="64" height="16" rx="4"/></g>',
     "u": '<path d="M28 20 v36 a22 22 0 0 0 44 0 v-36" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>',
