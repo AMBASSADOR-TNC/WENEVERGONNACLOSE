@@ -10,24 +10,29 @@ material.
 | Path | Available now | Boundary |
 |---|---|---|
 | Community start-here | Yes. The Table, The Counter, Whole Donuts path, and The Nurtured Chef path are public and optional. | No account, profile, enrollment, or personal-data requirement. |
-| Four-tap +U gateway | Yes. A broad Youth or Adult side, face-only feeling, bounded need, and first destination progressively route to available on-site content. | All choices are temporary page state only: never stored, submitted, tracked, or used as a profile. |
+| Four-tap +U gateway | Yes. A broad Youth or Adult side, face-only feeling, bounded need, and first destination progressively route to available on-site content. | Choices are stored only on the visitor's own device, so the visit can pick up where it left off. They are never sent anywhere, submitted, tracked, or used as a profile. |
+| One-screen journey | Yes. Gateway, Table, Library, Counter, Menu, Sides, and Leave — one screen at a time, the rest hidden. | Every screen links onward to Whole Donuts, The Nurtured Chef, or both; no screen is a dead end. |
+| TheWhisper dock | Yes. A persistent dock on every screen, with a 10-listen limit per visit. | Voices are the device's own; nothing is recorded or sent anywhere. |
 | +U Library | Yes. The tracked templates may be copied and adapted for personal use. | Do not add private, sensitive, or third-party material without permission. |
 | +U World | Yes. The visual studio is an optional public exploration path. | It does not create an account or collect a contribution. |
 | Donuts New School and Ambassador direction | Yes. They are open learning and leadership directions. | They are not enrollment, certification, employment, an application, or a guaranteed opportunity. |
-| Reviewed crumb process | Preparation only. The protocol and template are public. | The static site has no submission runtime; publication is always human-reviewed. |
+| Reviewed crumb process | Local-only saving. A visitor can save a crumb on their own device; it appears in the review queue as a browser-only candidate. | Nothing is sent anywhere; publication is always human-reviewed. |
 | Browser-only review queue | Yes. It renders curated metadata already shipped with the site. | It cannot scan, ingest, publish, merge, or access repositories or networks. |
 | Goods Window | Browse-only future concepts. | No store, order, payment, or external storefront route is active. |
-| Whole Donuts and TNC stores | Future owner-verified routes only. | They are non-clickable placeholders until availability, ownership, content, privacy, and safety are verified. |
+| Whole Donuts and TNC stores | Not live yet. The Leave screen generates a personal QR to the correct .buzz store so a visitor keeps their route. | The QR is honestly labeled "opens soon" until availability, ownership, content, privacy, and safety are verified. |
 | Optional support | A deliberate external Cash App exit or manual Chime instruction is available after confirmation. | It is separate from merchandise and never creates an entitlement, reward, or public record. |
 
 ## Privacy and safety boundary
 
-Gateway and World selections exist only in temporary page memory and clear on
-reset, skip, routing onward, or reload. The public bundle must not collect or
-request names, email addresses, face images, photos, exact age or birth date,
-location, sensitive data, repository source contents, secrets, or operational
-configuration. The gateway's face choices are accessible text equivalents for
-simple visual marks, not image capture or facial data.
+Gateway choices and saved crumbs live only on the visitor's own device
+(local browser storage) and are never sent anywhere. They can be cleared
+from the gateway and the Library at any time. World selections exist only in
+temporary page memory and clear on reset, skip, routing onward, or reload.
+The public bundle must not collect or request names, email addresses, face
+images, photos, exact age or birth date, location, sensitive data, repository
+source contents, secrets, or operational configuration. The gateway's face
+choices are accessible text equivalents for simple visual marks, not image
+capture or facial data.
 
 Do not add analytics, tracking, accounts, profiling, network scanning,
 automatic content intake, automatic publication, automatic GitHub actions, or
@@ -35,10 +40,11 @@ automatic merges. Do not add external assets or dependencies. A future
 capability is not public until it is explicitly implemented, reviewed, and
 truthfully labeled.
 
-Future ecosystem and store domains are not public destinations unless an owner
-verifies their availability, ownership, content, privacy, and safety. Until
-then, any reference is a non-clickable future owner-verified route, never a
-redirect or commerce claim.
+Future ecosystem and store domains are not live public destinations unless an
+owner verifies their availability, ownership, content, privacy, and safety.
+Until then, any reference is a clearly labeled future owner-verified route —
+the Leave screen's personal QR is labeled "opens soon" — never a redirect or
+commerce claim.
 
 ## Canonical ecosystem reconciliation
 
